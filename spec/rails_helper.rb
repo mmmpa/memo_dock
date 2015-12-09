@@ -13,6 +13,7 @@ if ENV['CI']
 else
   SimpleCov.formatter = SimpleCov::Formatter::RcovFormatter
 end
+
 SimpleCov.start 'rails' do
   add_filter '/lib/'
   add_filter '/spec/'
@@ -20,6 +21,7 @@ end
 
 Dir[Rails.root.join('spec/supports/**/*.rb')].each { |f| require f }
 load "#{Rails.root}/db/schema.rb"
+load "#{Rails.root}/db/seeds.rb"
 ActiveRecord::Migration.maintain_test_schema!
 
 RSpec.configure do |config|
