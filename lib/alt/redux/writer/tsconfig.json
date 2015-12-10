@@ -1,0 +1,14 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "commonjs",
+        "sourceMap": true,
+        "jsx" : "react",
+        "outDir" : "../writer_built"
+    },
+    "exclude": [
+      "node_modules",
+      "gulp",
+      "types"
+    ]
+}

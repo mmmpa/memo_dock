@@ -16,17 +16,28 @@ Rails.application.routes.draw do
     post '', to: 'sessions#create'
     delete '', to: 'sessions#destroy', as: :log_out
 
-    scope :memo do
-      get '', to: 'memos#index', as: :memos
-      get 'new', to: 'memos#new', as: :new_memo
-      post 'new', to: 'memos#create'
+    scope :api do
+      scope :sessions do
+        post '', to: 'sessions#create_calm', as: :api_log_in
+        delete '', to: 'sessions#destroy'
+      end
 
-      get ':memo_id', to: 'memos#edit', as: :memo
-      patch ':memo_id', to: 'memos#update'
-      delete ':memo_id', to: 'memos#destroy'
+      scope :memos, constraints: Constraint::Writer.new do
+        get '', to: 'memos#index', as: :memos
+        get 'new', to: 'memos#new', as: :new_memo
+        post 'new', to: 'memos#create'
 
-      post 'slim', to:  'memos#convert', as: :slim
+        get ':memo_id', to: 'memos#edit', as: :memo
+        patch ':memo_id', to: 'memos#update'
+        delete ':memo_id', to: 'memos#destroy'
+
+        post 'slim', to:  'memos#convert', as: :slim
+      end
+
+      get '*path', to: ->(env) { [401, {'Content-Type' => 'text/plain'}, ['unauthorized']] }
     end
+
+    get '*path', to: 'portal#portal'
   end
 
   # 閲覧画面

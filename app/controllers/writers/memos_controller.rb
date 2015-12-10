@@ -1,7 +1,9 @@
 module Writers
   class MemosController < ApplicationController
-    def index
+    layout 'writers'
 
+    def index
+      render json: {}
     end
   end
 end

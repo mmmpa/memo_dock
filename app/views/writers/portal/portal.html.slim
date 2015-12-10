@@ -1,0 +1,27 @@
+article#root
+script src='/js/writer.min.js'
+
+coffee:
+  request = window.superagent
+
+  request
+  .get '/w/api/memos'
+  .end (err, res) ->
+    console.log(res.text)
+    console.log(res.body)
+
+  token = document.getElementsByName('csrf-token')[0].getAttribute('content');
+
+  request
+  .post '/w/api/sessions'
+  .set('X-CSRF-Token', token)
+  .send
+    writer_session:
+      email: 'paper.om3@gmail.com'
+      password: 'aaaaaa'
+  .end (err, res) ->
+    request
+    .get '/w/api/memos'
+    .end (err, res) ->
+      console.log(res.text)
+      console.log(res.body)
