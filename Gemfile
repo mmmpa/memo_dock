@@ -3,7 +3,6 @@ source 'https://rubygems.org'
 
 gem 'rails', '4.2.5'
 gem 'pg'
-gem 'sqlite3'
 gem 'sass-rails', '~> 5.0'
 gem 'uglifier', '>= 1.3.0'
 gem 'coffee-rails', '~> 4.1.0'
@@ -24,18 +23,12 @@ end
 group :default do
   gem 'slim-rails'
   gem 'squeel'
-  gem 'authlogic'
-  gem 'kaminari'
-  gem 'penetration'
-  gem 'jquery-rails'
-  gem 'sweet-alert-confirm'
   gem 'rails_config'
+  gem 'tanemaki'
+  gem 'factory_girl_rails'
 end
 
 group :development, :test do
-  gem 'tanemaki'
-  gem 'spring-commands-rspec'
-  gem 'factory_girl_rails'
 end
 
 group :development do
@@ -56,9 +49,14 @@ group :test do
   gem 'rspec'
   gem 'rspec-rails'
   gem 'rspec-html-matchers'
+  gem 'spring-commands-rspec'
   gem 'faker'
   gem 'capybara'
   gem 'poltergeist'
   gem 'simplecov'
   gem 'simplecov-rcov'
+
+  gem 'sqlite3'
+  gem 'coveralls'
+  gem 'codeclimate-test-reporter'
 end

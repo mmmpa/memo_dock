@@ -1,3 +1,7 @@
+[![Build Status](https://travis-ci.org/mmmpa/memo_dock.svg)](https://travis-ci.org/mmmpa/memo_dock)
+[![Coverage Status](https://coveralls.io/repos/mmmpa/memo_dock/badge.svg?branch=master&service=github)](https://coveralls.io/github/mmmpa/memo_dock?branch=master)
+[![Code Climate](https://codeclimate.com/github/mmmpa/memo_dock/badges/gpa.svg)](https://codeclimate.com/github/mmmpa/memo_dock)
+
 # MEMO DOCK
 
 # Installation
