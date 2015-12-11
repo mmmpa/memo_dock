@@ -2,17 +2,18 @@
 
 import * as React from 'react'
 import { render } from 'react-dom'
-import { createStore } from 'redux'
+import { createStore, applyMiddleware } from 'redux'
 import { Provider } from 'react-redux'
 import App from './containers/app'
-
 import reducers from './reducers/reducers'
-import WriterRouter from "./router";
-let store = createStore(reducers);
-let rootElement = document.getElementById('root');
-let router:WriterRouter = new WriterRouter();
+import injectTapEventPlugin = require("react-tap-event-plugin");
+// to get default with typescript
+import thunkMiddleware = require("redux-thunk");
 
-router.goHere();
+let store = (applyMiddleware(thunkMiddleware)(createStore))(reducers);
+let rootElement = document.getElementById('root');
+
+injectTapEventPlugin();
 
 render(
   <Provider store={store}>

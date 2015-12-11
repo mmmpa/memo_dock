@@ -34,6 +34,7 @@
     "react-redux": "^4.0.0",
     "react-tap-event-plugin": "^0.2.1",
     "redux": "^3.0.4",
+    "redux-thunk": "^1.0.0",
     "typescript": "^1.7.3"
   }
 }

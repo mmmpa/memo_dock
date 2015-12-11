@@ -41,13 +41,12 @@ gulp.task 'watcher', ->
     .pipe gulp.dest(path.join(rootPath, dest))
 
   gulp.watch('./redux/writer_built/writer.js').on 'change', (e) ->
-    console.log e
     browserify
       entries: './redux/writer_built/writer.js'
       debug: true
     .bundle()
     .on('error', onError)
     .pipe source('writer.js')
-    .pipe streamify(uglify())
+    #.pipe streamify(uglify())
     .pipe rename('writer.min.js')
     .pipe gulp.dest(publicJsPath)

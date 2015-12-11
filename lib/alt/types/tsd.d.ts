@@ -3,3 +3,4 @@
 /// <reference path="redux/redux.d.ts" />
 /// <reference path="react/react-dom.d.ts" />
 /// <reference path="lodash/lodash.d.ts" />
+/// <reference path="redux-thunk/redux-thunk.d.ts" />
