@@ -1,0 +1,574 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for app/contexts/main-context.coffee</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../../prettify.css">
+
+    <link rel="stylesheet" href="../../base.css">
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">app/contexts/main-context.coffee</span></h1>
+    <h2>
+        
+        Statements: <span class="metric">26.62% <small>(37 / 139)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Branches: <span class="metric">14.29% <small>(1 / 7)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Functions: <span class="metric">7.14% <small>(4 / 56)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Lines: <span class="metric">12.73% <small>(7 / 55)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../../index.html">All files</a> &#187; <a href="index.html">app/contexts/</a> &#187; main-context.coffee</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60
+61
+62
+63
+64
+65
+66
+67
+68
+69
+70
+71
+72
+73
+74
+75
+76
+77
+78
+79
+80
+81
+82
+83
+84
+85
+86
+87
+88
+89
+90
+91
+92
+93
+94
+95
+96
+97
+98
+99
+100
+101
+102
+103
+104
+105
+106
+107
+108
+109
+110
+111
+112
+113
+114
+115
+116
+117
+118
+119
+120
+121
+122
+123
+124
+125
+126
+127
+128
+129
+130
+131
+132
+133
+134
+135
+136
+137
+138
+139
+140
+141
+142
+143
+144
+145
+146
+147
+148
+149
+150
+151
+152
+153
+154
+155
+156
+157
+158
+159
+160
+161
+162
+163
+164
+165
+166
+167
+168
+169
+170
+171
+172
+173
+174
+175
+176
+177</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">6</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">#
+# ReactApplicationの全てを統括するコンテキスト
+#
+# = Attributes
+#
+# - @content 実際にコンテンツを表示するルーター
+# - @notifier 全ての前面に表示されるオーバーレイルーター
+# - @menu グローバルメニューなどアプリケーション共通物を表示するルーター
+#
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" ><span class="missing-if-branch" title="else path not taken" >E</span>m</span></span></span></span>odule.exports = class MainContext extends Arda.Context
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" ><span class="fstat-no" title="function not covered" >  c</span></span></span></span>omponent: React.createClass (
+    mixins: [Arda.mixin]
+    render: <span class="fstat-no" title="function not covered" >-</span>&gt;
+      App.JSX.main()
+&nbsp;
+    componentDidMount: <span class="fstat-no" title="function not covered" >-</span>&gt;
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >      r</span>outers = {</span>
+        content: new Arda.Router(Arda.DefaultLayout, React.findDOMNode(@refs.content))
+        notifier: new Arda.Router(Arda.DefaultLayout, React.findDOMNode(@refs.notifier))
+        menu: new Arda.Router(Arda.DefaultLayout, React.findDOMNode(@refs.menu))
+      }
+      @dispatch 'display:initialized', routers
+  )
+&nbsp;
+  _history = []
+  _feature = []
+  _now = 0
+&nbsp;
+  initState: <span class="fstat-no" title="function not covered" >(</span>props) -&gt; props
+&nbsp;
+  expandComponentProps: <span class="fstat-no" title="function not covered" >(</span>props, state) -&gt; props
+&nbsp;
+  delegate: <span class="fstat-no" title="function not covered" >(</span>subscribe) -&gt;
+<span class="cstat-no" title="statement not covered" >    s</span>uper
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    s</span>ubscribe 'context:created', <span class="fstat-no" title="function not covered" >(</span>)-&gt;
+<span class="cstat-no" title="statement not covered" >      @</span>_initializeValuables()
+<span class="cstat-no" title="statement not covered" >      @</span>_initializeRouter()
+      @_initializeEventWatcher()
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    s</span>ubscribe 'display:initialized', @_initializeDisplay
+<span class="cstat-no" title="statement not covered" >    s</span>ubscribe 'scene:replace', @_replaceScene
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    s</span>ubscribe 'notify:success', <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >(</span></span>title, message)=&gt;
+<span class="cstat-no" title="statement not covered" >    s</span>ubscribe 'window:top', <span class="fstat-no" title="function not covered" >-</span>&gt; window.scrollTo(0, 0)
+<span class="cstat-no" title="statement not covered" >    s</span>ubscribe 'app:home', <span class="fstat-no" title="function not covered" >-</span>&gt;
+      @_replaceScene(App.Linker.get(App.Path.portal))
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    s</span>ubscribe 'notify:fail', <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >(</span></span>title, message)=&gt;
+<span class="cstat-no" title="statement not covered" >    s</span>ubscribe 'history:push', <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >(</span></span>linker)=&gt;
+<span class="cstat-no" title="statement not covered" >      h</span>istory.pushState({}, null, linker.paramsUri)
+      ga('send', 'pageview', linker.paramsUri)
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    s</span>ubscribe 'reload', <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >=</span></span>&gt;
+      @update(<span class="fstat-no" title="function not covered" >(</span>state) =&gt; state)
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    s</span>ubscribe 'question:show', <span class="fstat-no" title="function not covered" >(</span>id, tags)-&gt; @_replaceScene(App.Linker.get(App.Path.q, id: id, tags: tags))
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    s</span>ubscribe 'inform:rendered', <span class="fstat-no" title="function not covered" >(</span>q)-&gt;
+      MathJax.Hub.Typeset()
+&nbsp;
+    subscribe 'question:tagged:index', <span class="fstat-no" title="function not covered" >(</span>id)-&gt;
+      @_replaceScene(App.Linker.get(App.Path.taggedIndex, tags: _.flatten([id])))
+&nbsp;
+&nbsp;
+  #
+  # Application method
+  #
+&nbsp;
+  strikeApi: <span class="fstat-no" title="function not covered" >(</span>linker, forceReload)-&gt;
+    App.ApiStriker.strike(linker, forceReload)
+&nbsp;
+  #
+  # Initializer
+  #
+&nbsp;
+  _initializeEventWatcher: <span class="fstat-no" title="function not covered" >-</span>&gt;
+<span class="cstat-no" title="statement not covered" >    H</span>istoryWard.startBrutally()
+<span class="cstat-no" title="statement not covered" >    $</span>(window).on(HistoryWard.BACKWARD, @_backward)
+    $(window).on(HistoryWard.FORWARD, @_forward)
+&nbsp;
+  _initializeDisplay: <span class="fstat-no" title="function not covered" >(</span>routers)-&gt;
+    # このrouterはArda.Router
+<span class="cstat-no" title="statement not covered" >    @content = routers.c</span>ontent
+<span class="cstat-no" title="statement not covered" >    @notifier = routers.n</span>otifier
+<span class="cstat-no" title="statement not covered" >    @menu = routers.m</span>enu
+&nbsp;
+    # 以降replaceContextで統一する
+<span class="cstat-no" title="statement not covered" >    @</span>content.pushContext(App.BlankContext, { name: 'Content' }).done <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >=</span></span>&gt;
+      @_initializeScene()
+<span class="cstat-no" title="statement not covered" >    @</span>notifier.pushContext(App.BlankContext, { name: 'Notifier' }).done <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >=</span></span>&gt;
+      @notifier.replaceContext(App.Notifier.GodContext, { root: @ })
+    @menu.pushContext(App.BlankContext, { name: 'Menu' }).done <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >=</span></span>&gt;
+      @menu.replaceContext(App.Menu.GlobalContext, { root: @ })
+&nbsp;
+  _initializeRouter: <span class="fstat-no" title="function not covered" >-</span>&gt;
+    # 全てのコンテキストはメインコンテキストに通知を出せる
+<span class="cstat-no" title="statement not covered" >    App.Cassette.root = @</span>
+&nbsp;
+    # これはuriから動作を振りわける一般的なルーター
+<span class="cstat-no" title="statement not covered" >    @router = new A</span>pp.Router()
+    #@router.add('/', (params)-&gt; new App.Cassette(App.PortalContext, params))
+<span class="cstat-no" title="statement not covered" >    @</span>router.add('/', <span class="fstat-no" title="function not covered" >(</span>params)-&gt; new App.Cassette(App.PortalContext, params))
+<span class="cstat-no" title="statement not covered" >    @</span>router.add('/q', <span class="fstat-no" title="function not covered" >(</span>params)-&gt; new App.Cassette(App.Q.IndexContext, params))
+<span class="cstat-no" title="statement not covered" >    @</span>router.add('/q/tagged/-', <span class="fstat-no" title="function not covered" >(</span>params)-&gt; new App.Cassette(App.Q.IndexContext, params))
+<span class="cstat-no" title="statement not covered" >    @</span>router.add('/q/tagged/:tags', <span class="fstat-no" title="function not covered" >(</span>params)-&gt; new App.Cassette(App.Q.IndexContext, params))
+    @router.add('/q/:id', <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >(</span></span>params)=&gt;
+<span class="cstat-no" title="statement not covered" >      if @state.fromIndex</span>
+<span class="cstat-no" title="statement not covered" >        params.fromIndex = @state.f</span>romIndex
+<span class="cstat-no" title="statement not covered" >        @state.fromIndex = null</span>
+      new App.Cassette(App.Q.QuestionContext, params))
+&nbsp;
+  _initializeScene: <span class="fstat-no" title="function not covered" >-</span>&gt;
+<span class="cstat-no" title="statement not covered" >    @</span>content.pushContext(@_detectCassette().forPusher()...)
+&nbsp;
+  _initializeValuables: <span class="fstat-no" title="function not covered" >-</span>&gt;
+&nbsp;
+    #
+    # History Manager
+    #
+  _backward: <span class="fstat-no" title="function not covered" >(</span>e)=&gt;
+<span class="cstat-no" title="statement not covered" >    @</span>content.pushContext(@_detectCassette().forPusher()...)
+&nbsp;
+  _forward: <span class="fstat-no" title="function not covered" >(</span>e)=&gt;
+<span class="cstat-no" title="statement not covered" >    @</span>content.pushContext(@_detectCassette().forPusher()...)
+&nbsp;
+  #
+  # Helper
+  #
+  _detectCassette: <span class="fstat-no" title="function not covered" >-</span>&gt;
+    @router.execute(@_strippedPath())
+&nbsp;
+  _pickHeaderParameters: <span class="fstat-no" title="function not covered" >(</span>xhr)-&gt;
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    r</span>equired = [</span>
+      'Total-Pages'
+      'Per-Page'
+      'Current-Page'
+      'Paginate-Path'
+      'Access-Level'
+    ]
+    _.reduce(required, <span class="fstat-no" title="function not covered" >(</span>a, req)-&gt;
+<span class="cstat-no" title="statement not covered" >      c</span>onsole.log req
+<span class="cstat-no" title="statement not covered" >      a[req] = x</span>hr.getResponseHeader(req)
+      a
+    , {})
+&nbsp;
+  _strippedPath: <span class="fstat-no" title="function not covered" >-</span>&gt;
+    location.href.replace(/.+?:\/\/(.+?)\//, '/')
+&nbsp;
+  _choppedPath: <span class="fstat-no" title="function not covered" >-</span>&gt;
+    location.href.replace(/.+?:\/\/(.+?)\//, '/').replace(/\?.*/, '')
+&nbsp;
+  _isCrossDomain: <span class="fstat-no" title="function not covered" >(</span>url)-&gt;
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    o</span>riginAnchor = d</span>ocument.createElement("a")
+<span class="cstat-no" title="statement not covered" >    originAnchor.href = location.h</span>ref
+<span class="cstat-no" title="statement not covered" >    urlAnchor = d</span>ocument.createElement("a")
+&nbsp;
+<span class="cstat-no" title="statement not covered" >    try</span>
+<span class="cstat-no" title="statement not covered" >      urlAnchor.href = u</span>rl
+<span class="cstat-no" title="statement not covered" >      urlAnchor.href = urlAnchor.h</span>ref
+&nbsp;
+<span class="cstat-no" title="statement not covered" >      return !urlAnchor.protocol || !urlAnchor.host ||</span>
+          (originAnchor.protocol + "//" + originAnchor.host !=
+            urlAnchor.protocol + "//" + urlAnchor.host)
+    catch <span class="cstat-no" title="statement not covered" >e</span>
+<span class="cstat-no" title="statement not covered" >      return true</span>
+&nbsp;
+  #
+  #
+  #
+&nbsp;
+  _replaceScene: <span class="fstat-no" title="function not covered" >(</span>linker) -&gt;
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    @</span></span>emit('history:push', linker)
+    @content.pushContext(@_detectCassette().forPusher()...).then <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >=</span></span>&gt;
+      MathJax.Hub.Typeset()
+&nbsp;
+&nbsp;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Nov 14 2015 13:12:54 GMT+0900 (JST)</div>
+</div>
+
+<script src="../../prettify.js"></script>
+
+<script src="https://yui-s.yahooapis.com/3.6.0/build/yui/yui-min.js"></script>
+<script src="../../base.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!doctype html>
+<html lang="en">
+<head>
+    <title>Code coverage report for app/models/api-striker.coffee</title>
+    <meta charset="utf-8">
+
+    <link rel="stylesheet" href="../../prettify.css">
+
+    <link rel="stylesheet" href="../../base.css">
+</head>
+<body>
+<div class="header low">
+    <h1>Code coverage report for <span class="entity">app/models/api-striker.coffee</span></h1>
+    <h2>
+        
+        Statements: <span class="metric">28.57% <small>(8 / 28)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Branches: <span class="metric">0% <small>(0 / 9)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Functions: <span class="metric">18.18% <small>(2 / 11)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        
+        Lines: <span class="metric">26.67% <small>(4 / 15)</small></span> &nbsp;&nbsp;&nbsp;&nbsp;
+        
+        Ignored: <span class="metric"><span class="ignore-none">none</span></span> &nbsp;&nbsp;&nbsp;&nbsp;
+    </h2>
+    <div class="path"><a href="../../index.html">All files</a> &#187; <a href="index.html">app/models/</a> &#187; api-striker.coffee</div>
+</div>
+<div class="body">
+<pre><table class="coverage">
+<tr><td class="line-count">1
+2
+3
+4
+5
+6
+7
+8
+9
+10
+11
+12
+13
+14
+15
+16
+17
+18
+19
+20
+21
+22
+23
+24
+25
+26
+27
+28
+29
+30
+31
+32
+33
+34
+35
+36
+37
+38
+39
+40
+41
+42
+43
+44
+45
+46
+47
+48
+49
+50
+51
+52
+53
+54
+55
+56
+57
+58
+59
+60</td><td class="line-coverage"><span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-yes">1</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-no">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span>
+<span class="cline-any cline-neutral">&nbsp;</span></td><td class="text"><pre class="prettyprint lang-js">#
+# apiアクセス方法を統一するサービスクラス
+# 一度アクセスしたapiのデータは保持する（GETのみ）
+#
+<span class="fstat-no" title="function not covered" >module.exports = class A</span>piStriker
+  @_struck = {}
+&nbsp;
+  @strike = <span class="fstat-no" title="function not covered" >(</span>linker, forceReload)-&gt;
+<span class="cstat-no" title="statement not covered" >    c</span>onsole.log linker
+<span class="cstat-no" title="statement not covered" >    if !forceReload &amp;&amp; linker.isGet &amp;&amp; @_struck[linker.paramsUri]</span>
+      # Promiseを期待されるので空うちする。
+<span class="cstat-no" title="statement not covered" >      return new Promise(<span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >(</span></span>resolve, reject)=&gt;</span>
+        resolve(@_struck[linker.paramsUri])
+      )
+&nbsp;
+    (if linker.isPost()
+      $.ajax(
+        url: '/api' + linker.uri
+        type: linker.method
+        dataType: 'json'
+        contentType: 'application/json'
+        data: JSON.stringify(linker.params)
+      )
+    else
+      $.ajax(
+        url: '/api' + linker.uri
+        type: linker.method
+        dataType: 'json'
+        data: linker.params
+      )
+    ).then <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >(</span></span>data, __, xhr)=&gt;
+      # データ保持動作
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >      h</span>eader = @</span>pickHeaderParameters(xhr)
+<span class="cstat-no" title="statement not covered" >      if linker.isGet</span>
+<span class="cstat-no" title="statement not covered" >        @_struck[linker.paramsUri] =</span>
+          body: data
+          header: header
+      $.Deferred().resolve(
+        body: data
+        header: header
+      )
+&nbsp;
+  @pickHeaderParameters: <span class="fstat-no" title="function not covered" >(</span>xhr)-&gt;
+<span class="cstat-no" title="statement not covered" ><span class="cstat-no" title="statement not covered" >    h</span>eader = {</span>}
+<span class="cstat-no" title="statement not covered" >    required = [</span>
+      'Total-Pages'
+      'Per-Page'
+      'Current-Page'
+    ]
+<span class="cstat-no" title="statement not covered" >    names = [</span>
+      'total'
+      'per'
+      'page'
+    ]
+<span class="cstat-no" title="statement not covered" >    _</span>.each(required, <span class="fstat-no" title="function not covered" ><span class="fstat-no" title="function not covered" >(</span></span>value, index)=&gt;
+      header[names[index]] = xhr.getResponseHeader(value)
+    )
+&nbsp;
+    header
+&nbsp;</pre></td></tr>
+</table></pre>
+
+</div>
+<div class="footer">
+    <div class="meta">Generated by <a href="http://istanbul-js.org/" target="_blank">istanbul</a> at Sat Nov 14 2015 13:12:54 GMT+0900 (JST)</div>
+</div>
+
+<script src="../../prettify.js"></script>
+
+<script src="https://yui-s.yahooapis.com/3.6.0/build/yui/yui-min.js"></script>
+<script src="../../base.js"></script>
+</body>
+</html>

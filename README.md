@@ -20,3 +20,11 @@ RAILS_ENV=production rake db:create
 RAILS_ENV=production rake db:migrate
 RAILS_ENV=production rake db:seed
 ```
+
+# 設計メモ
+
+特にget系の動作をする場合は内部から直接dispatchするのではなくて、pushStateでurlを変更後に、routerに登録した関数からdispatchする。
+
+そのための関数はcontainerから注入されるため、storeの存在を下位コンポーネントが知らずにいられるのと同じように、routerの存在もしらずにいられるようにする。
+
+post系はcontainerから注入された関数経由でdispatchする普通のアクセスでOK。
