@@ -12,13 +12,10 @@ Rails.application.routes.draw do
   # 編集画面
 
   scope :w, module: :writers  do
-    get '', to: 'sessions#new', as: :log_in
-    post '', to: 'sessions#create'
-    delete '', to: 'sessions#destroy', as: :log_out
-
     scope :api do
       scope :sessions do
-        post '', to: 'sessions#create_calm', as: :api_log_in
+        get '', to: 'sessions#show', as: :api_log_in
+        post '', to: 'sessions#create'
         delete '', to: 'sessions#destroy'
       end
 
@@ -37,6 +34,7 @@ Rails.application.routes.draw do
       get '*path', to: ->(env) { [401, {'Content-Type' => 'text/plain'}, ['unauthorized']] }
     end
 
+    get '', to: 'portal#portal', as: :writer_portal
     get '*path', to: 'portal#portal'
   end
 

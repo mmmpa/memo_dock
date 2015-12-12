@@ -4,25 +4,23 @@
 
 /// <reference path="../types/tsd.d.ts" />
 
-import * as Type from '../action-types'
+import * as Type from '../constants/action-types';
+import {Context} from '../constants/status';
 import * as Context from '../contexts'
 import * as _ from 'lodash'
 
-function context(state:string = Context.APP_LOGIN, action):string {
+function context(state:Context = Context.Login, action):Context {
   switch (action.type) {
-    case Type.REQUEST_LOGIN:
-      return Context.APP_LOGIN;
-    case Type.LOGOUT:
-      return Context.APP_LOGIN;
-    case Type.LOGIN:
-      console.log('index')
-      return Context.MEMO_INDEX;
-    case Type.MEMO_CREATION:
-      return Context.MEMO_EDIT;
-    case Type.MEMO_EDIT:
-      return Context.MEMO_EDIT;
-    case Type.MEMO_INDEX:
-      return Context.MEMO_INDEX;
+    case Type.Login.LoggedIn:
+      return Context.MemoIndex;
+    case Type.Login.LoggedOut:
+      return Context.Login;
+    case Type.Memo.Index:
+      return Context.MemoIndex;
+    case Type.Memo.Edit:
+      return Context.MemoEdit;
+    case Type.Memo.Create:
+      return Context.MemoEdit;
     default:
       return state;
   }

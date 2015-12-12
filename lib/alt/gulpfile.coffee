@@ -9,7 +9,7 @@ uglify = require 'gulp-uglify'
 source = require 'vinyl-source-stream'
 streamify = require 'gulp-streamify'
 rename = require 'gulp-rename'
-
+notify = require 'gulp-notify'
 path = require 'path'
 _ = require 'lodash'
 
@@ -50,3 +50,4 @@ gulp.task 'watcher', ->
     #.pipe streamify(uglify())
     .pipe rename('writer.min.js')
     .pipe gulp.dest(publicJsPath)
+    .pipe notify message: 'complete'

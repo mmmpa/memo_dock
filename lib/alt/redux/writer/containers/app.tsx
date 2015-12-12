@@ -3,7 +3,7 @@
 import * as React from 'react'
 import { Component, PropTypes } from 'react'
 import { connect } from 'react-redux'
-import * as Context from '../contexts'
+import {Context} from '../constants/status';
 import WriterRouter from "../router";
 import Login from "../components/login";
 import MemoIndex from "../components/memo-index";
@@ -17,11 +17,12 @@ router.goHere();
 
 class App extends Component {
   render() {
-    const { dispatch, loggedIn, context } = this.props
+    // injected by connect
+    const { dispatch, loggedIn, loginState, context } = this.props;
 
     if (!loggedIn) {
       return (<Login
-        test="test"
+        loginState={loginState}
         login={
             (email, password) =>{
               dispatch(tryLogin(email, password));
@@ -31,7 +32,7 @@ class App extends Component {
     }
 
     switch (context) {
-      case Context.APP_LOGIN:
+      case Context.Login:
         return (<Login
           test="test"
           login={
@@ -40,9 +41,9 @@ class App extends Component {
             }
           }
         />);
-      case Context.MEMO_INDEX:
+      case Context.MemoIndex:
         return <MemoIndex />;
-      case Context.MEMO_EDIT:
+      case Context.MemoEdit:
         return <Memo />;
       default:
         return <div>loading...</div>;
@@ -53,6 +54,7 @@ class App extends Component {
 function select(state) {
   return {
     loggedIn: state.loggedIn,
+    loginState: state.loginState,
     context: state.context,
   }
 }

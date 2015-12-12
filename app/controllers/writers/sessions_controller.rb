@@ -4,23 +4,19 @@ module Writers
 
     rescue_from ActionController::ParameterMissing, with: -> { render plain: :missing, status: 401 }
 
-    def new
-      @session = WriterSession.new
-    end
-
-    def create_calm
-      WriterSession.create!(session_params)
-      render nothing: true, status: 201
-    rescue Authlogic::Session::Existence::SessionInvalidError => e
-      render nothing: true, status: 401
+    def show
+      if WriterSession.find
+        render nothing: true, status: 200
+      else
+        render nothing: true, status: 403
+      end
     end
 
     def create
       WriterSession.create!(session_params)
-      redirect_to memos_url
+      render nothing: true, status: 201
     rescue Authlogic::Session::Existence::SessionInvalidError => e
-      @session = e.record
-      render :new
+      render nothing: true, status: 401
     end
 
     def destroy

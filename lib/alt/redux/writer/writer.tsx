@@ -9,9 +9,10 @@ import reducers from './reducers/reducers'
 import injectTapEventPlugin = require("react-tap-event-plugin");
 // to get default with typescript
 import thunkMiddleware = require("redux-thunk");
+import Store = Redux.Store;
 
-let store = (applyMiddleware(thunkMiddleware)(createStore))(reducers);
-let rootElement = document.getElementById('root');
+let store:Store = (applyMiddleware(thunkMiddleware)(createStore))(reducers);
+let rootElement:HTMLElement = document.getElementById('root');
 
 injectTapEventPlugin();
 

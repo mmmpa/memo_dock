@@ -17,6 +17,7 @@
     "gulp-espower": "^1.0.1",
     "gulp-minify-css": "^1.2.2",
     "gulp-mocha": "^2.2.0",
+    "gulp-notify": "^2.2.0",
     "gulp-plumber": "^1.0.1",
     "gulp-rename": "^1.2.2",
     "gulp-sass": "^2.1.0",
@@ -35,6 +36,7 @@
     "react-tap-event-plugin": "^0.2.1",
     "redux": "^3.0.4",
     "redux-thunk": "^1.0.0",
+    "superagent": "^1.5.0",
     "typescript": "^1.7.3"
   }
 }
