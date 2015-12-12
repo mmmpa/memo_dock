@@ -11,6 +11,21 @@ export function requestLogin() {
   return {type: Type.Login.Request};
 }
 
+export function checkInitialState(callback:Function){
+  return (dispatch) => {
+    request
+      .get('/w/api/sessions')
+      .end((err, res)=> {
+        if (err) {
+          dispatch(requestLogin());
+        } else {
+          dispatch(login());
+          callback();
+        }
+      })
+  }
+}
+
 export function tryLogin(email:string, password:string) {
   return (dispatch) => {
     dispatch(waitLogin());

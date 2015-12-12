@@ -1,14 +1,14 @@
 export enum Login{
-  Request,
-  RequestRetry,
-  Wait,
-  LoggedIn,
-  LoggedOut
+  Request = 1,
+  RequestRetry = 2,
+  Wait = 3,
+  LoggedIn = 4,
+  LoggedOut = 5
 }
 
 export enum Memo{
-  Index,
-  Edit,
-  Create,
-  Delete
+  Index = 101,
+  Edit = 102,
+  Create = 103,
+  Delete = 104
 }

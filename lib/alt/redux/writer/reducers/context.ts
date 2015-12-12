@@ -9,10 +9,12 @@ import {Context} from '../constants/status';
 import * as Context from '../contexts'
 import * as _ from 'lodash'
 
-function context(state:Context = Context.Login, action):Context {
+function context(state:Context = Context.Calm, action):Context {
   switch (action.type) {
     case Type.Login.LoggedIn:
       return Context.MemoIndex;
+    case Type.Login.Request:
+      return Context.Login;
     case Type.Login.LoggedOut:
       return Context.Login;
     case Type.Memo.Index:

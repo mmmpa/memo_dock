@@ -8,39 +8,34 @@ import WriterRouter from "../router";
 import Login from "../components/login";
 import MemoIndex from "../components/memo-index";
 import Memo from "../components/memo-edit";
-import { tryLogin } from '../actions/login'
+import { tryLogin, checkInitialState } from '../actions/login'
 
 let router:WriterRouter = new WriterRouter();
 
-router.goHere();
-
 
 class App extends Component {
+  private initialized:boolean = false;
+
   render() {
     // injected by connect
     const { dispatch, loggedIn, loginState, context } = this.props;
 
-    if (!loggedIn) {
-      return (<Login
-        loginState={loginState}
-        login={
-            (email, password) =>{
-              dispatch(tryLogin(email, password));
-            }
-          }
-      />);
+    if(!this.initialized){
+      this.initialized = true;
+      dispatch(checkInitialState(()=> router.goHere()));
+      return <div>initializing...</div>;
     }
 
     switch (context) {
       case Context.Login:
-        return (<Login
-          test="test"
+        return <Login
+          loginState={loginState}
           login={
             (email, password) =>{
               dispatch(tryLogin(email, password));
             }
           }
-        />);
+        />;
       case Context.MemoIndex:
         return <MemoIndex />;
       case Context.MemoEdit:

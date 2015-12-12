@@ -1,15 +1,37 @@
+@import "./bootstrap/bootstrap"
+@import "./bootstrap/bootswatch"
+@import "./font-awesome/font-awesome"
+@import "./default"
+
+%main-title
+	@extend %size-h2
+
+%sub-title
+	@extend %size-h4
+
+
 .login
 	&.container
 		width: 400px
 		margin: 40px auto
 	&.title
+		@extend %main-title
 		margin: 10px 0
+	&.sub-title
+		@extend %sub-title
+	&.title-area
+		margin: 40px 0
 	&.input-area
 		margin: 10px 0
 	&.submit-area
-		margin: 20px 0
-		div
-			display: block !important
-	&.input,
+		margin: 40px 0
+	&.input
+		@extend .form-control
+		width: 100%
 	&.submit
-		width: 100% !important
+		@extend .btn, .btn-lg
+		width: 100%
+		&.ready
+			@extend .btn-success
+		&.wait
+			@extend .btn-default
