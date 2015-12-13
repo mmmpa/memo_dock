@@ -21,6 +21,14 @@ class Memo < ActiveRecord::Base
       .having { count(id).eq(tag_ids.flatten.size) }
   }
 
+  scope :page, ->(page_par, page_num) { order { created_at.desc }.limit(page_par).offset(page_par * (page_num - 1)) }
+
+  class << self
+    def total_pages(par)
+      (Memo.count.to_f / par).ceil
+    end
+  end
+
   def convert_slim_to_html!
     if src.nil?
       self.html = nil

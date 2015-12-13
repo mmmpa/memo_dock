@@ -12,6 +12,9 @@ require 'factory_girl_rails'
 require 'rspec-html-matchers'
 require 'simplecov'
 require 'simplecov-rcov'
+require "authlogic/test_case"
+include Authlogic::TestCase
+require 'pp'
 
 if ENV['CI']
   SimpleCov.formatter = SimpleCov::Formatter::MultiFormatter[Coveralls::SimpleCov::Formatter]
