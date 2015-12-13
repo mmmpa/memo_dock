@@ -1,7 +1,7 @@
 def generate_tag_list(base_num)
   tags = base_num % 5
   (0..tags).to_a.map do |n|
-    "タグ#{n}"
+    "タグ#{n + 1}"
   end
 end
 

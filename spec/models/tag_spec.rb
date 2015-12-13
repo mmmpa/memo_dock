@@ -31,25 +31,27 @@ RSpec.describe Tag, type: :model do
 
   describe 'counting and memo selecting' do
     before :all do
-      create(:memo, :valid, title: 1, tag_list: %w(a))
-      create(:memo, :valid, title: 2, tag_list: %w(a))
-      create(:memo, :valid, title: 3, tag_list: %w(b))
-      create(:memo, :valid, title: 4, tag_list: %w(b))
-      create(:memo, :valid, title: 5, tag_list: %w(b))
-      create(:memo, :valid, title: 6, tag_list: %w(c))
-      create(:memo, :valid, title: 7, tag_list: %w(a b))
-      create(:memo, :valid, title: 8, tag_list: %w(b c))
-      create(:memo, :valid, title: 9, tag_list: %w(a b c))
+      @store = []
+      @store.push create(:memo, :valid, title: 1, tag_list: %w(a))
+      @store.push create(:memo, :valid, title: 2, tag_list: %w(a))
+      @store.push create(:memo, :valid, title: 3, tag_list: %w(b))
+      @store.push create(:memo, :valid, title: 4, tag_list: %w(b))
+      @store.push create(:memo, :valid, title: 5, tag_list: %w(b))
+      @store.push create(:memo, :valid, title: 6, tag_list: %w(c))
+      @store.push create(:memo, :valid, title: 7, tag_list: %w(a b))
+      @store.push create(:memo, :valid, title: 8, tag_list: %w(b c))
+      @store.push create(:memo, :valid, title: 9, tag_list: %w(a b c))
     end
 
     after :all do
-      Memo.destroy_all
-      Tag.destroy_all
+      @store.map(&:destroy)
     end
 
     context 'tags with count' do
       it do
-        counts = Tag.with_used_count.order { :name }.map(&:count)
+        counts = Tag.with_used_count.order { :name }.load.select{ |tag|
+          %w(a b c d).include?(tag.name)
+        }.map(&:count)
         expect(counts).to eq([4, 6, 3])
       end
     end

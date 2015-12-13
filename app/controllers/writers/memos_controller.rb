@@ -6,7 +6,16 @@ module Writers
     layout 'writers'
 
     def index
-      render json: Memo.page(par, page)
+      response.headers['Total-Pages'] = total_pages
+      response.headers['Page'] = page
+      response.headers['Par'] = par
+      render json: MemoWriterIndex.page(par, page)
+    end
+
+    def edit
+      render json: MemoDetail.find(params[:memo_id])
+    rescue ActiveRecord::RecordNotFound
+      render nothing: true, status: 404
     end
 
     private

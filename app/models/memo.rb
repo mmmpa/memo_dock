@@ -56,6 +56,6 @@ class Memo < ActiveRecord::Base
   end
 
   def generate_tag_list!
-    self.tag_list = tags.pluck(:name)
+    self.tag_list ||= tags.pluck(:name)
   end
 end

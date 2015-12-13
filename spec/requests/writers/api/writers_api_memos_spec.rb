@@ -1,7 +1,16 @@
 require 'rails_helper'
 
 RSpec.describe "Writers::Api::Memos", type: :request do
-  let(:json) { JSON.parse(response.body).map(&:deep_symbolize_keys) }
+  let(:json) do
+    base = JSON.parse(response.body)
+    if Array === base
+      base.map(&:deep_symbolize_keys)
+    else
+      base.deep_symbolize_keys
+    end
+  end
+
+  let(:header) { response.header }
 
   describe 'needs login' do
     it 'gets 401 when not logged in' do
@@ -17,10 +26,51 @@ RSpec.describe "Writers::Api::Memos", type: :request do
     end
   end
 
+  describe 'getting memo data' do
+    before :each do
+      login
+    end
+
+    context 'with not exist id' do
+      it 'gets 404' do
+        get memo_path(memo_id: 0)
+        expect(response).to have_http_status(404)
+      end
+    end
+
+    context 'with exist id' do
+      it 'gets data' do
+        get memo_path(memo_id: Memo.last.id)
+        expect(response).to have_http_status(200)
+        expect(json[:title]).to eq(Memo.last.title)
+        expect(json[:tag_list]).to be_truthy
+      end
+    end
+  end
+
   describe 'indexing' do
     before :each do
       login
     end
+
+    context 'header includes meta data' do
+      it  do
+        get memos_path
+        expect(json.size).to eq(20)
+        expect(header['Total-Pages']).to eq(3)
+        expect(header['Par']).to eq(20)
+        expect(header['Page']).to eq(1)
+      end
+
+      it  do
+        get memos_path, page: 2
+        expect(json.size).to eq(20)
+        expect(header['Total-Pages']).to eq(3)
+        expect(header['Par']).to eq(20)
+        expect(header['Page']).to eq(2)
+      end
+    end
+
 
     context 'with no parameters' do
       it 'gets last 20 memos at once' do
