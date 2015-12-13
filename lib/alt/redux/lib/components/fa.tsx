@@ -1,7 +1,19 @@
 import * as React from 'react'
 import { Component, PropTypes } from 'react'
 
-export default class Fa extends Component {
+interface IFa{
+  icon:string,
+  scale?:number,
+  fixedWidth?:boolean,
+  list?:boolean,
+  border?:boolean,
+  pull?:string,
+  animation?:string,
+  rotate?:number,
+  flip?:string
+}
+
+export default class Fa extends Component<IFa, {}> {
   render() {
     let p = this.props;
     let classes = ['fa'];

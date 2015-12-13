@@ -1,7 +1,12 @@
 import * as React from 'react'
 import { Component, PropTypes } from 'react'
+import Memo from "../models/memo";
 
-export default class MemoIndexLine extends Component {
+interface IMemoIndexLine {
+  memo: Memo
+}
+
+export default class MemoIndexLine extends Component<IMemoIndexLine, {}> {
   render() {
     let {memo} = this.props;
     return <tr>

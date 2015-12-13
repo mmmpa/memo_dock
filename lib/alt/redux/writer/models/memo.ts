@@ -1,3 +1,5 @@
+import Tag from "./tag";
+
 export default class Memo {
   public id:number;
   public title:string;
@@ -8,6 +10,6 @@ export default class Memo {
     this.id = +json['id'];
     this.title = json['title'];
     this.isPublic = json['public'];
-    this.tags = json['tags'];
+    this.tags = json['tags'].map((tag)=> new Tag(tag));
   }
 }

@@ -1,21 +1,30 @@
 import * as React from 'react'
 import { Component, PropTypes } from 'react'
-import * as Mui from 'material-ui'
 import * as Status from '../constants/status'
 import Fa from '../lib/components/fa'
 
-export default class Login extends Component {
+interface ILogin {
+  loginState: Status.Login,
+  login: Function
+}
+
+interface ILoginState {
+  email:string,
+  password:string
+}
+
+export default class Login extends Component<ILogin, ILoginState> {
   constructor(props) {
     super(props);
     this.state = {email: '', password: ''};
   }
 
   changePassword(e) {
-    this.setState({password: e.target.value});
+    this.setState({email: this.state.email, password: e.target.value});
   }
 
   changeEmail(e) {
-    this.setState({email: e.target.value});
+    this.setState({email: e.target.value, password: this.state.password});
   }
 
   detectMessage():string {
@@ -69,5 +78,3 @@ export default class Login extends Component {
     </article>;
   }
 }
-
-Login.propTypes = {};

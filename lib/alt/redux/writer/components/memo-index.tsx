@@ -6,7 +6,11 @@ import Memo from "../models/memo";
 import * as _ from 'lodash'
 import MemoIndexLine from "./memo-index-line";
 
-export default class MemoIndex extends Component {
+interface IMemoIndex {
+  memos: Memo[]
+}
+
+export default class MemoIndex extends Component<IMemoIndex, {}> {
   constructor(props) {
     super(props);
   }
@@ -16,7 +20,6 @@ export default class MemoIndex extends Component {
   }
 
   render() {
-    console.log(this.memoLines(this.props.memos))
     return (
       <article>
         <h1>メモインデックス</h1>
@@ -36,5 +39,3 @@ export default class MemoIndex extends Component {
     )
   }
 }
-
-MemoIndex.propTypes = {};
