@@ -1,7 +1,7 @@
 import * as React from 'react'
 import { Component, PropTypes } from 'react'
 
-export default class Menu extends Component {
+export default class Menu extends Component<{},{}> {
   render() {
     return (
       <article>
@@ -10,6 +10,3 @@ export default class Menu extends Component {
     )
   }
 }
-
-Menu.propTypes = {
-};

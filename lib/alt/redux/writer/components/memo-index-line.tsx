@@ -3,6 +3,7 @@ import { Component, PropTypes } from 'react'
 import Memo from "../models/memo";
 
 interface IMemoIndexLine {
+  key:number,
   memo: Memo
 }
 

@@ -26,7 +26,7 @@ export function checkInitialState(callback:Function){
   }
 }
 
-export function tryLogin(email:string, password:string) {
+export function tryLogin(email:string, password:string, callback:Function) {
   return (dispatch) => {
     dispatch(waitLogin());
     request
@@ -39,6 +39,7 @@ export function tryLogin(email:string, password:string) {
           dispatch(requestRetryLogin());
         } else {
           dispatch(login());
+          callback();
         }
       })
   }

@@ -6,7 +6,6 @@
 
 import * as Type from '../constants/action-types';
 import {Context} from '../constants/status';
-import * as Context from '../contexts'
 import * as _ from 'lodash'
 
 function context(state:Context = Context.Calm, action):Context {

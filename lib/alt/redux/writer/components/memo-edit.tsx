@@ -1,7 +1,7 @@
 import * as React from 'react'
-import { Component, PropTypes } from 'react'
+import { Component } from 'react'
 
-export default class MemoEdit extends Component {
+export default class MemoEdit extends Component<{},{}> {
   render() {
     return (
       <article>
@@ -10,6 +10,3 @@ export default class MemoEdit extends Component {
     )
   }
 }
-
-MemoEdit.propTypes = {
-};

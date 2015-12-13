@@ -7,10 +7,20 @@ import {Context} from '../constants/status';
 import WriterRouter from "../router";
 import Login from "../components/login";
 import MemoIndex from "../components/memo-index";
-import Memo from "../components/memo-edit";
+import MemoEdit from "../components/memo-edit";
 import { tryLogin, checkInitialState } from '../actions/login'
+import * as Status from '../constants/status'
+import Memo from "../models/memo";
 
-class App extends Component {
+interface IApp{
+  dispatch?:Function,
+  loggedIn?:boolean,
+  loginState?:Status.Login,
+  context?: Status.Context,
+  memos?: Memo[]
+}
+
+class App extends Component<IApp, {}> {
   private initialized:boolean = false;
   private router:WriterRouter;
 
@@ -31,14 +41,14 @@ class App extends Component {
           loginState={loginState}
           login={
             (email, password) =>{
-              dispatch(tryLogin(email, password));
+              dispatch(tryLogin(email, password, ()=> this.router.goHere()));
             }
           }
         />;
       case Context.MemoIndex:
         return <MemoIndex memos={memos}/>;
       case Context.MemoEdit:
-        return <Memo />;
+        return <MemoEdit />;
       default:
         return <div>loading...</div>;
     }
