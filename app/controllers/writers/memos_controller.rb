@@ -6,9 +6,9 @@ module Writers
     layout 'writers'
 
     def index
-      response.headers['Total-Pages'] = total_pages
-      response.headers['Page'] = page
-      response.headers['Par'] = par
+      response.headers['Total-Pages'] = total_pages.to_s
+      response.headers['Page'] = page.to_s
+      response.headers['Par'] = par.to_s
       render json: MemoWriterIndex.page(par, page)
     end
 

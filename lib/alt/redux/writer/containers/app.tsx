@@ -10,19 +10,18 @@ import MemoIndex from "../components/memo-index";
 import Memo from "../components/memo-edit";
 import { tryLogin, checkInitialState } from '../actions/login'
 
-let router:WriterRouter = new WriterRouter();
-
-
 class App extends Component {
   private initialized:boolean = false;
+  private router:WriterRouter;
 
   render() {
     // injected by connect
-    const { dispatch, loggedIn, loginState, context } = this.props;
+    const { dispatch, loggedIn, loginState, context, memos } = this.props;
+    this.router = new WriterRouter(dispatch);
 
-    if(!this.initialized){
+    if (!this.initialized) {
       this.initialized = true;
-      dispatch(checkInitialState(()=> router.goHere()));
+      dispatch(checkInitialState(()=> this.router.goHere()));
       return <div>initializing...</div>;
     }
 
@@ -37,7 +36,7 @@ class App extends Component {
           }
         />;
       case Context.MemoIndex:
-        return <MemoIndex />;
+        return <MemoIndex memos={memos}/>;
       case Context.MemoEdit:
         return <Memo />;
       default:
@@ -51,6 +50,7 @@ function select(state) {
     loggedIn: state.loggedIn,
     loginState: state.loginState,
     context: state.context,
+    memos: state.memos,
   }
 }
 
