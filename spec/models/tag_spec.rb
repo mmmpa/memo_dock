@@ -21,9 +21,9 @@ RSpec.describe Tag, type: :model do
 
     context 'needs unique value' do
       it  do
-        create(:tag, :valid, name: 'a')
+        create(:tag, :valid, name: 'aa')
 
-        model.name = 'a'
+        model.name = 'aa'
         expect(model.valid?).to be_falsey
       end
     end
@@ -44,7 +44,10 @@ RSpec.describe Tag, type: :model do
     end
 
     after :all do
-      @store.map(&:destroy)
+      @store.map do |memo|
+        memo.tags.destroy_all
+        memo.destroy
+      end
     end
 
     context 'tags with count' do

@@ -60,7 +60,7 @@ function select(state) {
     loggedIn: state.loggedIn,
     loginState: state.loginState,
     context: state.context,
-    memos: state.memos,
+    memos: state.memos
   }
 }
 

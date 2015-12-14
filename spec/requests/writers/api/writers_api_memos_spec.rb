@@ -43,7 +43,7 @@ RSpec.describe "Writers::Api::Memos", type: :request do
         get memo_path(memo_id: Memo.last.id)
         expect(response).to have_http_status(200)
         expect(json[:title]).to eq(Memo.last.title)
-        expect(json[:tag_list]).to be_truthy
+        expect(json[:tags]).to be_truthy
       end
     end
   end
@@ -53,21 +53,21 @@ RSpec.describe "Writers::Api::Memos", type: :request do
       login
     end
 
-    context 'header includes meta data' do
+    context 'header includes meta data (values must be string)' do
       it  do
         get memos_path
         expect(json.size).to eq(20)
-        expect(header['Total-Pages']).to eq(3)
-        expect(header['Par']).to eq(20)
-        expect(header['Page']).to eq(1)
+        expect(header['Total-Pages']).to eq('3')
+        expect(header['Par']).to eq('20')
+        expect(header['Page']).to eq('1')
       end
 
       it  do
         get memos_path, page: 2
         expect(json.size).to eq(20)
-        expect(header['Total-Pages']).to eq(3)
-        expect(header['Par']).to eq(20)
-        expect(header['Page']).to eq(2)
+        expect(header['Total-Pages']).to eq('3')
+        expect(header['Par']).to eq('20')
+        expect(header['Page']).to eq('2')
       end
     end
 

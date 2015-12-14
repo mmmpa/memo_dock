@@ -10,7 +10,6 @@ class Memo < ActiveRecord::Base
   validates :public,
             inclusion: {in: [true, false]}
 
-  after_initialize :generate_tag_list!
   before_validation :convert_slim_to_html!
   before_validation :detect_tag_from_list!
 
@@ -40,7 +39,7 @@ class Memo < ActiveRecord::Base
 
   def detect_tag_from_list!
     registered = Set.new(tags.pluck(:name))
-    newer = Set.new(Array(tag_list))
+    newer = Set.new(Array(temp_tag_list))
 
     hold = registered & newer
 
@@ -55,7 +54,7 @@ class Memo < ActiveRecord::Base
     end
   end
 
-  def generate_tag_list!
-    self.tag_list ||= tags.pluck(:name)
+  def temp_tag_list
+    self.tag_list || tags.pluck(:name)
   end
 end
