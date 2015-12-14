@@ -1,0 +1,18 @@
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  pool: 5
+  username: <%= ENV['PG_USER'] %>
+  password: <%= ENV['PG_PASSWORD'] %>
+
+development:
+  <<: *default
+  database: memo_dock_development
+test:
+  adapter: sqlite3
+  database: ":memory:"
+  pool: 5
+  timeout: 5000
+production:
+  <<: *default
+  database: memo_dock_production
