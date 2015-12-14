@@ -3,7 +3,7 @@
 import * as Type from '../constants/action-types';
 const request = require('superagent');
 
-export function getIndex(page:number=1){
+export function getIndex(page:number = 1) {
   return (dispatch) => {
     request
       .get('/w/api/memos')
@@ -12,12 +12,12 @@ export function getIndex(page:number=1){
         if (err) {
           //dispatch(requestLogin());
         } else {
-          dispatch(gotIndex(res.body));
+          dispatch(gotIndex(res.body, +res.header.page, +res.header.par, +res.header['total-pages']));
         }
       })
   }
 }
 
-function gotIndex(value:any[]){
-  return {type: Type.Memo.Index, value};
+function gotIndex(memos:any[], page:number, par:number, total:number) {
+  return {type: Type.Memo.Index, memos, page, par, total};
 }

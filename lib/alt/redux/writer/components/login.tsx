@@ -1,11 +1,10 @@
 import * as React from 'react'
-import { Component, PropTypes } from 'react'
 import * as Status from '../constants/status'
 import Fa from '../lib/components/fa'
+import {LoginMix} from "../mixins";
 
 interface ILogin {
-  loginState: Status.Login,
-  login: Function
+  loginState: Status.Login
 }
 
 interface ILoginState {
@@ -13,7 +12,7 @@ interface ILoginState {
   password:string
 }
 
-export default class Login extends Component<ILogin, ILoginState> {
+export default class Login extends React.Component<ILogin, ILoginState> {
   constructor(props) {
     super(props);
     this.state = {email: '', password: ''};
@@ -53,7 +52,7 @@ export default class Login extends Component<ILogin, ILoginState> {
   }
 
   login(e) {
-    this.props.login(this.state.email, this.state.password);
+    LoginMix.login(this.state.email, this.state.password);
   }
 
   render() {

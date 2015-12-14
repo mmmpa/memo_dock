@@ -3,13 +3,43 @@
 @import "./font-awesome/font-awesome"
 @import "./default"
 
+a
+	cursor: pointer
+
 %main-title
 	@extend %size-h2
 
 %sub-title
 	@extend %size-h4
 
-
+.memo-index
+	&.index-table
+		@extend .table, .table-striped
+		width: 100%
+		td,
+		th
+			vertical-align: middle
+		.title,
+		.tags
+			width: 50%
+		.public
+			@extend %min-cell
+			text-align: center
+	&.tag-link-container
+		display: inline-block
+		margin-right: 1em
+	&.pager-container
+		display: inline-block
+		margin: 10px 10px 10px 0
+	&.pager
+		text-align: left
+		margin: 0
+		padding: 0
+	&.pager-link
+		&.not
+			@extend .btn, .btn-primary
+		&.now
+			@extend .btn, .btn-default
 .login
 	&.container
 		width: 400px

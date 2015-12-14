@@ -4,7 +4,7 @@ export default class Memo {
   public id:number;
   public title:string;
   public isPublic:boolean;
-  public tags:string[];
+  public tags:Tag[];
 
   constructor(json:any) {
     this.id = +json['id'];

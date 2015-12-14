@@ -2,21 +2,21 @@ import Router from './lib/router';
 import * as MemoAction from './actions/memo'
 
 export default class WriterRouter {
-  private router:Router;
+  static dispatch:Function;
+  static router:Router = new Router();
 
-  constructor(dispatch:Function) {
-    this.router = new Router();
+  static initialize() {
     // メモ一覧を取得
-    this.router.add('/w/memos', (params) => dispatch(MemoAction.getIndex()));
+    this.router.add('/w/memos', (params) => this.dispatch(MemoAction.getIndex()));
     // メモの内容を取得
     this.router.add('/w/memos/:memo_id', (params) => console.log('メモの内容を取得'));
   }
 
-  go(url:string):any {
+  static go(url:string):any {
     return this.router.execute(url);
   }
 
-  goHere():any {
+  static goHere():any {
     return this.go(WriterRouter.strippedPath());
   }
 

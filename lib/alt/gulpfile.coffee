@@ -21,7 +21,7 @@ onError = (err)->
   console.log(err.toString())
   @emit("end")
 
-gulp.task 'watcher', ->
+gulp.task 'default', ->
   sassWatch = path.join(srcRootPath, 'sass/**/*.sass')
 
   split = (filePath)->
@@ -40,7 +40,15 @@ gulp.task 'watcher', ->
     .pipe minify(keepBreaks: false)
     .pipe gulp.dest(path.join(rootPath, dest))
 
+  gulp.watch('./redux/writer_built/built.js').on 'change', (e) ->
+    gulp
+    .src e.path
+    .pipe rename('writer.min.js')
+    .pipe gulp.dest(publicJsPath)
+    .pipe notify message: 'complete'
+
   gulp.watch('./redux/writer_built/writer.js').on 'change', (e) ->
+    return
     browserify
       entries: './redux/writer_built/writer.js'
       debug: true

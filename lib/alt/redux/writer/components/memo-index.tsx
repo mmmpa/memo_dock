@@ -1,16 +1,17 @@
 /// <reference path="../types/tsd.d.ts" />
 
 import * as React from 'react'
-import { Component, PropTypes } from 'react'
 import Memo from "../models/memo";
 import * as _ from 'lodash'
 import MemoIndexLine from "./memo-index-line";
+import MemoIndexPager from "./memo-index-pager";
+import {MemoIndexData} from "../models/memo-index-data";
 
 interface IMemoIndex {
-  memos: Memo[]
+  memoIndexData: MemoIndexData
 }
 
-export default class MemoIndex extends Component<IMemoIndex, {}> {
+export default class MemoIndex extends React.Component<IMemoIndex, {}> {
   constructor(props) {
     super(props);
   }
@@ -20,19 +21,24 @@ export default class MemoIndex extends Component<IMemoIndex, {}> {
   }
 
   render() {
+    if(!this.props.memoIndexData){
+      return <div>...loading</div>
+    }
+    let {memos} = this.props.memoIndexData;
     return (
-      <article>
+      <article className="memo-index container">
         <h1>メモインデックス</h1>
+        <MemoIndexPager memoIndexData={this.props.memoIndexData}/>
         <table className="memo-index index-table">
           <thead>
             <tr>
-              <th>タイトル</th>
-              <th>タグ</th>
-              <th>公開</th>
+              <th className="title">タイトル</th>
+              <th className="tags">タグ</th>
+              <th className="public">公開</th>
             </tr>
           </thead>
           <tbody>
-            {this.props.memos.map((memo)=> <MemoIndexLine key={memo.id} memo={memo}/>)}
+            {this.memoLines(memos)}
           </tbody>
         </table>
       </article>

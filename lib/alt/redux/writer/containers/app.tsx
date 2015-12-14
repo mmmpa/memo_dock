@@ -11,42 +11,39 @@ import MemoEdit from "../components/memo-edit";
 import { tryLogin, checkInitialState } from '../actions/login'
 import * as Status from '../constants/status'
 import Memo from "../models/memo";
+import Mixin from "../mixins";
+import {MemoIndexData} from "../models/memo-index-data";
 
-interface IApp{
+WriterRouter.initialize();
+
+interface IApp {
   dispatch?:Function,
   loggedIn?:boolean,
   loginState?:Status.Login,
   context?: Status.Context,
-  memos?: Memo[]
+  memoIndexData?: MemoIndexData
 }
 
 class App extends Component<IApp, {}> {
   private initialized:boolean = false;
-  private router:WriterRouter;
 
   render() {
     // injected by connect
-    const { dispatch, loggedIn, loginState, context, memos } = this.props;
-    this.router = new WriterRouter(dispatch);
+    const { dispatch, loggedIn, loginState, context, memoIndexData} = this.props;
+    Mixin.dispatch = dispatch;
+    WriterRouter.dispatch = dispatch;
 
     if (!this.initialized) {
       this.initialized = true;
-      dispatch(checkInitialState(()=> this.router.goHere()));
+      dispatch(checkInitialState(()=> WriterRouter.goHere()));
       return <div>initializing...</div>;
     }
 
     switch (context) {
       case Context.Login:
-        return <Login
-          loginState={loginState}
-          login={
-            (email, password) =>{
-              dispatch(tryLogin(email, password, ()=> this.router.goHere()));
-            }
-          }
-        />;
+        return <Login loginState={loginState}/>;
       case Context.MemoIndex:
-        return <MemoIndex memos={memos}/>;
+        return <MemoIndex memoIndexData={memoIndexData}/>;
       case Context.MemoEdit:
         return <MemoEdit />;
       default:
@@ -60,7 +57,7 @@ function select(state) {
     loggedIn: state.loggedIn,
     loginState: state.loginState,
     context: state.context,
-    memos: state.memos
+    memoIndexData: state.memoIndexData,
   }
 }
 
