@@ -38,7 +38,7 @@ class Memo < ActiveRecord::Base
       return
     end
 
-    self.html = convert(src)
+    self.html = Memo.convert(src)
   end
 
   def detect_tag_from_list!
