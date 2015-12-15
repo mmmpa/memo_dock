@@ -9,7 +9,7 @@ export default class WriterRouter {
     // メモ一覧を取得
     this.router.add('/w/memos', (params) => this.dispatch(MemoAction.getIndex()));
     // メモの内容を取得
-    this.router.add('/w/memos/:memo_id', (params) => console.log('メモの内容を取得'));
+    this.router.add('/w/memos/:memoId', (params) => this.dispatch(MemoAction.editMemoById(params['memoId'])));
   }
 
   static go(url:string):any {

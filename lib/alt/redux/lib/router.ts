@@ -80,7 +80,7 @@ export default class Router {
   }
 
   static isIncludePlaceholder(url:string):boolean {
-    return url.match(/:[a-z_0-9]+/) != null;
+    return url.match(/:[a-zA-Z_0-9]+/) != null;
   };
 
   static strip(url:string):string {
@@ -107,7 +107,7 @@ export default class Router {
   };
 
   private pickHolder(url:string, holders:string[]):string[] {
-    let result:RegExpMatchArray = url.match(/(:[a-z_0-9]+)/);
+    let result:RegExpMatchArray = url.match(/(:[a-zA-Z_0-9]+)/);
     if (!result) {
       return [Router.strip(url), holders.join(':')];
     }

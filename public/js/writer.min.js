@@ -33881,16 +33881,18 @@ function logout() {
 }
 exports.logout = logout;
 
-},{"../constants/action-types":190,"superagent":181}],183:[function(require,module,exports){
+},{"../constants/action-types":191,"superagent":181}],183:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var Type = require('../constants/action-types');
+var memo_1 = require("../models/memo");
 var request = require('superagent');
 function getIndex(page) {
     if (page === void 0) { page = 1; }
     return function (dispatch) {
+        dispatch(waitLoadedIndex());
         request
             .get('/w/api/memos')
-            .set({ page: page })
+            .query({ page: page })
             .end(function (err, res) {
             if (err) {
             }
@@ -33901,11 +33903,45 @@ function getIndex(page) {
     };
 }
 exports.getIndex = getIndex;
+function waitLoadedIndex() {
+    return { type: Type.Memo.WaitIndex };
+}
 function gotIndex(memos, page, par, total) {
     return { type: Type.Memo.Index, memos: memos, page: page, par: par, total: total };
 }
+function goEditMemo(memo) {
+    if (memo === void 0) { memo = null; }
+    return { type: Type.Memo.Edit, memo: memo };
+}
+function waitLoadedMemo() {
+    return { type: Type.Memo.WaitEdit };
+}
+function editNewMemo() {
+    goEditMemo(new memo_1.default());
+}
+exports.editNewMemo = editNewMemo;
+function editMemoById(memoId) {
+    return function (dispatch) {
+        dispatch(waitLoadedMemo());
+        request
+            .get('/w/api/memos/' + memoId)
+            .end(function (err, res) {
+            if (err) {
+                dispatch(goEditMemo(new memo_1.default()));
+            }
+            else {
+                dispatch(goEditMemo(new memo_1.default(res.body)));
+            }
+        });
+    };
+}
+exports.editMemoById = editMemoById;
+function editMemo(memo) {
+    return editMemoById(memo.id);
+}
+exports.editMemo = editMemo;
 
-},{"../constants/action-types":190,"superagent":181}],184:[function(require,module,exports){
+},{"../constants/action-types":191,"../models/memo":198,"superagent":181}],184:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -33954,28 +33990,72 @@ var Login = (function (_super) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Login;
 
-},{"../constants/status":191,"../lib/components/fa":193,"../mixins":195,"react":169}],185:[function(require,module,exports){
+},{"../constants/status":192,"../lib/components/fa":194,"../mixins":196,"react":169}],185:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var React = require('react');
-var react_1 = require('react');
+var menu_1 = require("../components/menu");
+var _ = require('lodash');
 var MemoEdit = (function (_super) {
     __extends(MemoEdit, _super);
-    function MemoEdit() {
-        _super.apply(this, arguments);
+    function MemoEdit(props) {
+        _super.call(this, props);
+        if (this.props.memoData) {
+            var _a = this.props.memoData, title = _a.title, src = _a.src, isPublic = _a.isPublic;
+            this.state = {
+                title: title,
+                src: src,
+                isPublic: isPublic
+            };
+        }
+        else {
+            this.state = {
+                title: '',
+                src: '',
+                isPublic: false
+            };
+        }
     }
+    MemoEdit.prototype.componentDidUpdate = function () {
+        if (this.cm.getValue() != this.state.src) {
+            this.cm.setValue(this.state.src || '');
+        }
+    };
+    MemoEdit.prototype.componentDidMount = function () {
+        var _this = this;
+        setTimeout(function () {
+            _this.cm = CodeMirror.fromTextArea(_this.refs.editor, {
+                lineNumbers: true,
+                mode: "slim",
+                lineWrapping: true
+            });
+            _this.cm.on('change', _this.changeSrc.bind(_this));
+            _this.cm.setSize('100%', '100%');
+            _this.cm.setValue(_this.props.memoData.src || '');
+        }, 1);
+    };
+    MemoEdit.prototype.changeSrc = function (e) {
+        this.setState(_.merge(this.state, { src: e.doc.getValue() }));
+    };
+    MemoEdit.prototype.changeTitle = function (e) {
+        this.setState(_.merge(this.state, { title: e.target.value }));
+    };
+    MemoEdit.prototype.changeTags = function (e) {
+        this.setState(_.merge(this.state, { tags: e.target.value }));
+    };
     MemoEdit.prototype.render = function () {
-        return (React.createElement("article", null, React.createElement("h1", null, "メモ編集ページ")));
+        var _a = this.state, title = _a.title, src = _a.src, tags = _a.tags;
+        return (React.createElement("article", {"className": "memo-edit"}, React.createElement("link", {"href": "/css/codemirror.css", "rel": "stylesheet", "type": "text/css"}), React.createElement(menu_1.default, null), React.createElement("section", {"className": "memo-edit edit-container"}, React.createElement("section", {"className": "memo-edit title"}, React.createElement("input", {"type": "text", "value": title, "onChange": this.changeTitle.bind(this)})), React.createElement("section", {"className": "memo-edit tags"}, React.createElement("input", {"type": "text", "value": tags, "onChange": this.changeTags.bind(this)})), React.createElement("section", {"className": "memo-edit content"}, React.createElement("section", {"className": "memo-edit src"}, React.createElement("textarea", {"ref": "editor"})), React.createElement("section", {"className": "memo-edit html"}, React.createElement("div", {"className": "memo-edit html-container"}))))));
     };
     return MemoEdit;
-})(react_1.Component);
+})(React.Component);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoEdit;
 
-},{"react":169}],186:[function(require,module,exports){
+},{"../components/menu":190,"lodash":31,"react":169}],186:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -34005,7 +34085,7 @@ var MemoIndexLine = (function (_super) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoIndexLine;
 
-},{"../mixins":195,"./memo-index-tag-link":188,"react":169}],187:[function(require,module,exports){
+},{"../mixins":196,"./memo-index-tag-link":188,"react":169}],187:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -34013,16 +34093,17 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var React = require('react');
 var _ = require('lodash');
+var mixins_1 = require("../mixins");
 var MemoIndexPager = (function (_super) {
     __extends(MemoIndexPager, _super);
     function MemoIndexPager() {
         _super.apply(this, arguments);
     }
     MemoIndexPager.prototype.render = function () {
-        var _a = this.props.memoIndexData, page = _a.page, par = _a.par, total = _a.total;
+        var _a = this.props.memoIndexData, memos = _a.memos, page = _a.page, par = _a.par, total = _a.total;
         return React.createElement("ul", {"className": "memo-index pager"}, _.times(total, function (n) {
             var now = n + 1;
-            return React.createElement("li", {"className": "memo-index pager-container", "key": "pager" + now}, React.createElement("a", {"className": "memo-index pager-link " + (now == page ? 'now' : 'not')}, now));
+            return React.createElement("li", {"className": "memo-index pager-container", "key": "pager" + now}, React.createElement("a", {"className": "memo-index pager-link " + (now == page ? 'now' : 'not'), "onClick": function () { return mixins_1.MemoMix.pageIndex(now); }, "disabled": memos.length === 0 ? true : false}, now));
         }));
     };
     return MemoIndexPager;
@@ -34030,7 +34111,7 @@ var MemoIndexPager = (function (_super) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoIndexPager;
 
-},{"lodash":31,"react":169}],188:[function(require,module,exports){
+},{"../mixins":196,"lodash":31,"react":169}],188:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -34053,7 +34134,7 @@ var MemoIndexTagLink = (function (_super) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoIndexTagLink;
 
-},{"../mixins":195,"react":169}],189:[function(require,module,exports){
+},{"../mixins":196,"react":169}],189:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -34061,8 +34142,10 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var React = require('react');
+var menu_1 = require("../components/menu");
 var memo_index_line_1 = require("./memo-index-line");
 var memo_index_pager_1 = require("./memo-index-pager");
+var fa_1 = require('../lib/components/fa');
 var MemoIndex = (function (_super) {
     __extends(MemoIndex, _super);
     function MemoIndex(props) {
@@ -34072,19 +34155,47 @@ var MemoIndex = (function (_super) {
         if (memos === void 0) { memos = []; }
         return memos.map(function (memo) { return React.createElement(memo_index_line_1.default, {"key": memo.id, "memo": memo}); });
     };
-    MemoIndex.prototype.render = function () {
-        if (!this.props.memoIndexData) {
-            return React.createElement("div", null, "...loading");
+    MemoIndex.prototype.loading = function (memos) {
+        if (memos === void 0) { memos = []; }
+        if (!memos || memos.length === 0) {
+            return React.createElement(fa_1.default, {"icon": "spinner", "animation": "pulse"});
         }
+        else {
+            return null;
+        }
+    };
+    MemoIndex.prototype.render = function () {
         var memos = this.props.memoIndexData.memos;
-        return (React.createElement("article", {"className": "memo-index container"}, React.createElement("h1", null, "メモインデックス"), React.createElement(memo_index_pager_1.default, {"memoIndexData": this.props.memoIndexData}), React.createElement("table", {"className": "memo-index index-table"}, React.createElement("thead", null, React.createElement("tr", null, React.createElement("th", {"className": "title"}, "タイトル"), React.createElement("th", {"className": "tags"}, "タグ"), React.createElement("th", {"className": "public"}, "公開"))), React.createElement("tbody", null, this.memoLines(memos)))));
+        return (React.createElement("article", {"className": "memo-index"}, React.createElement(menu_1.default, null), React.createElement("section", {"className": "memo-index index-container"}, React.createElement("h1", {"className": "memo-index index-title"}, "メモ一覧"), React.createElement(memo_index_pager_1.default, {"memoIndexData": this.props.memoIndexData}), React.createElement("table", {"className": "memo-index index-table"}, React.createElement("thead", null, React.createElement("tr", null, React.createElement("th", {"className": "title"}, "タイトル"), React.createElement("th", {"className": "tags"}, "タグ"), React.createElement("th", {"className": "public"}, "公開"))), React.createElement("tbody", null, this.memoLines(memos))), this.loading(memos), React.createElement(memo_index_pager_1.default, {"memoIndexData": this.props.memoIndexData}))));
     };
     return MemoIndex;
 })(React.Component);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoIndex;
 
-},{"./memo-index-line":186,"./memo-index-pager":187,"react":169}],190:[function(require,module,exports){
+},{"../components/menu":190,"../lib/components/fa":194,"./memo-index-line":186,"./memo-index-pager":187,"react":169}],190:[function(require,module,exports){
+var __extends = (this && this.__extends) || function (d, b) {
+    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
+    function __() { this.constructor = d; }
+    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
+};
+var React = require('react');
+var react_1 = require('react');
+var mixins_1 = require("../mixins");
+var Menu = (function (_super) {
+    __extends(Menu, _super);
+    function Menu() {
+        _super.apply(this, arguments);
+    }
+    Menu.prototype.render = function () {
+        return (React.createElement("article", {"className": "global-menu"}, React.createElement("nav", {"className": "global-menu menu-container"}, React.createElement("ul", {"className": "global-menu menu-list"}, React.createElement("li", null, React.createElement("a", {"onClick": function () { return mixins_1.MemoMix.goMemoIndex(); }}, "メモ一覧")), React.createElement("li", null, React.createElement("a", {"onClick": function () { return mixins_1.MemoMix.goNewMemo(); }}, "新規メモ"))))));
+    };
+    return Menu;
+})(react_1.Component);
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = Menu;
+
+},{"../mixins":196,"react":169}],191:[function(require,module,exports){
 (function (Login) {
     Login[Login["Request"] = 1] = "Request";
     Login[Login["RequestRetry"] = 2] = "RequestRetry";
@@ -34095,13 +34206,15 @@ exports.default = MemoIndex;
 var Login = exports.Login;
 (function (Memo) {
     Memo[Memo["Index"] = 101] = "Index";
+    Memo[Memo["WaitIndex"] = 105] = "WaitIndex";
     Memo[Memo["Edit"] = 102] = "Edit";
+    Memo[Memo["WaitEdit"] = 106] = "WaitEdit";
     Memo[Memo["Create"] = 103] = "Create";
     Memo[Memo["Delete"] = 104] = "Delete";
 })(exports.Memo || (exports.Memo = {}));
 var Memo = exports.Memo;
 
-},{}],191:[function(require,module,exports){
+},{}],192:[function(require,module,exports){
 (function (Login) {
     Login[Login["Ready"] = 101] = "Ready";
     Login[Login["Request"] = 102] = "Request";
@@ -34118,7 +34231,7 @@ var Login = exports.Login;
 })(exports.Context || (exports.Context = {}));
 var Context = exports.Context;
 
-},{}],192:[function(require,module,exports){
+},{}],193:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -34144,7 +34257,7 @@ var App = (function (_super) {
     }
     App.prototype.render = function () {
         // injected by connect
-        var _a = this.props, dispatch = _a.dispatch, loggedIn = _a.loggedIn, loginState = _a.loginState, context = _a.context, memoIndexData = _a.memoIndexData;
+        var _a = this.props, dispatch = _a.dispatch, loggedIn = _a.loggedIn, loginState = _a.loginState, context = _a.context, memoIndexData = _a.memoIndexData, memoData = _a.memoData;
         mixins_1.default.dispatch = dispatch;
         router_1.default.dispatch = dispatch;
         if (!this.initialized) {
@@ -34158,7 +34271,7 @@ var App = (function (_super) {
             case status_1.Context.MemoIndex:
                 return React.createElement(memo_index_1.default, {"memoIndexData": memoIndexData});
             case status_1.Context.MemoEdit:
-                return React.createElement(memo_edit_1.default, null);
+                return React.createElement(memo_edit_1.default, {"memoData": memoData});
             default:
                 return React.createElement("div", null, "loading...");
         }
@@ -34171,12 +34284,13 @@ function select(state) {
         loginState: state.loginState,
         context: state.context,
         memoIndexData: state.memoIndexData,
+        memoData: state.memoData,
     };
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = react_redux_1.connect(select)(App);
 
-},{"../actions/login":182,"../components/login":184,"../components/memo-edit":185,"../components/memo-index":189,"../constants/status":191,"../mixins":195,"../router":203,"react":169,"react-redux":36}],193:[function(require,module,exports){
+},{"../actions/login":182,"../components/login":184,"../components/memo-edit":185,"../components/memo-index":189,"../constants/status":192,"../mixins":196,"../router":204,"react":169,"react-redux":36}],194:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -34208,7 +34322,7 @@ var Fa = (function (_super) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Fa;
 
-},{"react":169}],194:[function(require,module,exports){
+},{"react":169}],195:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var _ = require('lodash');
 var RouterNode = (function () {
@@ -34270,7 +34384,7 @@ var Router = (function () {
         return now.app(params);
     };
     Router.isIncludePlaceholder = function (url) {
-        return url.match(/:[a-z_0-9]+/) != null;
+        return url.match(/:[a-zA-Z_0-9]+/) != null;
     };
     ;
     Router.strip = function (url) {
@@ -34296,7 +34410,7 @@ var Router = (function () {
     };
     ;
     Router.prototype.pickHolder = function (url, holders) {
-        var result = url.match(/(:[a-z_0-9]+)/);
+        var result = url.match(/(:[a-zA-Z_0-9]+)/);
         if (!result) {
             return [Router.strip(url), holders.join(':')];
         }
@@ -34308,9 +34422,10 @@ var Router = (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Router;
 
-},{"lodash":31}],195:[function(require,module,exports){
+},{"lodash":31}],196:[function(require,module,exports){
 var router_1 = require("./router");
 var LoginAction = require('./actions/login');
+var MemoAction = require('./actions/memo');
 var Mixin = (function () {
     function Mixin() {
     }
@@ -34330,36 +34445,61 @@ exports.LoginMix = LoginMix;
 var MemoMix = (function () {
     function MemoMix() {
     }
+    MemoMix.goMemoIndex = function () {
+        Mixin.dispatch(MemoAction.getIndex(1));
+    };
+    MemoMix.goNewMemo = function () {
+        Mixin.dispatch(MemoAction.editNewMemo());
+    };
     MemoMix.selectTag = function (tag) {
         console.log(Mixin.dispatch);
         console.log(tag);
     };
     MemoMix.editMemo = function (memo) {
-        console.log(memo);
+        Mixin.dispatch(MemoAction.editMemo(memo));
+    };
+    MemoMix.pageIndex = function (page) {
+        Mixin.dispatch(MemoAction.getIndex(page));
     };
     return MemoMix;
 })();
 exports.MemoMix = MemoMix;
 
-},{"./actions/login":182,"./router":203}],196:[function(require,module,exports){
+},{"./actions/login":182,"./actions/memo":183,"./router":204}],197:[function(require,module,exports){
 var MemoIndexData = (function () {
     function MemoIndexData(memos, page, par, total) {
+        if (memos === void 0) { memos = []; }
+        if (page === void 0) { page = 0; }
+        if (par === void 0) { par = 0; }
+        if (total === void 0) { total = 0; }
         this.memos = memos;
         this.page = page;
         this.par = par;
         this.total = total;
     }
+    MemoIndexData.prototype.clone = function () {
+        return new MemoIndexData(this.memos.concat(), this.page, this.par, this.total);
+    };
     return MemoIndexData;
 })();
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoIndexData;
 
-},{}],197:[function(require,module,exports){
+},{}],198:[function(require,module,exports){
 var tag_1 = require("./tag");
 var Memo = (function () {
     function Memo(json) {
+        if (json === void 0) { json = null; }
+        this.title = '';
+        this.isPublic = false;
+        this.tags = [];
+        this.src = '';
+        if (!json) {
+            return;
+        }
         this.id = +json['id'];
         this.title = json['title'];
+        this.src = json['src'];
         this.isPublic = json['public'];
         this.tags = json['tags'].map(function (tag) { return new tag_1.default(tag); });
     }
@@ -34368,7 +34508,7 @@ var Memo = (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Memo;
 
-},{"./tag":198}],198:[function(require,module,exports){
+},{"./tag":199}],199:[function(require,module,exports){
 var Tag = (function () {
     function Tag(json) {
         this.id = +json['id'];
@@ -34379,7 +34519,7 @@ var Tag = (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Tag;
 
-},{}],199:[function(require,module,exports){
+},{}],200:[function(require,module,exports){
 //
 // 表示する画面を決定するstate
 //
@@ -34397,6 +34537,8 @@ function context(state, action) {
             return status_1.Context.Login;
         case Type.Memo.Index:
             return status_1.Context.MemoIndex;
+        case Type.Memo.WaitIndex:
+            return status_1.Context.MemoIndex;
         case Type.Memo.Edit:
             return status_1.Context.MemoEdit;
         case Type.Memo.Create:
@@ -34408,7 +34550,7 @@ function context(state, action) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = { context: context };
 
-},{"../constants/action-types":190,"../constants/status":191}],200:[function(require,module,exports){
+},{"../constants/action-types":191,"../constants/status":192}],201:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var Type = require('../constants/action-types');
 var Status = require('../constants/status');
@@ -34441,27 +34583,43 @@ function loginState(state, action) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = { loggedIn: loggedIn, loginState: loginState };
 
-},{"../constants/action-types":190,"../constants/status":191}],201:[function(require,module,exports){
+},{"../constants/action-types":191,"../constants/status":192}],202:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var Type = require('../constants/action-types');
 var _ = require('lodash');
 var memo_1 = require('../models/memo');
 var memo_index_data_1 = require("../models/memo-index-data");
 function memoIndexData(state, action) {
-    if (state === void 0) { state = null; }
+    if (state === void 0) { state = new memo_index_data_1.default(); }
     switch (action.type) {
         case Type.Memo.Index:
             var memos = action.memos, page = action.page, par = action.par, total = action.total;
             var ms = _.map(memos, function (memo) { return new memo_1.default(memo); });
             return new memo_index_data_1.default(ms, page, par, total);
+        case Type.Memo.WaitIndex:
+            if (!state) {
+                return state;
+            }
+            var newData = state.clone();
+            newData.memos = [];
+            return newData;
+        default:
+            return state;
+    }
+}
+function memoData(state, action) {
+    if (state === void 0) { state = null; }
+    switch (action.type) {
+        case Type.Memo.Edit:
+            return action.memo;
         default:
             return state;
     }
 }
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = { memoIndexData: memoIndexData };
+exports.default = { memoIndexData: memoIndexData, memoData: memoData };
 
-},{"../constants/action-types":190,"../models/memo":197,"../models/memo-index-data":196,"lodash":31}],202:[function(require,module,exports){
+},{"../constants/action-types":191,"../models/memo":198,"../models/memo-index-data":197,"lodash":31}],203:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var _ = require('lodash');
 var redux_1 = require('redux');
@@ -34471,7 +34629,7 @@ var context_1 = require('./context');
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = redux_1.combineReducers(_.assign({}, login_1.default, memo_1.default, context_1.default));
 
-},{"./context":199,"./login":200,"./memo":201,"lodash":31,"redux":173}],203:[function(require,module,exports){
+},{"./context":200,"./login":201,"./memo":202,"lodash":31,"redux":173}],204:[function(require,module,exports){
 var router_1 = require('./lib/router');
 var MemoAction = require('./actions/memo');
 var WriterRouter = (function () {
@@ -34482,7 +34640,7 @@ var WriterRouter = (function () {
         // メモ一覧を取得
         this.router.add('/w/memos', function (params) { return _this.dispatch(MemoAction.getIndex()); });
         // メモの内容を取得
-        this.router.add('/w/memos/:memo_id', function (params) { return console.log('メモの内容を取得'); });
+        this.router.add('/w/memos/:memoId', function (params) { return _this.dispatch(MemoAction.editMemoById(params['memoId'])); });
     };
     WriterRouter.go = function (url) {
         return this.router.execute(url);
@@ -34499,7 +34657,7 @@ var WriterRouter = (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = WriterRouter;
 
-},{"./actions/memo":183,"./lib/router":194}],204:[function(require,module,exports){
+},{"./actions/memo":183,"./lib/router":195}],205:[function(require,module,exports){
 /// <reference path="types/tsd.d.ts" />
 var React = require('react');
 var react_dom_1 = require('react-dom');
@@ -34513,4 +34671,4 @@ var store = (redux_1.applyMiddleware(thunkMiddleware)(redux_1.createStore))(redu
 var rootElement = document.getElementById('root');
 react_dom_1.render(React.createElement(react_redux_1.Provider, {"store": store}, React.createElement(app_1.default, null)), rootElement);
 
-},{"./containers/app":192,"./reducers/reducers":202,"react":169,"react-dom":33,"react-redux":36,"redux":173,"redux-thunk":171}]},{},[204]);
+},{"./containers/app":193,"./reducers/reducers":203,"react":169,"react-dom":33,"react-redux":36,"redux":173,"redux-thunk":171}]},{},[205]);

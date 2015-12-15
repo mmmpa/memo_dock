@@ -6,16 +6,34 @@
 a
 	cursor: pointer
 
+body
+	overflow: scroll
+
 %main-title
 	@extend %size-h2
 
 %sub-title
 	@extend %size-h4
 
+.global-menu
+	&.menu-container
+		@extend .navbar, .navbar-default, .navbar-fixed-top
+	&.menu-list
+		@extend .nav, .navbar-nav, %size-h4
+.memo-edit
+	&.edit-container
+		padding-top: 70px
+		margin: 0 20px
 .memo-index
+	&.index-container
+		padding-top: 70px
+		margin: 0 20px
+	&.index-title
+		@extend %sub-title
 	&.index-table
 		@extend .table, .table-striped
 		width: 100%
+		margin: 20px 0
 		td,
 		th
 			vertical-align: middle
@@ -33,7 +51,7 @@ a
 		margin: 10px 10px 10px 0
 	&.pager
 		text-align: left
-		margin: 0
+		margin: 20px 0
 		padding: 0
 	&.pager-link
 		&.not

@@ -18,6 +18,8 @@ function context(state:Context = Context.Calm, action):Context {
       return Context.Login;
     case Type.Memo.Index:
       return Context.MemoIndex;
+    case Type.Memo.WaitIndex:
+      return Context.MemoIndex;
     case Type.Memo.Edit:
       return Context.MemoEdit;
     case Type.Memo.Create:

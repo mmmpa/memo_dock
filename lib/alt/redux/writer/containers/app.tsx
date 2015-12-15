@@ -29,7 +29,7 @@ class App extends Component<IApp, {}> {
 
   render() {
     // injected by connect
-    const { dispatch, loggedIn, loginState, context, memoIndexData} = this.props;
+    const { dispatch, loggedIn, loginState, context, memoIndexData, memoData} = this.props;
     Mixin.dispatch = dispatch;
     WriterRouter.dispatch = dispatch;
 
@@ -45,7 +45,7 @@ class App extends Component<IApp, {}> {
       case Context.MemoIndex:
         return <MemoIndex memoIndexData={memoIndexData}/>;
       case Context.MemoEdit:
-        return <MemoEdit />;
+        return <MemoEdit memoData={memoData}/>;
       default:
         return <div>loading...</div>;
     }
@@ -58,6 +58,7 @@ function select(state) {
     loginState: state.loginState,
     context: state.context,
     memoIndexData: state.memoIndexData,
+    memoData: state.memoData,
   }
 }
 

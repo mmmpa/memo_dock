@@ -8,7 +8,9 @@ export enum Login{
 
 export enum Memo{
   Index = 101,
+  WaitIndex = 105,
   Edit = 102,
+  WaitEdit = 106,
   Create = 103,
   Delete = 104
 }

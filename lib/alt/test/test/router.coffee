@@ -43,6 +43,7 @@ describe 'Film Router', ->
 
     it 'with placeholder', ->
       router = new Router()
+      router.add('/user', (params)-> 'test')
       router.add('/user/:id', (params)-> "id #{params.id}")
       assert.deepEqual router.execute('/user/1'), 'id 1'
 
