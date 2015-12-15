@@ -2,6 +2,7 @@
 
 import * as Type from '../constants/action-types';
 import Memo from "../models/memo";
+import {token} from "./login"
 const request = require('superagent');
 
 export function getIndex(page:number = 1) {
@@ -57,4 +58,24 @@ export function editMemoById(memoId:number){
 
 export function editMemo(memo:Memo) {
   return editMemoById(memo.id);
+}
+
+export function renderSlim(slim:string){
+  return (dispatch) => {
+    request
+      .post('/w/api/memos/slim')
+      .set('X-CSRF-Token', token())
+      .send({slim})
+      .end((err, res)=> {
+        if (err) {
+          dispatch(renderedSlim('書式が不正です'));
+        } else {
+          dispatch(renderedSlim(res.body.html));
+        }
+      })
+  }
+}
+
+export function renderedSlim(html:string){
+  return {type: Type.Memo.Rendered, html};
 }

@@ -26,6 +26,10 @@ class Memo < ActiveRecord::Base
     def total_pages(par)
       (Memo.count.to_f / par).ceil
     end
+
+    def convert(slim)
+      Slim::Template.new(pretty: false) { slim }.render
+    end
   end
 
   def convert_slim_to_html!
@@ -34,7 +38,7 @@ class Memo < ActiveRecord::Base
       return
     end
 
-    self.html = Slim::Template.new(pretty: false) { src }.render
+    self.html = convert(src)
   end
 
   def detect_tag_from_list!

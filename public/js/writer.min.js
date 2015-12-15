@@ -33885,6 +33885,7 @@ exports.logout = logout;
 /// <reference path="../types/tsd.d.ts" />
 var Type = require('../constants/action-types');
 var memo_1 = require("../models/memo");
+var login_1 = require("./login");
 var request = require('superagent');
 function getIndex(page) {
     if (page === void 0) { page = 1; }
@@ -33940,8 +33941,29 @@ function editMemo(memo) {
     return editMemoById(memo.id);
 }
 exports.editMemo = editMemo;
+function renderSlim(slim) {
+    return function (dispatch) {
+        request
+            .post('/w/api/memos/slim')
+            .set('X-CSRF-Token', login_1.token())
+            .send({ slim: slim })
+            .end(function (err, res) {
+            if (err) {
+                dispatch(renderedSlim('書式が不正です'));
+            }
+            else {
+                dispatch(renderedSlim(res.body.html));
+            }
+        });
+    };
+}
+exports.renderSlim = renderSlim;
+function renderedSlim(html) {
+    return { type: Type.Memo.Rendered, html: html };
+}
+exports.renderedSlim = renderedSlim;
 
-},{"../constants/action-types":191,"../models/memo":198,"superagent":181}],184:[function(require,module,exports){
+},{"../constants/action-types":191,"../models/memo":198,"./login":182,"superagent":181}],184:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -33998,17 +34020,23 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var React = require('react');
 var menu_1 = require("../components/menu");
+var fa_1 = require('../lib/components/fa');
 var _ = require('lodash');
+var mixins_1 = require("../mixins");
 var MemoEdit = (function (_super) {
     __extends(MemoEdit, _super);
     function MemoEdit(props) {
+        var _this = this;
         _super.call(this, props);
         if (this.props.memoData) {
             var _a = this.props.memoData, title = _a.title, src = _a.src, isPublic = _a.isPublic;
             this.state = {
                 title: title,
                 src: src,
-                isPublic: isPublic
+                isPublic: isPublic,
+                renderer: _.debounce(function () {
+                    mixins_1.MemoMix.renderSlim(_this.state.src);
+                }, 1000)
             };
         }
         else {
@@ -34038,6 +34066,7 @@ var MemoEdit = (function (_super) {
         }, 1);
     };
     MemoEdit.prototype.changeSrc = function (e) {
+        this.state.renderer();
         this.setState(_.merge(this.state, { src: e.doc.getValue() }));
     };
     MemoEdit.prototype.changeTitle = function (e) {
@@ -34046,16 +34075,21 @@ var MemoEdit = (function (_super) {
     MemoEdit.prototype.changeTags = function (e) {
         this.setState(_.merge(this.state, { tags: e.target.value }));
     };
+    MemoEdit.prototype.togglePublic = function (e) {
+        this.setState(_.merge(this.state, { isPublic: !this.state.isPublic }));
+        console.log(this.state);
+    };
     MemoEdit.prototype.render = function () {
-        var _a = this.state, title = _a.title, src = _a.src, tags = _a.tags;
-        return (React.createElement("article", {"className": "memo-edit"}, React.createElement("link", {"href": "/css/codemirror.css", "rel": "stylesheet", "type": "text/css"}), React.createElement(menu_1.default, null), React.createElement("section", {"className": "memo-edit edit-container"}, React.createElement("section", {"className": "memo-edit title"}, React.createElement("input", {"type": "text", "value": title, "onChange": this.changeTitle.bind(this)})), React.createElement("section", {"className": "memo-edit tags"}, React.createElement("input", {"type": "text", "value": tags, "onChange": this.changeTags.bind(this)})), React.createElement("section", {"className": "memo-edit content"}, React.createElement("section", {"className": "memo-edit src"}, React.createElement("textarea", {"ref": "editor"})), React.createElement("section", {"className": "memo-edit html"}, React.createElement("div", {"className": "memo-edit html-container"}))))));
+        var _a = this.state, title = _a.title, src = _a.src, tags = _a.tags, isPublic = _a.isPublic;
+        var rendered = this.props.rendered;
+        return (React.createElement("article", {"className": "memo-edit"}, React.createElement("link", {"href": "/css/codemirror.css", "rel": "stylesheet", "type": "text/css"}), React.createElement(menu_1.default, null), React.createElement("section", {"className": "memo-edit edit-container"}, React.createElement("section", {"className": "memo-edit title"}, React.createElement("input", {"type": "text", "placeholder": "タイトル", "value": title, "onChange": this.changeTitle.bind(this)})), React.createElement("section", {"className": "memo-edit tags"}, React.createElement("input", {"type": "text", "placeholder": "タグ（スペース区切り）", "value": tags, "onChange": this.changeTags.bind(this)})), React.createElement("section", {"className": "memo-edit content"}, React.createElement("section", {"className": "memo-edit src"}, React.createElement("textarea", {"ref": "editor"})), React.createElement("section", {"className": "memo-edit html"}, React.createElement("div", {"className": "memo-edit html-container", "dangerouslySetInnerHTML": { __html: rendered }}))), React.createElement("section", {"className": "memo-edit submit-area"}, React.createElement("button", {"className": "memo-edit submit"}, React.createElement(fa_1.default, {"icon": "paw"}), "保存する"), React.createElement("div", {"className": "memo-edit public"}, React.createElement("label", null, React.createElement("input", {"type": "checkbox", "checked": isPublic, "onChange": this.togglePublic.bind(this)}), "公開"))))));
     };
     return MemoEdit;
 })(React.Component);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoEdit;
 
-},{"../components/menu":190,"lodash":31,"react":169}],186:[function(require,module,exports){
+},{"../components/menu":190,"../lib/components/fa":194,"../mixins":196,"lodash":31,"react":169}],186:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -34209,6 +34243,7 @@ var Login = exports.Login;
     Memo[Memo["WaitIndex"] = 105] = "WaitIndex";
     Memo[Memo["Edit"] = 102] = "Edit";
     Memo[Memo["WaitEdit"] = 106] = "WaitEdit";
+    Memo[Memo["Rendered"] = 107] = "Rendered";
     Memo[Memo["Create"] = 103] = "Create";
     Memo[Memo["Delete"] = 104] = "Delete";
 })(exports.Memo || (exports.Memo = {}));
@@ -34257,7 +34292,7 @@ var App = (function (_super) {
     }
     App.prototype.render = function () {
         // injected by connect
-        var _a = this.props, dispatch = _a.dispatch, loggedIn = _a.loggedIn, loginState = _a.loginState, context = _a.context, memoIndexData = _a.memoIndexData, memoData = _a.memoData;
+        var _a = this.props, dispatch = _a.dispatch, loggedIn = _a.loggedIn, loginState = _a.loginState, context = _a.context, memoIndexData = _a.memoIndexData, memoData = _a.memoData, rendered = _a.rendered;
         mixins_1.default.dispatch = dispatch;
         router_1.default.dispatch = dispatch;
         if (!this.initialized) {
@@ -34271,7 +34306,7 @@ var App = (function (_super) {
             case status_1.Context.MemoIndex:
                 return React.createElement(memo_index_1.default, {"memoIndexData": memoIndexData});
             case status_1.Context.MemoEdit:
-                return React.createElement(memo_edit_1.default, {"memoData": memoData});
+                return React.createElement(memo_edit_1.default, {"memoData": memoData, "rendered": rendered});
             default:
                 return React.createElement("div", null, "loading...");
         }
@@ -34285,6 +34320,7 @@ function select(state) {
         context: state.context,
         memoIndexData: state.memoIndexData,
         memoData: state.memoData,
+        rendered: state.rendered
     };
 }
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -34445,6 +34481,9 @@ exports.LoginMix = LoginMix;
 var MemoMix = (function () {
     function MemoMix() {
     }
+    MemoMix.renderSlim = function (slim) {
+        Mixin.dispatch(MemoAction.renderSlim(slim));
+    };
     MemoMix.goMemoIndex = function () {
         Mixin.dispatch(MemoAction.getIndex(1));
     };
@@ -34616,8 +34655,17 @@ function memoData(state, action) {
             return state;
     }
 }
+function rendered(state, action) {
+    if (state === void 0) { state = ''; }
+    switch (action.type) {
+        case Type.Memo.Rendered:
+            return action.html;
+        default:
+            return state;
+    }
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = { memoIndexData: memoIndexData, memoData: memoData };
+exports.default = { memoIndexData: memoIndexData, memoData: memoData, rendered: rendered };
 
 },{"../constants/action-types":191,"../models/memo":198,"../models/memo-index-data":197,"lodash":31}],203:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />

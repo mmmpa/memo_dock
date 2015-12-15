@@ -17,6 +17,10 @@ export class LoginMix {
 }
 
 export class MemoMix {
+  static renderSlim(slim:string){
+    Mixin.dispatch(MemoAction.renderSlim(slim));
+  }
+
   static goMemoIndex() {
     Mixin.dispatch(MemoAction.getIndex(1));
   }

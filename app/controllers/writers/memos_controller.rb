@@ -18,6 +18,12 @@ module Writers
       render nothing: true, status: 404
     end
 
+    def convert
+      render json: {html: Memo.convert(params[:slim])}
+    rescue
+      render nothing: true, status: 500
+    end
+
     private
 
     def page

@@ -11,6 +11,7 @@ export enum Memo{
   WaitIndex = 105,
   Edit = 102,
   WaitEdit = 106,
+  Rendered = 107,
   Create = 103,
   Delete = 104
 }

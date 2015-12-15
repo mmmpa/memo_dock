@@ -24,6 +24,30 @@ body
 	&.edit-container
 		padding-top: 70px
 		margin: 0 20px
+	&.title,
+	&.tags
+		input
+			@extend .form-control
+			width: 100%
+	&.content
+		@extend .clearfix
+	&.src,
+	&.html
+		@extend .col-sm-6
+		padding: 0
+	&.src
+		border: 1px solid $gray-lighter
+		border-top-width: 0
+	&.submit-area
+		margin: 20px 0
+	&.public
+		@extend %size-h6
+		display: inline-block
+		margin-left: 20px
+	&.submit
+		@extend .btn, .btn-success
+		@extend %size-h6
+
 .memo-index
 	&.index-container
 		padding-top: 70px

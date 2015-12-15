@@ -21,7 +21,8 @@ interface IApp {
   loggedIn?:boolean,
   loginState?:Status.Login,
   context?: Status.Context,
-  memoIndexData?: MemoIndexData
+  memoIndexData?: MemoIndexData,
+  rendered?:string
 }
 
 class App extends Component<IApp, {}> {
@@ -29,7 +30,7 @@ class App extends Component<IApp, {}> {
 
   render() {
     // injected by connect
-    const { dispatch, loggedIn, loginState, context, memoIndexData, memoData} = this.props;
+    const { dispatch, loggedIn, loginState, context, memoIndexData, memoData, rendered} = this.props;
     Mixin.dispatch = dispatch;
     WriterRouter.dispatch = dispatch;
 
@@ -45,7 +46,7 @@ class App extends Component<IApp, {}> {
       case Context.MemoIndex:
         return <MemoIndex memoIndexData={memoIndexData}/>;
       case Context.MemoEdit:
-        return <MemoEdit memoData={memoData}/>;
+        return <MemoEdit memoData={memoData} rendered={rendered}/>;
       default:
         return <div>loading...</div>;
     }
@@ -59,6 +60,7 @@ function select(state) {
     context: state.context,
     memoIndexData: state.memoIndexData,
     memoData: state.memoData,
+    rendered: state.rendered
   }
 }
 

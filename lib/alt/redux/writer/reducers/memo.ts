@@ -32,4 +32,13 @@ function memoData(state = null, action) {
   }
 }
 
-export default {memoIndexData, memoData}
+function rendered(state:string = '', action) {
+  switch (action.type) {
+    case Type.Memo.Rendered:
+      return action.html;
+    default:
+      return state;
+  }
+}
+
+export default {memoIndexData, memoData, rendered}
