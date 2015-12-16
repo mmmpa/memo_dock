@@ -51,13 +51,6 @@ gulp.task 'default', ->
     .pipe gulp.dest(publicJsPath)
     .pipe notify message: 'complete'
 
-gulp.task 'writerTsc', ->
-  gulp.src ''
-  .pipe plumber()
-  .pipe shell([
-    "cd redux/writer/; tsc | sed -r $'s/[0-9]+,[0-9]+/\\e[31m\\e[1m a \\e[0m/g' | sed -r $'s/^.+\.tsx/\e[1m&\e[0m/g'"
-  ], {})
-
 gulp.task 'hardPacking', ->
     gulp
     .src path.join(publicJsPath, 'writer.min.js')
