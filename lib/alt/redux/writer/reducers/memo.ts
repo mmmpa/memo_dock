@@ -34,6 +34,8 @@ function memoData(state = null, action) {
 
 function rendered(state:string = '', action) {
   switch (action.type) {
+    case Type.Memo.Edit:
+      return '';
     case Type.Memo.Rendered:
       return action.html;
     default:

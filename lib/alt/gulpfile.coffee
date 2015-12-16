@@ -6,6 +6,7 @@ sass = require 'gulp-sass'
 minify = require 'gulp-minify-css'
 plumber = require 'gulp-plumber'
 uglify = require 'gulp-uglify'
+gzip = require 'gulp-gzip'
 source = require 'vinyl-source-stream'
 streamify = require 'gulp-streamify'
 rename = require 'gulp-rename'
@@ -47,15 +48,18 @@ gulp.task 'default', ->
     .pipe gulp.dest(publicJsPath)
     .pipe notify message: 'complete'
 
-  gulp.watch('./redux/writer_built/writer.js').on 'change', (e) ->
-    return
-    browserify
-      entries: './redux/writer_built/writer.js'
-      debug: true
-    .bundle()
-    .on('error', onError)
-    .pipe source('writer.js')
-    #.pipe streamify(uglify())
-    .pipe rename('writer.min.js')
+
+gulp.task 'hardPacking', ->
+    gulp
+    .src path.join(publicJsPath, 'writer.min.js')
+    .pipe streamify(uglify())
+    .pipe gzip()
     .pipe gulp.dest(publicJsPath)
     .pipe notify message: 'complete'
+
+gulp.task 'softPacking', ->
+  gulp
+  .src path.join(publicJsPath, 'writer.min.js')
+  .pipe streamify(uglify())
+  .pipe gulp.dest(publicJsPath)
+  .pipe notify message: 'complete'

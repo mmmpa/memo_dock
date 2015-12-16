@@ -20,6 +20,7 @@ body
 		@extend .navbar, .navbar-default, .navbar-fixed-top
 	&.menu-list
 		@extend .nav, .navbar-nav, %size-h4
+
 .memo-edit
 	&.edit-container
 		padding-top: 70px
@@ -35,11 +36,25 @@ body
 	&.html
 		@extend .col-sm-6
 		padding: 0
+	&.html-container
+		margin: 0
+		padding: 10px
+		overflow: scroll
+		box-sizing: border-box
 	&.src
 		border: 1px solid $gray-lighter
 		border-top-width: 0
 	&.submit-area
-		margin: 20px 0
+		height: 65px
+		overflow: hidden
+		line-height: 40px
+		padding: 10px 20px
+		position: absolute
+		width: 100%
+		border-top: 1px solid $gray-lighter
+		background: #fff
+		bottom: 0
+		left: 0
 	&.public
 		@extend %size-h6
 		display: inline-block
@@ -82,6 +97,7 @@ body
 			@extend .btn, .btn-primary
 		&.now
 			@extend .btn, .btn-default
+
 .login
 	&.container
 		width: 400px
