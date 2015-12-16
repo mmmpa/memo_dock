@@ -5,6 +5,7 @@ export default class Memo {
   public title:string = '';
   public isPublic:boolean = false;
   public tags:Tag[] = [];
+  public tagList:string = '';
   public src:string = '';
 
   constructor(json:any = null) {
@@ -16,5 +17,6 @@ export default class Memo {
     this.src = json['src'];
     this.isPublic = json['public'];
     this.tags = json['tags'].map((tag)=> new Tag(tag));
+    this.tagList = this.tags.map((tag)=> tag.name).join(' ');
   }
 }

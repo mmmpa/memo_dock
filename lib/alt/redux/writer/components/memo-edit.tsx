@@ -5,8 +5,7 @@ import Fa from '../lib/components/fa'
 import * as _ from 'lodash'
 import {MemoMix} from "../mixins";
 require("zepto/zepto.min");
-
-//const $ = Zepto(window);
+let $ = window.$;
 
 require("codemirror/addon/display/placeholder");
 require("codemirror/addon/lint/lint.js");
@@ -25,28 +24,27 @@ interface IMemoEdit {
 }
 
 interface IMemoEditState {
-  title:string,
-  src:string,
-  isPublic:boolean,
-  tags?:string[],
+  title?:string,
+  src?:string,
+  isPublic?:boolean,
+  tagList?:string,
   renderer?:Function
 }
 
-
 export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState> {
   private cm:any;
-  private $:any;
 
   constructor(props) {
     super(props);
 
     if (this.props.memoData) {
-      let {title, src, isPublic} = this.props.memoData;
+      let {title, src, isPublic, tagList} = this.props.memoData;
 
       this.state = {
         title: title,
         src: src,
         isPublic: isPublic,
+        tagList: tagList,
         renderer: _.debounce(()=> {
           MemoMix.renderSlim(this.state.src);
           this.resize();
@@ -56,7 +54,8 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
       this.state = {
         title: '',
         src: '',
-        isPublic: false
+        isPublic: false,
+        tagList: ''
       }
     }
   }
@@ -69,7 +68,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
 
   componentDidMount() {
     setTimeout(()=> {
-      this.cm = CodeMirror.fromTextArea(this.refs.editor, {
+      this.cm = CodeMirror.fromTextArea($('#editor')[0], {
         lineNumbers: true,
         mode: "slim",
         lineWrapping: true
@@ -106,7 +105,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
     let $html = $('#htmlDisplay');
     let bottom:number = $('#submitArea').position().top;
     let height:number = bottom - top;
-    console.log($html.position().left, left)
+
     if ($('#srcArea').position().left === $('#htmlArea').position().left ) {
       height /= 2;
       this.cm.setSize(null, height);
@@ -118,7 +117,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   }
 
   render() {
-    let {title, src, tags, isPublic} = this.state;
+    let {title, src, tagList, isPublic} = this.state;
     let {rendered} = this.props;
     return (
       <article className="memo-edit">
@@ -129,11 +128,11 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
             <input type="text" placeholder="タイトル" value={title} onChange={this.changeTitle.bind(this)}/>
           </section>
           <section className="memo-edit tags">
-            <input type="text" placeholder="タグ（スペース区切り）" value={tags} onChange={this.changeTags.bind(this)}/>
+            <input type="text" placeholder="タグ（スペース区切り）" value={tagList} onChange={this.changeTags.bind(this)}/>
           </section>
           <section className="memo-edit content" id="contentArea">
             <section className="memo-edit src" id="srcArea">
-              <textarea ref="editor"/>
+              <textarea id="editor"/>
             </section>
             <section className="memo-edit html" id="htmlArea">
               <div className="memo-edit html-container" id="htmlDisplay">

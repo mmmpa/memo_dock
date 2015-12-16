@@ -12,7 +12,7 @@ import { tryLogin, checkInitialState } from '../actions/login'
 import * as Status from '../constants/status'
 import Memo from "../models/memo";
 import Mixin from "../mixins";
-import {MemoIndexData} from "../models/memo-index-data";
+import MemoIndexData from "../models/memo-index-data";
 
 WriterRouter.initialize();
 
@@ -21,9 +21,11 @@ interface IApp {
   loggedIn?:boolean,
   loginState?:Status.Login,
   context?: Status.Context,
+  memoData?: Memo,
   memoIndexData?: MemoIndexData,
   rendered?:string
 }
+
 
 class App extends Component<IApp, {}> {
   private initialized:boolean = false;

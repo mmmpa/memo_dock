@@ -2,6 +2,7 @@ gulp = require 'gulp'
 
 browserify = require 'browserify'
 sass = require 'gulp-sass'
+watch = require 'gulp-watch'
 
 minify = require 'gulp-minify-css'
 plumber = require 'gulp-plumber'
@@ -13,17 +14,19 @@ rename = require 'gulp-rename'
 notify = require 'gulp-notify'
 path = require 'path'
 _ = require 'lodash'
+shell = require 'gulp-shell'
 
 rootPath = path.join(__dirname, '../../')
 srcRootPath = path.join(__dirname, './')
 publicJsPath = path.join(rootPath, './public/js')
+sassWatch = path.join(srcRootPath, 'sass/**/*.sass')
+writerWatch = path.join(srcRootPath, 'redux/writer/**/*.ts')
 
 onError = (err)->
   console.log(err.toString())
   @emit("end")
 
 gulp.task 'default', ->
-  sassWatch = path.join(srcRootPath, 'sass/**/*.sass')
 
   split = (filePath)->
     _(path.relative(rootPath, filePath).split('/')).drop(3).dropRight(1).value()
@@ -48,6 +51,12 @@ gulp.task 'default', ->
     .pipe gulp.dest(publicJsPath)
     .pipe notify message: 'complete'
 
+gulp.task 'writerTsc', ->
+  gulp.src ''
+  .pipe plumber()
+  .pipe shell([
+    "cd redux/writer/; tsc | sed -r $'s/[0-9]+,[0-9]+/\\e[31m\\e[1m a \\e[0m/g' | sed -r $'s/^.+\.tsx/\e[1m&\e[0m/g'"
+  ], {})
 
 gulp.task 'hardPacking', ->
     gulp
