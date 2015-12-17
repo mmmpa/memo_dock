@@ -22,7 +22,7 @@ export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}>  
     let {memo} = this.props;
     return <tr>
       <td className="title">
-        <a onClick={()=> MemoMix.editMemo(memo)}>{memo.title}</a>
+        <a onClick={()=> MemoMix.goMemoEdit(memo)}>{memo.title}</a>
       </td>
       <td className="tags">{this.tagLinks(memo.tags)}</td>
       <td className="public">{this.detectPublicText()}</td>

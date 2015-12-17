@@ -21,7 +21,7 @@ export default class MemoIndexTagLink extends React.Component<IMemoIndexTagLink,
     let {tag} = this.props;
     return (
       <div className="memo-index tag-link-container">
-        <a className="memo-index tag-link" onClick={()=> MemoMix.selectTag(tag)}>{tag.name}</a>
+        <a className="memo-index tag-link" onClick={()=> MemoMix.goTaggedIndex(tag)}>{tag.name}</a>
       </div>
     )
   }

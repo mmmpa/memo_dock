@@ -4,6 +4,7 @@ import Memo from "../models/memo";
 import Fa from '../lib/components/fa'
 import * as _ from 'lodash'
 import {MemoMix} from "../mixins";
+import {EditMemoState} from '../constants/status'
 require("zepto/zepto.min");
 let $ = window.$;
 
@@ -20,6 +21,7 @@ import * as CodeMirror from 'codemirror'
 
 interface IMemoEdit {
   memoData:Memo,
+  editState:EditMemoState
   rendered?:string
 }
 
@@ -36,20 +38,15 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
 
     let {memoData} = this.props;
 
-    if (memoData) {
-      this.state = {
-        memoData: memoData,
-        renderer: _.debounce(()=> {
-          MemoMix.renderSlim(this.state.memoData.src);
-          this.resize();
-        }, 1000)
-      }
-    } else {
-      this.state = {
-        memoData: null
-      }
+    this.state = {
+      memoData: memoData,
+      renderer: _.debounce(()=> {
+        MemoMix.renderSlim(this.state.memoData.src);
+        this.resize();
+      }, 1000)
     }
   }
+
 
   componentDidUpdate() {
     let {memoData} = this.state;
@@ -97,6 +94,25 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
     this.setState(_.merge(this.state, {memoData}));
   }
 
+  detectSaveButton() {
+    if (this.props.editState === EditMemoState.Ready) {
+      return <button className="memo-edit submit" onClick={this.save.bind(this)}>
+        <Fa icon="paw"/>
+        Save
+      </button>
+    } else if (this.props.editState === EditMemoState.Loading) {
+      return <button className="memo-edit submit" onClick={this.save.bind(this)}>
+        <Fa icon="paw"/>
+        Wait...
+      </button>
+    } else {
+      return <button className="memo-edit submit" disabled={true}>
+        <Fa icon="spinner" animation="pulse"/>
+        Saving...
+      </button>
+    }
+  }
+
   togglePublic(e) {
     let {memoData} = this.state;
     memoData.isPublic = !memoData.isPublic;
@@ -121,10 +137,13 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   }
 
   save() {
-    MemoMix.updateMemo(this.state.memoData);
+    MemoMix.saveMemo(this.state.memoData);
   }
 
   render() {
+    if (!this.state.memoData) {
+      return <div>loading...</div>
+    }
     let {title, src, tagList, isPublic} = this.state.memoData;
     let {rendered} = this.props;
     return (
@@ -149,10 +168,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
             </section>
           </section>
           <section className="memo-edit submit-area" id="submitArea">
-            <button className="memo-edit submit" onClick={this.save.bind(this)}>
-              <Fa icon="paw"/>
-              保存する
-            </button>
+            {this.detectSaveButton()}
             <div className="memo-edit public">
               <label>
                 <input type="checkbox" checked={isPublic} onChange={this.togglePublic.bind(this)}/>

@@ -3,9 +3,26 @@
 import * as Type from '../constants/action-types';
 import Memo from "../models/memo";
 import {token} from "./login"
+import Dispatch = Redux.Dispatch;
 const request = require('superagent');
 
-export function getIndex(page:number = 1) {
+//　メモ関係画面遷移
+
+function goMemoEditor(memo:Memo = null) {
+  return {type: Type.Memo.StartEditing, memo};
+}
+
+function goMemoIndex() {
+  return {type: Type.Memo.StartEditing};
+}
+
+// メモインデックス取得関係
+
+export function getIndex(){
+  return loadMemoIndex();
+}
+
+export function loadMemoIndex(page:number = 1) {
   return (dispatch) => {
     dispatch(waitLoadedIndex());
     request
@@ -15,92 +32,84 @@ export function getIndex(page:number = 1) {
         if (err) {
           //dispatch(requestLogin());
         } else {
-          dispatch(gotIndex(res.body, +res.header.page, +res.header.par, +res.header['total-pages']));
+          dispatch(loadMemoIndexSuccess(res.body, +res.header.page, +res.header.par, +res.header['total-pages']));
         }
       })
   }
 }
 
-export function updateMemo(memo:Memo) {
-  if(memo.isPersisted()){
-    return (dispatch) => {
-      request
-        .patch('/w/api/memos/' + memo.id)
-        .set('X-CSRF-Token', token())
-        .send({memo: memo.generateParams()})
-        .end((err, res)=> {
-          if (err) {
-            dispatch(updateMemoFailed(res.body));
-          } else {
-            console.log(res.body);
-
-            dispatch(updateMemoAfter(new Memo(res.body)));
-          }
-        })
-    }
-  }else{
-    return (dispatch) => {
-      request
-        .post('/w/api/memos/new')
-        .set('X-CSRF-Token', token())
-        .send({memo: memo.generateParams()})
-        .end((err, res)=> {
-          if (err) {
-            dispatch(updateMemoFailed(res.body));
-          } else {
-            dispatch(updateMemoAfter(new Memo(res.body)));
-          }
-        })
-    }
-  }
-}
-
-function updateMemoFailed(errors:any) {
-  return {type: Type.Memo.FailedCreation, errors};
-}
-
-function updateMemoAfter(memo:Memo) {
-  return {type: Type.Memo.Created, memo};
+function loadMemoIndexSuccess(memos:any[], page:number, par:number, total:number) {
+  return {type: Type.Memo.ShowIndex, memos, page, par, total};
 }
 
 function waitLoadedIndex() {
   return {type: Type.Memo.WaitIndex};
 }
 
-function gotIndex(memos:any[], page:number, par:number, total:number) {
-  return {type: Type.Memo.Index, memos, page, par, total};
+// メモ保存関係
+
+export function saveMemo(memo:Memo) {
+  let requester = memo.isPersisted()
+    ? request.patch('/w/api/memos/' + memo.id)
+    : request.post('/w/api/memos/new');
+
+  return (dispatch) => {
+    dispatch(saveMemoStart());
+    requester
+      .set('X-CSRF-Token', token())
+      .send({memo: memo.generateParams()})
+      .end((err, res)=> {
+        if (err) {
+          dispatch(saveMemoFail(res.body));
+        } else {
+          dispatch(saveMemoSuccess(new Memo(res.body)));
+        }
+      })
+  }
 }
 
-function goEditMemo(memo:Memo = null) {
-  return {type: Type.Memo.Edit, memo};
+function saveMemoStart() {
+  return {type: Type.Memo.StartSaving};
 }
+
+function saveMemoFail(errors:any) {
+  return {type: Type.Memo.FailSaving, errors};
+}
+
+function saveMemoSuccess(memo:Memo) {
+  return {type: Type.Memo.SuccessSaving, memo};
+}
+
+// メモ編集画面
 
 function waitLoadedMemo() {
-  return {type: Type.Memo.WaitEdit};
+  return {type: Type.Memo.WaitEditing};
 }
 
-export function editNewMemo() {
-  goEditMemo(new Memo());
-}
-
-export function editMemoById(memoId:number) {
+export function goEditMemoById(memoId:number) {
   return (dispatch) => {
     dispatch(waitLoadedMemo());
     request
       .get('/w/api/memos/' + memoId)
       .end((err, res)=> {
         if (err) {
-          dispatch(goEditMemo(new Memo()));
+          dispatch(goMemoEditor(new Memo()));
         } else {
-          dispatch(goEditMemo(new Memo(res.body)));
+          dispatch(goMemoEditor(new Memo(res.body)));
         }
       })
   }
 }
 
-export function editMemo(memo:Memo) {
-  return editMemoById(memo.id);
+export function goEditNewMemo() {
+  return goMemoEditor(new Memo());
 }
+
+export function startEditMemo(memo:Memo) {
+  return goEditMemoById(memo.id);
+}
+
+// slimのリアルタイムレンダリング
 
 export function renderSlim(slim:string) {
   return (dispatch) => {
@@ -110,14 +119,14 @@ export function renderSlim(slim:string) {
       .send({slim})
       .end((err, res)=> {
         if (err) {
-          dispatch(renderedSlim('書式が不正です'));
+          dispatch(renderSlimFinish('書式が不正です'));
         } else {
-          dispatch(renderedSlim(res.body.html));
+          dispatch(renderSlimFinish(res.body.html));
         }
       })
   }
 }
 
-export function renderedSlim(html:string) {
-  return {type: Type.Memo.Rendered, html};
+export function renderSlimFinish(html:string) {
+  return {type: Type.Memo.FinishRendering, html};
 }

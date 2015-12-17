@@ -46012,7 +46012,20 @@ var Type = require('../constants/action-types');
 var memo_1 = require("../models/memo");
 var login_1 = require("./login");
 var request = require('superagent');
-function getIndex(page) {
+//　メモ関係画面遷移
+function goMemoEditor(memo) {
+    if (memo === void 0) { memo = null; }
+    return { type: Type.Memo.StartEditing, memo: memo };
+}
+function goMemoIndex() {
+    return { type: Type.Memo.StartEditing };
+}
+// メモインデックス取得関係
+function getIndex() {
+    return loadMemoIndex();
+}
+exports.getIndex = getIndex;
+function loadMemoIndex(page) {
     if (page === void 0) { page = 1; }
     return function (dispatch) {
         dispatch(waitLoadedIndex());
@@ -46023,91 +46036,77 @@ function getIndex(page) {
             if (err) {
             }
             else {
-                dispatch(gotIndex(res.body, +res.header.page, +res.header.par, +res.header['total-pages']));
+                dispatch(loadMemoIndexSuccess(res.body, +res.header.page, +res.header.par, +res.header['total-pages']));
             }
         });
     };
 }
-exports.getIndex = getIndex;
-function updateMemo(memo) {
-    if (memo.isPersisted()) {
-        return function (dispatch) {
-            request
-                .patch('/w/api/memos/' + memo.id)
-                .set('X-CSRF-Token', login_1.token())
-                .send({ memo: memo.generateParams() })
-                .end(function (err, res) {
-                if (err) {
-                    dispatch(updateMemoFailed(res.body));
-                }
-                else {
-                    console.log(res.body);
-                    dispatch(updateMemoAfter(new memo_1.default(res.body)));
-                }
-            });
-        };
-    }
-    else {
-        return function (dispatch) {
-            request
-                .post('/w/api/memos/new')
-                .set('X-CSRF-Token', login_1.token())
-                .send({ memo: memo.generateParams() })
-                .end(function (err, res) {
-                if (err) {
-                    dispatch(updateMemoFailed(res.body));
-                }
-                else {
-                    dispatch(updateMemoAfter(new memo_1.default(res.body)));
-                }
-            });
-        };
-    }
-}
-exports.updateMemo = updateMemo;
-function updateMemoFailed(errors) {
-    return { type: Type.Memo.FailedCreation, errors: errors };
-}
-function updateMemoAfter(memo) {
-    return { type: Type.Memo.Created, memo: memo };
+exports.loadMemoIndex = loadMemoIndex;
+function loadMemoIndexSuccess(memos, page, par, total) {
+    return { type: Type.Memo.ShowIndex, memos: memos, page: page, par: par, total: total };
 }
 function waitLoadedIndex() {
     return { type: Type.Memo.WaitIndex };
 }
-function gotIndex(memos, page, par, total) {
-    return { type: Type.Memo.Index, memos: memos, page: page, par: par, total: total };
+// メモ保存関係
+function saveMemo(memo) {
+    var requester = memo.isPersisted()
+        ? request.patch('/w/api/memos/' + memo.id)
+        : request.post('/w/api/memos/new');
+    return function (dispatch) {
+        dispatch(saveMemoStart());
+        requester
+            .set('X-CSRF-Token', login_1.token())
+            .send({ memo: memo.generateParams() })
+            .end(function (err, res) {
+            if (err) {
+                dispatch(saveMemoFail(res.body));
+            }
+            else {
+                dispatch(saveMemoSuccess(new memo_1.default(res.body)));
+            }
+        });
+    };
 }
-function goEditMemo(memo) {
-    if (memo === void 0) { memo = null; }
-    return { type: Type.Memo.Edit, memo: memo };
+exports.saveMemo = saveMemo;
+function saveMemoStart() {
+    return { type: Type.Memo.StartSaving };
 }
+function saveMemoFail(errors) {
+    return { type: Type.Memo.FailSaving, errors: errors };
+}
+function saveMemoSuccess(memo) {
+    return { type: Type.Memo.SuccessSaving, memo: memo };
+}
+// メモ編集画面
 function waitLoadedMemo() {
-    return { type: Type.Memo.WaitEdit };
+    return { type: Type.Memo.WaitEditing };
 }
-function editNewMemo() {
-    goEditMemo(new memo_1.default());
-}
-exports.editNewMemo = editNewMemo;
-function editMemoById(memoId) {
+function goEditMemoById(memoId) {
     return function (dispatch) {
         dispatch(waitLoadedMemo());
         request
             .get('/w/api/memos/' + memoId)
             .end(function (err, res) {
             if (err) {
-                dispatch(goEditMemo(new memo_1.default()));
+                dispatch(goMemoEditor(new memo_1.default()));
             }
             else {
-                dispatch(goEditMemo(new memo_1.default(res.body)));
+                dispatch(goMemoEditor(new memo_1.default(res.body)));
             }
         });
     };
 }
-exports.editMemoById = editMemoById;
-function editMemo(memo) {
-    return editMemoById(memo.id);
+exports.goEditMemoById = goEditMemoById;
+function goEditNewMemo() {
+    return goMemoEditor(new memo_1.default());
 }
-exports.editMemo = editMemo;
+exports.goEditNewMemo = goEditNewMemo;
+function startEditMemo(memo) {
+    return goEditMemoById(memo.id);
+}
+exports.startEditMemo = startEditMemo;
+// slimのリアルタイムレンダリング
 function renderSlim(slim) {
     return function (dispatch) {
         request
@@ -46116,19 +46115,19 @@ function renderSlim(slim) {
             .send({ slim: slim })
             .end(function (err, res) {
             if (err) {
-                dispatch(renderedSlim('書式が不正です'));
+                dispatch(renderSlimFinish('書式が不正です'));
             }
             else {
-                dispatch(renderedSlim(res.body.html));
+                dispatch(renderSlimFinish(res.body.html));
             }
         });
     };
 }
 exports.renderSlim = renderSlim;
-function renderedSlim(html) {
-    return { type: Type.Memo.Rendered, html: html };
+function renderSlimFinish(html) {
+    return { type: Type.Memo.FinishRendering, html: html };
 }
-exports.renderedSlim = renderedSlim;
+exports.renderSlimFinish = renderSlimFinish;
 
 },{"../constants/action-types":201,"../models/memo":208,"./login":192,"superagent":190}],194:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
@@ -46190,6 +46189,7 @@ var menu_1 = require("../components/menu");
 var fa_1 = require('../lib/components/fa');
 var _ = require('lodash');
 var mixins_1 = require("../mixins");
+var status_1 = require('../constants/status');
 require("zepto/zepto.min");
 var $ = window.$;
 require("codemirror/addon/display/placeholder");
@@ -46207,20 +46207,13 @@ var MemoEdit = (function (_super) {
         var _this = this;
         _super.call(this, props);
         var memoData = this.props.memoData;
-        if (memoData) {
-            this.state = {
-                memoData: memoData,
-                renderer: _.debounce(function () {
-                    mixins_1.MemoMix.renderSlim(_this.state.memoData.src);
-                    _this.resize();
-                }, 1000)
-            };
-        }
-        else {
-            this.state = {
-                memoData: null
-            };
-        }
+        this.state = {
+            memoData: memoData,
+            renderer: _.debounce(function () {
+                mixins_1.MemoMix.renderSlim(_this.state.memoData.src);
+                _this.resize();
+            }, 1000)
+        };
     }
     MemoEdit.prototype.componentDidUpdate = function () {
         var memoData = this.state.memoData;
@@ -46263,6 +46256,17 @@ var MemoEdit = (function (_super) {
         memoData.tagList = e.target.value;
         this.setState(_.merge(this.state, { memoData: memoData }));
     };
+    MemoEdit.prototype.detectSaveButton = function () {
+        if (this.props.editState === status_1.EditMemoState.Ready) {
+            return React.createElement("button", {"className": "memo-edit submit", "onClick": this.save.bind(this)}, React.createElement(fa_1.default, {"icon": "paw"}), "Save");
+        }
+        else if (this.props.editState === status_1.EditMemoState.Loading) {
+            return React.createElement("button", {"className": "memo-edit submit", "onClick": this.save.bind(this)}, React.createElement(fa_1.default, {"icon": "paw"}), "Wait...");
+        }
+        else {
+            return React.createElement("button", {"className": "memo-edit submit", "disabled": true}, React.createElement(fa_1.default, {"icon": "spinner", "animation": "pulse"}), "Saving...");
+        }
+    };
     MemoEdit.prototype.togglePublic = function (e) {
         var memoData = this.state.memoData;
         memoData.isPublic = !memoData.isPublic;
@@ -46285,19 +46289,22 @@ var MemoEdit = (function (_super) {
         }
     };
     MemoEdit.prototype.save = function () {
-        mixins_1.MemoMix.updateMemo(this.state.memoData);
+        mixins_1.MemoMix.saveMemo(this.state.memoData);
     };
     MemoEdit.prototype.render = function () {
+        if (!this.state.memoData) {
+            return React.createElement("div", null, "loading...");
+        }
         var _a = this.state.memoData, title = _a.title, src = _a.src, tagList = _a.tagList, isPublic = _a.isPublic;
         var rendered = this.props.rendered;
-        return (React.createElement("article", {"className": "memo-edit"}, React.createElement("link", {"href": "/css/codemirror.css", "rel": "stylesheet", "type": "text/css"}), React.createElement(menu_1.default, null), React.createElement("section", {"className": "memo-edit edit-container"}, React.createElement("section", {"className": "memo-edit title"}, React.createElement("input", {"type": "text", "placeholder": "タイトル", "value": title, "onChange": this.changeTitle.bind(this)})), React.createElement("section", {"className": "memo-edit tags"}, React.createElement("input", {"type": "text", "placeholder": "タグ（スペース区切り）", "value": tagList, "onChange": this.changeTags.bind(this)})), React.createElement("section", {"className": "memo-edit content", "id": "contentArea"}, React.createElement("section", {"className": "memo-edit src", "id": "srcArea"}, React.createElement("textarea", {"id": "editor"})), React.createElement("section", {"className": "memo-edit html", "id": "htmlArea"}, React.createElement("div", {"className": "memo-edit html-container", "id": "htmlDisplay"}, React.createElement("div", {"dangerouslySetInnerHTML": { __html: rendered }})))), React.createElement("section", {"className": "memo-edit submit-area", "id": "submitArea"}, React.createElement("button", {"className": "memo-edit submit", "onClick": this.save.bind(this)}, React.createElement(fa_1.default, {"icon": "paw"}), "保存する"), React.createElement("div", {"className": "memo-edit public"}, React.createElement("label", null, React.createElement("input", {"type": "checkbox", "checked": isPublic, "onChange": this.togglePublic.bind(this)}), "公開"))))));
+        return (React.createElement("article", {"className": "memo-edit"}, React.createElement("link", {"href": "/css/codemirror.css", "rel": "stylesheet", "type": "text/css"}), React.createElement(menu_1.default, null), React.createElement("section", {"className": "memo-edit edit-container"}, React.createElement("section", {"className": "memo-edit title"}, React.createElement("input", {"type": "text", "placeholder": "タイトル", "value": title, "onChange": this.changeTitle.bind(this)})), React.createElement("section", {"className": "memo-edit tags"}, React.createElement("input", {"type": "text", "placeholder": "タグ（スペース区切り）", "value": tagList, "onChange": this.changeTags.bind(this)})), React.createElement("section", {"className": "memo-edit content", "id": "contentArea"}, React.createElement("section", {"className": "memo-edit src", "id": "srcArea"}, React.createElement("textarea", {"id": "editor"})), React.createElement("section", {"className": "memo-edit html", "id": "htmlArea"}, React.createElement("div", {"className": "memo-edit html-container", "id": "htmlDisplay"}, React.createElement("div", {"dangerouslySetInnerHTML": { __html: rendered }})))), React.createElement("section", {"className": "memo-edit submit-area", "id": "submitArea"}, this.detectSaveButton(), React.createElement("div", {"className": "memo-edit public"}, React.createElement("label", null, React.createElement("input", {"type": "checkbox", "checked": isPublic, "onChange": this.togglePublic.bind(this)}), "公開"))))));
     };
     return MemoEdit;
 })(React.Component);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoEdit;
 
-},{"../components/menu":200,"../lib/components/fa":204,"../mixins":206,"codemirror":3,"codemirror/addon/display/placeholder":1,"codemirror/addon/lint/lint.js":2,"codemirror/mode/css/css.js":4,"codemirror/mode/htmlmixed/htmlmixed.js":5,"codemirror/mode/javascript/javascript.js":6,"codemirror/mode/ruby/ruby.js":7,"codemirror/mode/slim/slim.js":8,"codemirror/mode/xml/xml.js":9,"lodash":40,"react":178,"zepto/zepto.min":191}],196:[function(require,module,exports){
+},{"../components/menu":200,"../constants/status":202,"../lib/components/fa":204,"../mixins":206,"codemirror":3,"codemirror/addon/display/placeholder":1,"codemirror/addon/lint/lint.js":2,"codemirror/mode/css/css.js":4,"codemirror/mode/htmlmixed/htmlmixed.js":5,"codemirror/mode/javascript/javascript.js":6,"codemirror/mode/ruby/ruby.js":7,"codemirror/mode/slim/slim.js":8,"codemirror/mode/xml/xml.js":9,"lodash":40,"react":178,"zepto/zepto.min":191}],196:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -46320,7 +46327,7 @@ var MemoIndexLine = (function (_super) {
     };
     MemoIndexLine.prototype.render = function () {
         var memo = this.props.memo;
-        return React.createElement("tr", null, React.createElement("td", {"className": "title"}, React.createElement("a", {"onClick": function () { return mixins_1.MemoMix.editMemo(memo); }}, memo.title)), React.createElement("td", {"className": "tags"}, this.tagLinks(memo.tags)), React.createElement("td", {"className": "public"}, this.detectPublicText()));
+        return React.createElement("tr", null, React.createElement("td", {"className": "title"}, React.createElement("a", {"onClick": function () { return mixins_1.MemoMix.goMemoEdit(memo); }}, memo.title)), React.createElement("td", {"className": "tags"}, this.tagLinks(memo.tags)), React.createElement("td", {"className": "public"}, this.detectPublicText()));
     };
     return MemoIndexLine;
 })(React.Component);
@@ -46345,7 +46352,7 @@ var MemoIndexPager = (function (_super) {
         var _a = this.props.memoIndexData, memos = _a.memos, page = _a.page, par = _a.par, total = _a.total;
         return React.createElement("ul", {"className": "memo-index pager"}, _.times(total, function (n) {
             var now = n + 1;
-            return React.createElement("li", {"className": "memo-index pager-container", "key": "pager" + now}, React.createElement("a", {"className": "memo-index pager-link " + (now == page ? 'now' : 'not'), "onClick": function () { return mixins_1.MemoMix.pageIndex(now); }, "disabled": memos.length === 0 ? true : false}, now));
+            return React.createElement("li", {"className": "memo-index pager-container", "key": "pager" + now}, React.createElement("a", {"className": "memo-index pager-link " + (now == page ? 'now' : 'not'), "onClick": function () { return mixins_1.MemoMix.loadMemoIndex(now); }, "disabled": memos.length === 0 ? true : false}, now));
         }));
     };
     return MemoIndexPager;
@@ -46369,7 +46376,7 @@ var MemoIndexTagLink = (function (_super) {
     }
     MemoIndexTagLink.prototype.render = function () {
         var tag = this.props.tag;
-        return (React.createElement("div", {"className": "memo-index tag-link-container"}, React.createElement("a", {"className": "memo-index tag-link", "onClick": function () { return mixins_1.MemoMix.selectTag(tag); }}, tag.name)));
+        return (React.createElement("div", {"className": "memo-index tag-link-container"}, React.createElement("a", {"className": "memo-index tag-link", "onClick": function () { return mixins_1.MemoMix.goTaggedIndex(tag); }}, tag.name)));
     };
     return MemoIndexTagLink;
 })(React.Component);
@@ -46447,15 +46454,16 @@ exports.default = Menu;
 })(exports.Login || (exports.Login = {}));
 var Login = exports.Login;
 (function (Memo) {
-    Memo[Memo["Index"] = 101] = "Index";
+    Memo[Memo["ShowIndex"] = 101] = "ShowIndex";
     Memo[Memo["WaitIndex"] = 105] = "WaitIndex";
-    Memo[Memo["Edit"] = 102] = "Edit";
-    Memo[Memo["WaitEdit"] = 106] = "WaitEdit";
-    Memo[Memo["Rendered"] = 107] = "Rendered";
+    Memo[Memo["StartEditing"] = 102] = "StartEditing";
+    Memo[Memo["WaitEditing"] = 106] = "WaitEditing";
+    Memo[Memo["FinishRendering"] = 107] = "FinishRendering";
     Memo[Memo["Create"] = 103] = "Create";
     Memo[Memo["Delete"] = 104] = "Delete";
-    Memo[Memo["Created"] = 108] = "Created";
-    Memo[Memo["FailedCreation"] = 109] = "FailedCreation";
+    Memo[Memo["SuccessSaving"] = 108] = "SuccessSaving";
+    Memo[Memo["FailSaving"] = 109] = "FailSaving";
+    Memo[Memo["StartSaving"] = 110] = "StartSaving";
 })(exports.Memo || (exports.Memo = {}));
 var Memo = exports.Memo;
 
@@ -46475,6 +46483,12 @@ var Login = exports.Login;
     Context[Context["Calm"] = 0] = "Calm";
 })(exports.Context || (exports.Context = {}));
 var Context = exports.Context;
+(function (EditMemoState) {
+    EditMemoState[EditMemoState["Ready"] = 0] = "Ready";
+    EditMemoState[EditMemoState["Loading"] = 1] = "Loading";
+    EditMemoState[EditMemoState["Saving"] = 2] = "Saving";
+})(exports.EditMemoState || (exports.EditMemoState = {}));
+var EditMemoState = exports.EditMemoState;
 
 },{}],203:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
@@ -46502,7 +46516,7 @@ var App = (function (_super) {
     }
     App.prototype.render = function () {
         // injected by connect
-        var _a = this.props, dispatch = _a.dispatch, loggedIn = _a.loggedIn, loginState = _a.loginState, context = _a.context, memoIndexData = _a.memoIndexData, memoData = _a.memoData, rendered = _a.rendered;
+        var _a = this.props, dispatch = _a.dispatch, loggedIn = _a.loggedIn, loginState = _a.loginState, context = _a.context, memoIndexData = _a.memoIndexData, memoData = _a.memoData, editState = _a.editState, rendered = _a.rendered;
         mixins_1.default.dispatch = dispatch;
         router_1.default.dispatch = dispatch;
         if (!this.initialized) {
@@ -46516,7 +46530,7 @@ var App = (function (_super) {
             case status_1.Context.MemoIndex:
                 return React.createElement(memo_index_1.default, {"memoIndexData": memoIndexData});
             case status_1.Context.MemoEdit:
-                return React.createElement(memo_edit_1.default, {"memoData": memoData, "rendered": rendered});
+                return React.createElement(memo_edit_1.default, {"memoData": memoData, "editState": editState, "rendered": rendered});
             default:
                 return React.createElement("div", null, "loading...");
         }
@@ -46530,7 +46544,8 @@ function select(state) {
         context: state.context,
         memoIndexData: state.memoIndexData,
         memoData: state.memoData,
-        rendered: state.rendered
+        rendered: state.rendered,
+        editState: state.editState
     };
 }
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -46691,27 +46706,31 @@ exports.LoginMix = LoginMix;
 var MemoMix = (function () {
     function MemoMix() {
     }
-    MemoMix.renderSlim = function (slim) {
-        Mixin.dispatch(MemoAction.renderSlim(slim));
-    };
     MemoMix.goMemoIndex = function () {
-        Mixin.dispatch(MemoAction.getIndex(1));
+        MemoMix.loadMemoIndex();
     };
     MemoMix.goNewMemo = function () {
-        Mixin.dispatch(MemoAction.editNewMemo());
+        Mixin.dispatch(MemoAction.goEditNewMemo());
     };
-    MemoMix.selectTag = function (tag) {
+    MemoMix.goMemoEditById = function (id) {
+        Mixin.dispatch(MemoAction.goEditMemoById(id));
+    };
+    MemoMix.goMemoEdit = function (memo) {
+        Mixin.dispatch(MemoAction.goEditMemoById(memo.id));
+    };
+    MemoMix.goTaggedIndex = function (tag) {
         console.log(Mixin.dispatch);
         console.log(tag);
     };
-    MemoMix.updateMemo = function (memo) {
-        Mixin.dispatch(MemoAction.updateMemo(memo));
+    MemoMix.saveMemo = function (memo) {
+        Mixin.dispatch(MemoAction.saveMemo(memo));
     };
-    MemoMix.editMemo = function (memo) {
-        Mixin.dispatch(MemoAction.editMemo(memo));
+    MemoMix.loadMemoIndex = function (page) {
+        if (page === void 0) { page = 1; }
+        Mixin.dispatch(MemoAction.loadMemoIndex(page));
     };
-    MemoMix.pageIndex = function (page) {
-        Mixin.dispatch(MemoAction.getIndex(page));
+    MemoMix.renderSlim = function (slim) {
+        Mixin.dispatch(MemoAction.renderSlim(slim));
     };
     return MemoMix;
 })();
@@ -46801,11 +46820,13 @@ function context(state, action) {
             return status_1.Context.Login;
         case Type.Login.LoggedOut:
             return status_1.Context.Login;
-        case Type.Memo.Index:
+        case Type.Memo.ShowIndex:
             return status_1.Context.MemoIndex;
         case Type.Memo.WaitIndex:
             return status_1.Context.MemoIndex;
-        case Type.Memo.Edit:
+        case Type.Memo.WaitEditing:
+            return status_1.Context.MemoEdit;
+        case Type.Memo.StartEditing:
             return status_1.Context.MemoEdit;
         case Type.Memo.Create:
             return status_1.Context.MemoEdit;
@@ -46855,10 +46876,11 @@ var Type = require('../constants/action-types');
 var _ = require('lodash');
 var memo_1 = require('../models/memo');
 var memo_index_data_1 = require("../models/memo-index-data");
+var status_1 = require('../constants/status');
 function memoIndexData(state, action) {
     if (state === void 0) { state = new memo_index_data_1.default(); }
     switch (action.type) {
-        case Type.Memo.Index:
+        case Type.Memo.ShowIndex:
             var memos = action.memos, page = action.page, par = action.par, total = action.total;
             var ms = _.map(memos, function (memo) { return new memo_1.default(memo); });
             return new memo_index_data_1.default(ms, page, par, total);
@@ -46874,11 +46896,11 @@ function memoIndexData(state, action) {
     }
 }
 function memoData(state, action) {
-    if (state === void 0) { state = null; }
+    if (state === void 0) { state = new memo_1.default(); }
     switch (action.type) {
-        case Type.Memo.Edit:
+        case Type.Memo.StartEditing:
             return action.memo;
-        case Type.Memo.Created:
+        case Type.Memo.SuccessSaving:
             return action.memo;
         default:
             return state;
@@ -46887,18 +46909,35 @@ function memoData(state, action) {
 function rendered(state, action) {
     if (state === void 0) { state = ''; }
     switch (action.type) {
-        case Type.Memo.Edit:
+        case Type.Memo.StartEditing:
             return '';
-        case Type.Memo.Rendered:
+        case Type.Memo.FinishRendering:
             return action.html;
         default:
             return state;
     }
 }
+function editState(state, action) {
+    if (state === void 0) { state = status_1.EditMemoState.Ready; }
+    switch (action.type) {
+        case Type.Memo.WaitEditing:
+            return status_1.EditMemoState.Loading;
+        case Type.Memo.StartEditing:
+            return status_1.EditMemoState.Ready;
+        case Type.Memo.StartSaving:
+            return status_1.EditMemoState.Saving;
+        case Type.Memo.SuccessSaving:
+            return status_1.EditMemoState.Ready;
+        case Type.Memo.FailSaving:
+            return status_1.EditMemoState.Ready;
+        default:
+            return state;
+    }
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = { memoIndexData: memoIndexData, memoData: memoData, rendered: rendered };
+exports.default = { memoIndexData: memoIndexData, memoData: memoData, rendered: rendered, editState: editState };
 
-},{"../constants/action-types":201,"../models/memo":208,"../models/memo-index-data":207,"lodash":40}],213:[function(require,module,exports){
+},{"../constants/action-types":201,"../constants/status":202,"../models/memo":208,"../models/memo-index-data":207,"lodash":40}],213:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var _ = require('lodash');
 var redux_1 = require('redux');
@@ -46910,16 +46949,15 @@ exports.default = redux_1.combineReducers(_.assign({}, login_1.default, memo_1.d
 
 },{"./context":210,"./login":211,"./memo":212,"lodash":40,"redux":182}],214:[function(require,module,exports){
 var router_1 = require('./lib/router');
-var MemoAction = require('./actions/memo');
+var mixins_1 = require("./mixins");
 var WriterRouter = (function () {
     function WriterRouter() {
     }
     WriterRouter.initialize = function () {
-        var _this = this;
         // メモ一覧を取得
-        this.router.add('/w/memos', function (params) { return _this.dispatch(MemoAction.getIndex()); });
+        this.router.add('/w/memos', function (params) { return mixins_1.MemoMix.loadMemoIndex(); });
         // メモの内容を取得
-        this.router.add('/w/memos/:memoId', function (params) { return _this.dispatch(MemoAction.editMemoById(params['memoId'])); });
+        this.router.add('/w/memos/:memoId', function (params) { return mixins_1.MemoMix.goMemoEditById(params['memoId']); });
     };
     WriterRouter.go = function (url) {
         return this.router.execute(url);
@@ -46936,7 +46974,7 @@ var WriterRouter = (function () {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = WriterRouter;
 
-},{"./actions/memo":193,"./lib/router":205}],215:[function(require,module,exports){
+},{"./lib/router":205,"./mixins":206}],215:[function(require,module,exports){
 /// <reference path="types/tsd.d.ts" />
 var React = require('react');
 var react_dom_1 = require('react-dom');

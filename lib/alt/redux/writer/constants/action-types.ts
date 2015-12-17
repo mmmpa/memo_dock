@@ -7,13 +7,14 @@ export enum Login{
 }
 
 export enum Memo{
-  Index = 101,
+  ShowIndex = 101,
   WaitIndex = 105,
-  Edit = 102,
-  WaitEdit = 106,
-  Rendered = 107,
+  StartEditing = 102,
+  WaitEditing = 106,
+  FinishRendering = 107,
   Create = 103,
   Delete = 104,
-  Created = 108,
-  FailedCreation = 109,
+  SuccessSaving = 108,
+  FailSaving = 109,
+  StartSaving = 110,
 }

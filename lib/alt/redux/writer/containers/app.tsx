@@ -10,6 +10,7 @@ import MemoIndex from "../components/memo-index";
 import MemoEdit from "../components/memo-edit";
 import { tryLogin, checkInitialState } from '../actions/login'
 import * as Status from '../constants/status'
+import {EditMemoState} from '../constants/status'
 import Memo from "../models/memo";
 import Mixin from "../mixins";
 import MemoIndexData from "../models/memo-index-data";
@@ -24,7 +25,8 @@ interface IApp {
   context?: Status.Context,
   memoData?: Memo,
   memoIndexData?: MemoIndexData,
-  rendered?:string
+  rendered?:string,
+  editState?:EditMemoState
 }
 
 class App extends Component<IApp, {}> {
@@ -32,7 +34,7 @@ class App extends Component<IApp, {}> {
 
   render() {
     // injected by connect
-    const { dispatch, loggedIn, loginState, context, memoIndexData, memoData, rendered} = this.props;
+    const { dispatch, loggedIn, loginState, context, memoIndexData, memoData, editState, rendered} = this.props;
     Mixin.dispatch = dispatch;
     WriterRouter.dispatch = dispatch;
 
@@ -48,7 +50,7 @@ class App extends Component<IApp, {}> {
       case Context.MemoIndex:
         return <MemoIndex memoIndexData={memoIndexData}/>;
       case Context.MemoEdit:
-        return <MemoEdit memoData={memoData} rendered={rendered}/>;
+        return <MemoEdit memoData={memoData} editState={editState} rendered={rendered}/>;
       default:
         return <div>loading...</div>;
     }
@@ -62,7 +64,8 @@ function select(state) {
     context: state.context,
     memoIndexData: state.memoIndexData,
     memoData: state.memoData,
-    rendered: state.rendered
+    rendered: state.rendered,
+    editState: state.editState
   }
 }
 

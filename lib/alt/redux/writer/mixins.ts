@@ -17,32 +17,37 @@ export class LoginMix {
 }
 
 export class MemoMix {
-  static renderSlim(slim:string){
-    Mixin.dispatch(MemoAction.renderSlim(slim));
-  }
-
   static goMemoIndex() {
-    Mixin.dispatch(MemoAction.getIndex(1));
+    MemoMix.loadMemoIndex();
   }
 
   static goNewMemo() {
-    Mixin.dispatch(MemoAction.editNewMemo());
+    Mixin.dispatch(MemoAction.goEditNewMemo());
   }
 
-  static selectTag(tag:Tag) {
+  static goMemoEditById(id:number) {
+    Mixin.dispatch(MemoAction.goEditMemoById(id));
+  }
+
+  static goMemoEdit(memo:Memo) {
+    Mixin.dispatch(MemoAction.goEditMemoById(memo.id));
+  }
+
+  static goTaggedIndex(tag:Tag) {
     console.log(Mixin.dispatch);
     console.log(tag);
   }
 
-  static updateMemo(memo:Memo) {
-    Mixin.dispatch(MemoAction.updateMemo(memo));
+
+  static saveMemo(memo:Memo) {
+    Mixin.dispatch(MemoAction.saveMemo(memo));
   }
 
-  static editMemo(memo:Memo) {
-    Mixin.dispatch(MemoAction.editMemo(memo));
+  static loadMemoIndex(page:number = 1) {
+    Mixin.dispatch(MemoAction.loadMemoIndex(page));
   }
 
-  static pageIndex(page:number) {
-    Mixin.dispatch(MemoAction.getIndex(page));
+  static renderSlim(slim:string){
+    Mixin.dispatch(MemoAction.renderSlim(slim));
   }
 }

@@ -16,7 +16,7 @@ export default class MemoIndexPager extends React.Component<IMemoIndexPager, {}>
         let now = n + 1;
         return <li className="memo-index pager-container" key={"pager" + now}>
           <a className={"memo-index pager-link " + (now == page ? 'now' : 'not') }
-             onClick={()=> MemoMix.pageIndex(now) }
+             onClick={()=> MemoMix.loadMemoIndex(now) }
              disabled={ memos.length === 0 ? true : false }
           >{now}</a>
         </li>

@@ -12,3 +12,9 @@ export enum Context{
   MemoIndex = 3,
   Calm = 0
 }
+
+export enum EditMemoState{
+  Ready,
+  Loading,
+  Saving,
+}

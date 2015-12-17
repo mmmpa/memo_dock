@@ -16,11 +16,13 @@ function context(state:Context = Context.Calm, action):Context {
       return Context.Login;
     case Type.Login.LoggedOut:
       return Context.Login;
-    case Type.Memo.Index:
+    case Type.Memo.ShowIndex:
       return Context.MemoIndex;
     case Type.Memo.WaitIndex:
       return Context.MemoIndex;
-    case Type.Memo.Edit:
+    case Type.Memo.WaitEditing:
+      return Context.MemoEdit;
+    case Type.Memo.StartEditing:
       return Context.MemoEdit;
     case Type.Memo.Create:
       return Context.MemoEdit;
