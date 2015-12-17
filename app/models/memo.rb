@@ -42,7 +42,12 @@ class Memo < ActiveRecord::Base
   end
 
   def normalized_tag_list
-    Array(temp_tag_list).flatten.join(',').gsub(/,[^\S]+/, ',').split(',')
+    Array(temp_tag_list)
+      .flatten
+      .join(',')
+      .gsub(/,[^\S]+/, ',')
+      .tr('　０-９Ａ-Ｚａ-ｚ－', ' 0-9A-Za-z-')
+      .split(',')
   end
 
   def detect_tag_from_list!
@@ -60,6 +65,8 @@ class Memo < ActiveRecord::Base
       tag = Tag.find_or_create_by(name: name)
       tags << tag
     end
+
+    self.tag_list = nil
   end
 
   def temp_tag_list

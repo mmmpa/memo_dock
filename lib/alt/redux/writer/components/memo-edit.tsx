@@ -24,10 +24,7 @@ interface IMemoEdit {
 }
 
 interface IMemoEditState {
-  title?:string,
-  src?:string,
-  isPublic?:boolean,
-  tagList?:string,
+  memoData?:Memo,
   renderer?:Function
 }
 
@@ -37,32 +34,31 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   constructor(props) {
     super(props);
 
-    if (this.props.memoData) {
-      let {title, src, isPublic, tagList} = this.props.memoData;
+    let {memoData} = this.props;
 
+    if (memoData) {
       this.state = {
-        title: title,
-        src: src,
-        isPublic: isPublic,
-        tagList: tagList,
+        memoData: memoData,
         renderer: _.debounce(()=> {
-          MemoMix.renderSlim(this.state.src);
+          MemoMix.renderSlim(this.state.memoData.src);
           this.resize();
         }, 1000)
       }
     } else {
       this.state = {
-        title: '',
-        src: '',
-        isPublic: false,
-        tagList: ''
+        memoData: null
       }
     }
   }
 
   componentDidUpdate() {
-    if (this.cm.getValue() != this.state.src) {
-      this.cm.setValue(this.state.src || '');
+    let {memoData} = this.state;
+    if (this.props.memoData.id !== memoData.id) {
+      this.state.memoData.id = memoData.id;
+      this.setState({memoData: this.props.memoData});
+    }
+    if (this.cm.getValue() != memoData.src) {
+      this.cm.setValue(memoData.src || '');
     }
   }
 
@@ -84,19 +80,27 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
 
   changeSrc(e) {
     this.state.renderer();
-    this.setState(_.merge(this.state, {src: e.doc.getValue()}));
+    let {memoData} = this.state;
+    memoData.src = e.doc.getValue();
+    this.setState(_.merge(this.state, {memoData}));
   }
 
   changeTitle(e) {
-    this.setState(_.merge(this.state, {title: e.target.value}));
+    let {memoData} = this.state;
+    memoData.title = e.target.value;
+    this.setState(_.merge(this.state, {memoData}));
   }
 
   changeTags(e) {
-    this.setState(_.merge(this.state, {tags: e.target.value}));
+    let {memoData} = this.state;
+    memoData.tagList = e.target.value;
+    this.setState(_.merge(this.state, {memoData}));
   }
 
   togglePublic(e) {
-    this.setState(_.merge(this.state, {isPublic: !this.state.isPublic}));
+    let {memoData} = this.state;
+    memoData.isPublic = !memoData.isPublic;
+    this.setState(_.merge(this.state, {memoData}));
   }
 
   resize() {
@@ -106,7 +110,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
     let bottom:number = $('#submitArea').position().top;
     let height:number = bottom - top;
 
-    if ($('#srcArea').position().left === $('#htmlArea').position().left ) {
+    if ($('#srcArea').position().left === $('#htmlArea').position().left) {
       height /= 2;
       this.cm.setSize(null, height);
       $html.css({height});
@@ -116,8 +120,12 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
     }
   }
 
+  save() {
+    MemoMix.updateMemo(this.state.memoData);
+  }
+
   render() {
-    let {title, src, tagList, isPublic} = this.state;
+    let {title, src, tagList, isPublic} = this.state.memoData;
     let {rendered} = this.props;
     return (
       <article className="memo-edit">
@@ -141,7 +149,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
             </section>
           </section>
           <section className="memo-edit submit-area" id="submitArea">
-            <button className="memo-edit submit">
+            <button className="memo-edit submit" onClick={this.save.bind(this)}>
               <Fa icon="paw"/>
               保存する
             </button>

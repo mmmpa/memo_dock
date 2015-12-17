@@ -32,11 +32,14 @@ RSpec.describe "Writers::Api::Memos", type: :request do
     end
 
     context 'with valid parameters' do
-      it 'gets 201' do
+      it 'gets 201, and new memo data' do
+        params = attributes_for(:memo, :valid)
         expect {
-          post new_memo_path, memo: attributes_for(:memo, :valid)
+          post new_memo_path, memo: params
         }.to change(Memo, :count).by(1)
         expect(response).to have_http_status(201)
+        expect(json[:title]).to eq(params[:title])
+        expect(json[:src]).to eq(params[:src])
       end
 
       context 'with string boolean' do

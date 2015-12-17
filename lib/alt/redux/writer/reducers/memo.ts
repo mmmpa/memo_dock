@@ -27,6 +27,8 @@ function memoData(state = null, action) {
   switch (action.type) {
     case Type.Memo.Edit:
       return action.memo;
+    case Type.Memo.Created:
+      return action.memo;
     default:
       return state;
   }

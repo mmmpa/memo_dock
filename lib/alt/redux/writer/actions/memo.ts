@@ -21,6 +21,48 @@ export function getIndex(page:number = 1) {
   }
 }
 
+export function updateMemo(memo:Memo) {
+  if(memo.isPersisted()){
+    return (dispatch) => {
+      request
+        .patch('/w/api/memos/' + memo.id)
+        .set('X-CSRF-Token', token())
+        .send({memo: memo.generateParams()})
+        .end((err, res)=> {
+          if (err) {
+            dispatch(updateMemoFailed(res.body));
+          } else {
+            console.log(res.body);
+
+            dispatch(updateMemoAfter(new Memo(res.body)));
+          }
+        })
+    }
+  }else{
+    return (dispatch) => {
+      request
+        .post('/w/api/memos/new')
+        .set('X-CSRF-Token', token())
+        .send({memo: memo.generateParams()})
+        .end((err, res)=> {
+          if (err) {
+            dispatch(updateMemoFailed(res.body));
+          } else {
+            dispatch(updateMemoAfter(new Memo(res.body)));
+          }
+        })
+    }
+  }
+}
+
+function updateMemoFailed(errors:any) {
+  return {type: Type.Memo.FailedCreation, errors};
+}
+
+function updateMemoAfter(memo:Memo) {
+  return {type: Type.Memo.Created, memo};
+}
+
 function waitLoadedIndex() {
   return {type: Type.Memo.WaitIndex};
 }
@@ -37,11 +79,11 @@ function waitLoadedMemo() {
   return {type: Type.Memo.WaitEdit};
 }
 
-export function editNewMemo(){
+export function editNewMemo() {
   goEditMemo(new Memo());
 }
 
-export function editMemoById(memoId:number){
+export function editMemoById(memoId:number) {
   return (dispatch) => {
     dispatch(waitLoadedMemo());
     request
@@ -60,7 +102,7 @@ export function editMemo(memo:Memo) {
   return editMemoById(memo.id);
 }
 
-export function renderSlim(slim:string){
+export function renderSlim(slim:string) {
   return (dispatch) => {
     request
       .post('/w/api/memos/slim')
@@ -76,6 +118,6 @@ export function renderSlim(slim:string){
   }
 }
 
-export function renderedSlim(html:string){
+export function renderedSlim(html:string) {
   return {type: Type.Memo.Rendered, html};
 }

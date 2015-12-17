@@ -34,6 +34,10 @@ export class MemoMix {
     console.log(tag);
   }
 
+  static updateMemo(memo:Memo) {
+    Mixin.dispatch(MemoAction.updateMemo(memo));
+  }
+
   static editMemo(memo:Memo) {
     Mixin.dispatch(MemoAction.editMemo(memo));
   }

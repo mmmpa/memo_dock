@@ -8,8 +8,7 @@ module Writers
     rescue_from ActiveRecord::RecordNotFound, with: -> { render nothing: true, status: 404 }
 
     def create
-      Memo.create!(memo_params)
-      render nothing: true, status: 201
+      render json: MemoDetail.create!(memo_params), status: 201
     rescue ActiveRecord::RecordInvalid => e
       render json: e.record.errors, status: 400
     end
@@ -28,7 +27,7 @@ module Writers
     end
 
     def edit
-      render json: MemoDetail.find(params[:memo_id])
+      render json: target_memo
     rescue ActiveRecord::RecordNotFound
       render nothing: true, status: 404
     end
@@ -42,7 +41,7 @@ module Writers
 
     def update
       target_memo.update!(memo_params)
-      render nothing: true, status: 204
+      render json: target_memo.reload, status: 201
     rescue ActiveRecord::RecordInvalid => e
       render json: e.record.errors, status: 400
     end
@@ -50,11 +49,11 @@ module Writers
     private
 
     def target_memo
-      Memo.find(params[:memo_id])
+      MemoDetail.find(params[:memo_id])
     end
 
     def memo_params
-      params.require(:memo).permit(:title, :tag_list, :src, :public)
+      pp params.require(:memo).permit(:title, :tag_list, :src, :public)
     end
 
     def page
