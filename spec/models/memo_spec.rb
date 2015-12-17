@@ -190,6 +190,16 @@ RSpec.describe Memo, type: :model do
         expect(model.valid?).to be_truthy
       end
 
+      it 'with "true"' do
+        model.public = 'true'
+        expect(model.public).to be_truthy
+      end
+
+      it 'with "false""' do
+        model.public = 'false'
+        expect(model.public).to be_falsey
+      end
+
       context 'with other (default: false)' do
         it do
           model.public = :a

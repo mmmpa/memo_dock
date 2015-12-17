@@ -41,9 +41,13 @@ class Memo < ActiveRecord::Base
     self.html = Memo.convert(src)
   end
 
+  def normalized_tag_list
+    Array(temp_tag_list).flatten.join(',').gsub(/,[^\S]+/, ',').split(',')
+  end
+
   def detect_tag_from_list!
     registered = Set.new(tags.pluck(:name))
-    newer = Set.new(Array(temp_tag_list))
+    newer = Set.new(normalized_tag_list)
 
     hold = registered & newer
 

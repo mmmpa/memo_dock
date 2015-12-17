@@ -16,6 +16,7 @@ import MemoIndexData from "../models/memo-index-data";
 
 WriterRouter.initialize();
 
+
 interface IApp {
   dispatch?:Function,
   loggedIn?:boolean,
@@ -25,7 +26,6 @@ interface IApp {
   memoIndexData?: MemoIndexData,
   rendered?:string
 }
-
 
 class App extends Component<IApp, {}> {
   private initialized:boolean = false;

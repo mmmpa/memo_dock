@@ -26,6 +26,128 @@ RSpec.describe "Writers::Api::Memos", type: :request do
     end
   end
 
+  describe 'creating new memo' do
+    before :each do
+      login
+    end
+
+    context 'with valid parameters' do
+      it 'gets 201' do
+        expect {
+          post new_memo_path, memo: attributes_for(:memo, :valid)
+        }.to change(Memo, :count).by(1)
+        expect(response).to have_http_status(201)
+      end
+
+      context 'with string boolean' do
+        it do
+          expect {
+            post new_memo_path, memo: attributes_for(:memo, :valid, public: 'true')
+          }.to change(Memo, :count).by(1)
+          expect(Memo.last.public).to be_truthy
+        end
+
+        it do
+          expect {
+            post new_memo_path, memo: attributes_for(:memo, :valid, public: 'false')
+          }.to change(Memo, :count).by(1)
+          expect(Memo.last.public).to be_falsey
+        end
+      end
+
+      context 'with string tag list' do
+        it do
+          expect {
+            post new_memo_path, memo: attributes_for(:memo, :valid, tag_list: 'tag1, tag2')
+          }.to change(Memo, :count).by(1)
+          expect(Memo.last.tags.pluck(:name)).to match_array(%w(tag1 tag2))
+        end
+      end
+    end
+
+    context 'with invalid parameters' do
+      it 'gets 400' do
+        expect {
+          post new_memo_path, memo: attributes_for(:memo, :valid, title: '')
+        }.to change(Memo, :count).by(0)
+        expect(response).to have_http_status(400)
+      end
+    end
+  end
+
+  describe 'updating a memo' do
+    before :each do
+      login
+    end
+
+    let!(:target_memo) { create(:memo, :valid) }
+    let!(:id) { target_memo.id }
+    let!(:title) { target_memo.title }
+
+    context 'with valid parameters' do
+      it do
+        expect {
+          patch memo_path(memo_id: id), memo: {title: '新しいタイトル'}
+        }.to change(Memo, :count).by(0)
+        expect(Memo.find(id).title).to eq('新しいタイトル')
+      end
+    end
+
+    context 'with invalid parameters' do
+      it 'with not exist id, gets 404' do
+        expect {
+          patch memo_path(memo_id: 0), memo: {title: '新しいタイトル'}
+        }.to change(Memo, :count).by(0)
+        expect(response).to have_http_status(404)
+      end
+
+      it 'gets 400' do
+        expect {
+          patch memo_path(memo_id: id), memo: {title: ''}
+        }.to change(Memo, :count).by(0)
+        expect(Memo.find(id).title).to eq(title)
+        expect(response).to have_http_status(400)
+      end
+    end
+  end
+
+  describe 'deleting memo' do
+    before :each do
+      login
+    end
+
+    let!(:target_memo) { create(:memo, :valid) }
+    let!(:id) { target_memo.id }
+
+    context 'with valid id' do
+      it do
+        expect {
+          delete memo_path(memo_id: id)
+        }.to change(Memo, :count).by(-1)
+        expect(response).to have_http_status(204)
+      end
+    end
+
+    context 'with invalid id' do
+      it do
+        expect {
+          delete memo_path(memo_id: 0)
+        }.to change(Memo, :count).by(0)
+        expect(response).to have_http_status(404)
+      end
+    end
+
+    it 'when failed, get 500' do
+      expect {
+        allow_any_instance_of(Memo).to receive(:destroy!) do
+          raise ActiveRecord::RecordNotDestroyed.new('')
+        end
+        delete memo_path(memo_id: id)
+      }.to change(Memo, :count).by(0)
+      expect(response).to have_http_status(500)
+    end
+  end
+
   describe 'getting memo data' do
     before :each do
       login
@@ -54,7 +176,7 @@ RSpec.describe "Writers::Api::Memos", type: :request do
     end
 
     context 'header includes meta data (values must be string)' do
-      it  do
+      it do
         get memos_path
         expect(json.size).to eq(20)
         expect(header['Total-Pages']).to eq('3')
@@ -62,7 +184,7 @@ RSpec.describe "Writers::Api::Memos", type: :request do
         expect(header['Page']).to eq('1')
       end
 
-      it  do
+      it do
         get memos_path, page: 2
         expect(json.size).to eq(20)
         expect(header['Total-Pages']).to eq('3')
