@@ -28,3 +28,5 @@ RAILS_ENV=production rake db:seed
 そのための関数はcontainerから注入されるため、storeの存在を下位コンポーネントが知らずにいられるのと同じように、routerの存在もしらずにいられるようにする。
 
 post系はcontainerから注入された関数経由でdispatchする普通のアクセスでOK。
+
+action名はとりあえず動詞で、reducerはそのままショートハンドで使えるように動詞。
