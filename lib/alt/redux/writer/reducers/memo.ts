@@ -26,10 +26,29 @@ function memoIndexData(state:MemoIndexData = new MemoIndexData(), action) {
 
 function memoData(state = new Memo(), action) {
   switch (action.type) {
+    case Type.Memo.WaitEditing:
+      return new Memo();
     case Type.Memo.StartEditing:
       return action.memo;
-    case Type.Memo.SuccessSaving:
+    case Type.Memo.SucceedSaving:
       return action.memo;
+    default:
+      return state;
+  }
+}
+
+function memoMessage(state:any = null, action) {
+  switch (action.type) {
+    case Type.Memo.StartEditing:
+      return null;
+    case Type.Memo.WaitEditing:
+      return null;
+    case Type.Memo.StartSaving:
+      return null;
+    case Type.Memo.SucceedSaving:
+      return {messages: {memo: 'Saved'}};
+    case Type.Memo.FailSaving:
+      return {errors: action.errors};
     default:
       return state;
   }
@@ -37,6 +56,8 @@ function memoData(state = new Memo(), action) {
 
 function rendered(state:string = '', action) {
   switch (action.type) {
+    case Type.Memo.WaitEditing:
+      return '';
     case Type.Memo.StartEditing:
       return '';
     case Type.Memo.FinishRendering:
@@ -54,7 +75,7 @@ function editState(state:EditMemoState = EditMemoState.Ready, action) {
       return EditMemoState.Ready;
     case Type.Memo.StartSaving:
       return EditMemoState.Saving;
-    case Type.Memo.SuccessSaving:
+    case Type.Memo.SucceedSaving:
       return EditMemoState.Ready;
     case Type.Memo.FailSaving:
       return EditMemoState.Ready;
@@ -63,5 +84,5 @@ function editState(state:EditMemoState = EditMemoState.Ready, action) {
   }
 }
 
-export default {memoIndexData, memoData, rendered, editState}
+export default {memoIndexData, memoData, rendered, editState, memoMessage}
 

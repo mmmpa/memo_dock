@@ -18,20 +18,25 @@ export class LoginMix {
 
 export class MemoMix {
   static goMemoIndex() {
-    MemoMix.loadMemoIndex();
+    this.loadMemoIndex();
   }
 
   static goNewMemo() {
-    Mixin.dispatch(MemoAction.goEditNewMemo());
+    WriterRouter.go('/w/memos/new');
   }
 
   static goMemoEditById(id:number) {
-    Mixin.dispatch(MemoAction.goEditMemoById(id));
+    WriterRouter.go('/w/memos/' + id);
   }
 
   static goMemoEdit(memo:Memo) {
-    Mixin.dispatch(MemoAction.goEditMemoById(memo.id));
+    this.goMemoEditById(memo.id);
   }
+
+  static loadMemoIndex(page:number = 1) {
+    WriterRouter.go('/w/tags/-/memos/' + page);
+  }
+
 
   static goTaggedIndex(tag:Tag) {
     console.log(Mixin.dispatch);
@@ -41,10 +46,6 @@ export class MemoMix {
 
   static saveMemo(memo:Memo) {
     Mixin.dispatch(MemoAction.saveMemo(memo));
-  }
-
-  static loadMemoIndex(page:number = 1) {
-    Mixin.dispatch(MemoAction.loadMemoIndex(page));
   }
 
   static renderSlim(slim:string){

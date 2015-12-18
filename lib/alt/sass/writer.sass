@@ -17,10 +17,23 @@ body
 
 .global-menu
 	&.menu-container
-		@extend .navbar, .navbar-default, .navbar-fixed-top
+		height: 65px
+		overflow: hidden
+		line-height: 65px
+		padding: 0 20px
+		position: absolute
+		width: 100%
+		border-bottom: 1px solid $gray-lighter
+		background: #fff
+		top: 0
+		left: 0
 	&.menu-list
-		@extend .nav, .navbar-nav, %size-h4
-
+		margin: 0
+		padding: 0
+		li
+			@extend %size-h4
+			display: inline-block
+			margin-right: 20px
 .memo-edit
 	&.edit-container
 		padding-top: 70px
@@ -47,8 +60,8 @@ body
 	&.submit-area
 		height: 65px
 		overflow: hidden
-		line-height: 40px
-		padding: 10px 20px
+		line-height: 65px
+		padding: 0 20px
 		position: absolute
 		width: 100%
 		border-top: 1px solid $gray-lighter
@@ -59,10 +72,30 @@ body
 		@extend %size-h6
 		display: inline-block
 		margin-left: 20px
+		height: 65px
+		line-height: 65px
+		vertical-align: middle
 	&.submit
+		vertical-align: middle
 		@extend .btn, .btn-success
 		@extend %size-h6
-
+	&.error-area
+		vertical-align: middle
+		display: inline-block
+		margin-left: 20px
+		overflow: hidden
+		height: 65px
+		line-height: 65px
+		ul
+			margin: 0
+			padding: 0
+		li
+			margin-right: 20px
+			display: inline-block
+			&.message
+				color: $brand-success
+			&.error
+				color: $brand-danger
 .memo-index
 	&.index-container
 		padding-top: 70px

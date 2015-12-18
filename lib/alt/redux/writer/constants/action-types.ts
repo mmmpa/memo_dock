@@ -3,7 +3,8 @@ export enum Login{
   RequestRetry = 2,
   Wait = 3,
   LoggedIn = 4,
-  LoggedOut = 5
+  LoggedOut = 5,
+  DisplayForm = 6
 }
 
 export enum Memo{
@@ -14,7 +15,9 @@ export enum Memo{
   FinishRendering = 107,
   Create = 103,
   Delete = 104,
-  SuccessSaving = 108,
+  SucceedSaving = 108,
   FailSaving = 109,
   StartSaving = 110,
+  DisplayEditor = 111,
+  DisplayIndex = 112,
 }

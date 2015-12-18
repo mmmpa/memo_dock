@@ -21,8 +21,9 @@ import * as CodeMirror from 'codemirror'
 
 interface IMemoEdit {
   memoData:Memo,
-  editState:EditMemoState
-  rendered?:string
+  editState:EditMemoState,
+  rendered?:string,
+  memoMessage?:any
 }
 
 interface IMemoEditState {
@@ -60,19 +61,17 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   }
 
   componentDidMount() {
-    setTimeout(()=> {
-      this.cm = CodeMirror.fromTextArea($('#editor')[0], {
-        lineNumbers: true,
-        mode: "slim",
-        lineWrapping: true
-      });
-      this.cm.on('change', this.changeSrc.bind(this));
-      this.cm.setSize('100%', '100%');
-      this.cm.setValue(this.props.memoData.src || '');
+    this.cm = CodeMirror.fromTextArea($('#editor')[0], {
+      lineNumbers: true,
+      mode: "slim",
+      lineWrapping: true
+    });
+    this.cm.on('change', this.changeSrc.bind(this));
+    this.cm.setSize('100%', '100%');
+    this.cm.setValue(this.props.memoData.src || '');
 
-      $(window).resize((e)=> setTimeout(this.resize.bind(this), 2));
-      this.resize();
-    }, 1);
+    $(window).resize((e)=> setTimeout(this.resize.bind(this), 2));
+    this.resize();
   }
 
   changeSrc(e) {
@@ -140,6 +139,31 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
     MemoMix.saveMemo(this.state.memoData);
   }
 
+  writeError() {
+    let {memoMessage} = this.props;
+
+    if (!memoMessage) {
+      return null;
+    }
+
+    let messages = _.pairs(memoMessage.messages).map((kv)=>{
+      return <li className="message" key={kv.join('')}>
+        <Fa icon="comment-o" />
+        {kv.join(':')}
+      </li>
+    });
+
+
+    let errors = _.pairs(memoMessage.errors).map((kv)=>{
+      return <li className="error" key={kv.join('')}>
+        <Fa icon="ban" />
+        {kv.join(':')}
+      </li>
+    });
+
+    return <ul>{messages}{errors}</ul>
+  }
+
   render() {
     if (!this.state.memoData) {
       return <div>loading...</div>
@@ -174,6 +198,9 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
                 <input type="checkbox" checked={isPublic} onChange={this.togglePublic.bind(this)}/>
                 公開
               </label>
+            </div>
+            <div className="memo-edit error-area">
+              {this.writeError()}
             </div>
           </section>
         </section>

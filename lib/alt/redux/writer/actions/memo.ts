@@ -8,22 +8,19 @@ const request = require('superagent');
 
 //　メモ関係画面遷移
 
-function goMemoEditor(memo:Memo = null) {
-  return {type: Type.Memo.StartEditing, memo};
+function displayEditor(){
+  return {type: Type.Memo.DisplayEditor};
 }
 
-function goMemoIndex() {
-  return {type: Type.Memo.StartEditing};
+function displayIndex(){
+  return {type: Type.Memo.DisplayIndex};
 }
 
 // メモインデックス取得関係
 
-export function getIndex(){
-  return loadMemoIndex();
-}
-
 export function loadMemoIndex(page:number = 1) {
   return (dispatch) => {
+    dispatch(displayIndex());
     dispatch(waitLoadedIndex());
     request
       .get('/w/api/memos')
@@ -62,7 +59,7 @@ export function saveMemo(memo:Memo) {
         if (err) {
           dispatch(saveMemoFail(res.body));
         } else {
-          dispatch(saveMemoSuccess(new Memo(res.body)));
+          dispatch(saveMemoSucceed(new Memo(res.body)));
         }
       })
   }
@@ -76,8 +73,8 @@ function saveMemoFail(errors:any) {
   return {type: Type.Memo.FailSaving, errors};
 }
 
-function saveMemoSuccess(memo:Memo) {
-  return {type: Type.Memo.SuccessSaving, memo};
+function saveMemoSucceed(memo:Memo) {
+  return {type: Type.Memo.SucceedSaving, memo};
 }
 
 // メモ編集画面
@@ -88,21 +85,29 @@ function waitLoadedMemo() {
 
 export function goEditMemoById(memoId:number) {
   return (dispatch) => {
+    dispatch(displayEditor());
     dispatch(waitLoadedMemo());
     request
       .get('/w/api/memos/' + memoId)
       .end((err, res)=> {
         if (err) {
-          dispatch(goMemoEditor(new Memo()));
+          dispatch(injectMemoData(new Memo()));
         } else {
-          dispatch(goMemoEditor(new Memo(res.body)));
+          dispatch(injectMemoData(new Memo(res.body)));
         }
       })
   }
 }
 
 export function goEditNewMemo() {
-  return goMemoEditor(new Memo());
+  return (dispatch) => {
+    dispatch(displayEditor());
+    dispatch(injectMemoData(new Memo()));
+  }
+}
+
+function injectMemoData(memo:Memo = null) {
+  return {type: Type.Memo.StartEditing, memo};
 }
 
 export function startEditMemo(memo:Memo) {

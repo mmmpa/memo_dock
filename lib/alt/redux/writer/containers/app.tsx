@@ -17,7 +17,6 @@ import MemoIndexData from "../models/memo-index-data";
 
 WriterRouter.initialize();
 
-
 interface IApp {
   dispatch?:Function,
   loggedIn?:boolean,
@@ -26,20 +25,26 @@ interface IApp {
   memoData?: Memo,
   memoIndexData?: MemoIndexData,
   rendered?:string,
-  editState?:EditMemoState
+  editState?:EditMemoState,
+  memoMessage?:any
 }
+
 
 class App extends Component<IApp, {}> {
   private initialized:boolean = false;
 
   render() {
     // injected by connect
-    const { dispatch, loggedIn, loginState, context, memoIndexData, memoData, editState, rendered} = this.props;
+    const { dispatch, loggedIn, loginState, context, memoIndexData, memoData, editState, rendered, memoMessage} = this.props;
     Mixin.dispatch = dispatch;
     WriterRouter.dispatch = dispatch;
 
     if (!this.initialized) {
       this.initialized = true;
+      window.addEventListener('popstate', (e)=>{
+        WriterRouter.goHere(false);
+        console.log(e)
+      });
       dispatch(checkInitialState(()=> WriterRouter.goHere()));
       return <div>initializing...</div>;
     }
@@ -50,7 +55,7 @@ class App extends Component<IApp, {}> {
       case Context.MemoIndex:
         return <MemoIndex memoIndexData={memoIndexData}/>;
       case Context.MemoEdit:
-        return <MemoEdit memoData={memoData} editState={editState} rendered={rendered}/>;
+        return <MemoEdit memoData={memoData} memoMessage={memoMessage} editState={editState} rendered={rendered}/>;
       default:
         return <div>loading...</div>;
     }
@@ -65,6 +70,7 @@ function select(state) {
     memoIndexData: state.memoIndexData,
     memoData: state.memoData,
     rendered: state.rendered,
+    memoMessage: state.memoMessage,
     editState: state.editState
   }
 }

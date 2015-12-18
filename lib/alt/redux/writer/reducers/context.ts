@@ -1,31 +1,20 @@
 //
-// 表示する画面を決定するstate
+// どの画面を使うかのみを決定する。
 //
 
 /// <reference path="../types/tsd.d.ts" />
 
 import * as Type from '../constants/action-types';
 import {Context} from '../constants/status';
-import * as _ from 'lodash'
 
 function context(state:Context = Context.Calm, action):Context {
   switch (action.type) {
-    case Type.Login.LoggedIn:
-      return Context.MemoIndex;
-    case Type.Login.Request:
+    case Type.Login.DisplayForm:
       return Context.Login;
-    case Type.Login.LoggedOut:
-      return Context.Login;
-    case Type.Memo.ShowIndex:
+    case Type.Memo.DisplayEditor:
+      return Context.MemoEdit;
+    case Type.Memo.DisplayIndex:
       return Context.MemoIndex;
-    case Type.Memo.WaitIndex:
-      return Context.MemoIndex;
-    case Type.Memo.WaitEditing:
-      return Context.MemoEdit;
-    case Type.Memo.StartEditing:
-      return Context.MemoEdit;
-    case Type.Memo.Create:
-      return Context.MemoEdit;
     default:
       return state;
   }
