@@ -24,6 +24,12 @@ class RouterNode {
   }
 }
 
+interface Stripped{
+  strip:string,
+  hash?:string,
+  query?:string
+}
+
 export default class Router {
   private map:any;
   private mapped:{[id: string]: boolean};
@@ -59,7 +65,9 @@ export default class Router {
   execute(url:string):any {
     let store = [];
     let now:RouterNode = this.map;
-    let ref:string[] = Router.strip(url).split('/');
+    let stripped:Stripped = Router.strip(url);
+    let ref:string[] = stripped.strip.split('/');
+    let queryParams:any = Router.pickParams(stripped.query);
 
     _.each(ref, (name:string)=> {
       if (now.find(name)) {
@@ -70,7 +78,7 @@ export default class Router {
       }
     });
 
-    let params = {};
+    let params = queryParams;
     let paramNames = now.parameters;
     _.each(paramNames, (name:string, index:number)=> {
       params[name] = store[index];
@@ -83,9 +91,32 @@ export default class Router {
     return url.match(/:[a-zA-Z_0-9]+/) != null;
   };
 
-  static strip(url:string):string {
-    return url.replace(/\/$/ig, '').replace(/.+?:\/\/(.+?)\//, '/').replace(/\?.*/, '');
+  static strip(url:string):Stripped {
+    let base:string[] = url.replace(/\/$/ig, '').replace(/.+?:\/\/(.+?)\//, '/').split('?');
+    let base2:string[] = base[0].split('#');
+    let query:string = base[1];
+    let hash:string = base2[1];
+    let strip:string = base2[0];
+    return {
+      strip,
+      hash,
+      query
+    }
   };
+
+  static pickParams(queryString:string):any{
+    console.log(queryString)
+    if(!queryString){
+      return {};
+    }
+    let result = {};
+    queryString.split('&').map((kvString)=>{
+      let kv:string[] = kvString.split('=');
+      result[kv[0]] = kv[1];
+    });
+
+    return result;
+  }
 
   isExist(url:string):boolean{
     return this.find(url) != undefined;
@@ -101,7 +132,7 @@ export default class Router {
       return this.normalized[url];
     }
     if (!Router.isIncludePlaceholder(url)) {
-      return this.normalized[url] = [Router.strip(url), ''];
+      return this.normalized[url] = [Router.strip(url).strip, ''];
     }
     return this.normalized[url] = this.pickHolder(url, []);
   };
@@ -109,7 +140,7 @@ export default class Router {
   private pickHolder(url:string, holders:string[]):string[] {
     let result:RegExpMatchArray = url.match(/(:[a-zA-Z_0-9]+)/);
     if (!result) {
-      return [Router.strip(url), holders.join(':')];
+      return [Router.strip(url).strip, holders.join(':')];
     }
     return this.pickHolder(url.replace(result[1], ':'), holders.concat(result[1].replace(':', '')));
   };

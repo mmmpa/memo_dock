@@ -27,8 +27,10 @@ export function loadMemoIndex(tag_ids:string = '', page:number = 1) {
       .query({page, tag_ids})
       .end((err, res)=> {
         if (err) {
+          console.log(err);
           //dispatch(requestLogin());
         } else {
+          console.log(res);
           dispatch(loadMemoIndexSuccess(res.body, +res.header.page, +res.header.par, +res.header['total-pages'], res.header['tag-ids']));
         }
       })

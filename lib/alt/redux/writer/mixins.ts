@@ -34,14 +34,12 @@ export class MemoMix {
   }
 
   static loadMemoIndex(page:number = 1, tagIds:string = '-') {
-    WriterRouter.go('/w/tags/' + tagIds + '/memos/' + page);
+    WriterRouter.go('/w/memos?tagIds=' + tagIds + '&pageNum=' + page);
   }
-
 
   static goTaggedIndex(tag:Tag) {
-    WriterRouter.go('/w/tags/' + tag.id + '/memos/1');
+    WriterRouter.go('/w/memos?tagIds=' + tag.id);
   }
-
 
   static saveMemo(memo:Memo) {
     Mixin.dispatch(MemoAction.saveMemo(memo));
