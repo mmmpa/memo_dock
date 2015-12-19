@@ -49,6 +49,8 @@ class Memo < ActiveRecord::Base
     end
 
     self.html = Memo.convert(src)
+  rescue Slim::Parser::SyntaxError => e
+    errors.add(:html, "invalid #{e.message.match(/Line [0-9]+, Column [0-9]+/).to_s}")
   end
 
   def normalized_tag_list

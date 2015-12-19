@@ -66,13 +66,11 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
       mode: "slim",
       lineWrapping: true
     });
-    setTimeout(()=> {
-      this.cm.on('change', this.changeSrc.bind(this));
-      this.cm.setSize('100%', '100%');
-      this.cm.setValue(this.props.memoData.src || '');
-      $(window).resize((e)=> setTimeout(this.resize.bind(this), 2));
-      this.resize();
-    }, 2);
+    this.cm.on('change', this.changeSrc.bind(this));
+    this.cm.setSize('100%', '100%');
+    this.cm.setValue(this.props.memoData.src || '');
+    $(window).resize((e)=> setTimeout(this.resize.bind(this), 2));
+    this.resize();
   }
 
   changeSrc(e) {
@@ -173,14 +171,13 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
     let {rendered} = this.props;
     return (
       <article className="memo-edit">
-        <link href="/css/codemirror.css" rel="stylesheet" type="text/css"/>
         <Menu/>
         <section className="memo-edit edit-container">
           <section className="memo-edit title">
             <input type="text" placeholder="タイトル" value={title} onChange={this.changeTitle.bind(this)}/>
           </section>
           <section className="memo-edit tags">
-            <input type="text" placeholder="タグ（スペース区切り）" value={tagList} onChange={this.changeTags.bind(this)}/>
+            <input type="text" placeholder="タグ（カンマ区切り）" value={tagList} onChange={this.changeTags.bind(this)}/>
           </section>
           <section className="memo-edit content" id="contentArea">
             <section className="memo-edit src" id="srcArea">

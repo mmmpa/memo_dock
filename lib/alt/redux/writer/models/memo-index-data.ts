@@ -3,12 +3,12 @@ import Memo from "./memo"
 export default class MemoIndexData {
   constructor(public memos:Memo[] = [], public page:number = 0, public par:number = 0, public total:number = 0, public tagIds:string = '') {
     if(tagIds === ''){
-      this.tagIds = '-'
+      this.tagIds = null
     }
   }
 
   isSelectedTag():boolean{
-    return this.tagIds !== '-';
+    return this.tagIds !== null;
   }
 
   clone() {

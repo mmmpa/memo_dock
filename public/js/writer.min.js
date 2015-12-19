@@ -46239,13 +46239,11 @@ var MemoEdit = (function (_super) {
             mode: "slim",
             lineWrapping: true
         });
-        setTimeout(function () {
-            _this.cm.on('change', _this.changeSrc.bind(_this));
-            _this.cm.setSize('100%', '100%');
-            _this.cm.setValue(_this.props.memoData.src || '');
-            $(window).resize(function (e) { return setTimeout(_this.resize.bind(_this), 2); });
-            _this.resize();
-        }, 2);
+        this.cm.on('change', this.changeSrc.bind(this));
+        this.cm.setSize('100%', '100%');
+        this.cm.setValue(this.props.memoData.src || '');
+        $(window).resize(function (e) { return setTimeout(_this.resize.bind(_this), 2); });
+        this.resize();
     };
     MemoEdit.prototype.changeSrc = function (e) {
         this.state.renderer();
@@ -46317,7 +46315,7 @@ var MemoEdit = (function (_super) {
         }
         var _a = this.state.memoData, title = _a.title, src = _a.src, tagList = _a.tagList, isPublic = _a.isPublic;
         var rendered = this.props.rendered;
-        return (React.createElement("article", {"className": "memo-edit"}, React.createElement("link", {"href": "/css/codemirror.css", "rel": "stylesheet", "type": "text/css"}), React.createElement(menu_1.default, null), React.createElement("section", {"className": "memo-edit edit-container"}, React.createElement("section", {"className": "memo-edit title"}, React.createElement("input", {"type": "text", "placeholder": "タイトル", "value": title, "onChange": this.changeTitle.bind(this)})), React.createElement("section", {"className": "memo-edit tags"}, React.createElement("input", {"type": "text", "placeholder": "タグ（スペース区切り）", "value": tagList, "onChange": this.changeTags.bind(this)})), React.createElement("section", {"className": "memo-edit content", "id": "contentArea"}, React.createElement("section", {"className": "memo-edit src", "id": "srcArea"}, React.createElement("textarea", {"id": "editor"})), React.createElement("section", {"className": "memo-edit html", "id": "htmlArea"}, React.createElement("div", {"className": "memo-edit html-container", "id": "htmlDisplay"}, React.createElement("div", {"dangerouslySetInnerHTML": { __html: rendered }})))), React.createElement("section", {"className": "memo-edit submit-area", "id": "submitArea"}, this.detectSaveButton(), React.createElement("div", {"className": "memo-edit public"}, React.createElement("label", null, React.createElement("input", {"type": "checkbox", "checked": isPublic, "onChange": this.togglePublic.bind(this)}), "公開")), React.createElement("div", {"className": "memo-edit error-area"}, this.writeError())))));
+        return (React.createElement("article", {"className": "memo-edit"}, React.createElement(menu_1.default, null), React.createElement("section", {"className": "memo-edit edit-container"}, React.createElement("section", {"className": "memo-edit title"}, React.createElement("input", {"type": "text", "placeholder": "タイトル", "value": title, "onChange": this.changeTitle.bind(this)})), React.createElement("section", {"className": "memo-edit tags"}, React.createElement("input", {"type": "text", "placeholder": "タグ（カンマ区切り）", "value": tagList, "onChange": this.changeTags.bind(this)})), React.createElement("section", {"className": "memo-edit content", "id": "contentArea"}, React.createElement("section", {"className": "memo-edit src", "id": "srcArea"}, React.createElement("textarea", {"id": "editor"})), React.createElement("section", {"className": "memo-edit html", "id": "htmlArea"}, React.createElement("div", {"className": "memo-edit html-container", "id": "htmlDisplay"}, React.createElement("div", {"dangerouslySetInnerHTML": { __html: rendered }})))), React.createElement("section", {"className": "memo-edit submit-area", "id": "submitArea"}, this.detectSaveButton(), React.createElement("div", {"className": "memo-edit public"}, React.createElement("label", null, React.createElement("input", {"type": "checkbox", "checked": isPublic, "onChange": this.togglePublic.bind(this)}), "公開")), React.createElement("div", {"className": "memo-edit error-area"}, this.writeError())))));
     };
     return MemoEdit;
 })(React.Component);
@@ -46749,6 +46747,7 @@ exports.default = Router;
 var router_1 = require("./router");
 var LoginAction = require('./actions/login');
 var MemoAction = require('./actions/memo');
+var _ = require('lodash');
 var Mixin = (function () {
     function Mixin() {
     }
@@ -46780,10 +46779,22 @@ var MemoMix = (function () {
     MemoMix.goMemoEdit = function (memo) {
         this.goMemoEditById(memo.id);
     };
-    MemoMix.loadMemoIndex = function (page, tagIds) {
-        if (page === void 0) { page = 1; }
-        if (tagIds === void 0) { tagIds = '-'; }
-        router_1.default.go('/w/memos?tagIds=' + tagIds + '&pageNum=' + page);
+    MemoMix.loadMemoIndex = function (pageNum, tagIds) {
+        if (pageNum === void 0) { pageNum = null; }
+        if (tagIds === void 0) { tagIds = null; }
+        router_1.default.go('/w/memos' + this.buildQuery({ pageNum: pageNum, tagIds: tagIds }));
+    };
+    MemoMix.buildQuery = function (hash) {
+        var result = [];
+        _.pairs(hash).map(function (kv) {
+            if (kv[1]) {
+                result.push(kv.join('='));
+            }
+        });
+        if (result.length === 0) {
+            return '';
+        }
+        return '?' + result.join('&');
     };
     MemoMix.goTaggedIndex = function (tag) {
         router_1.default.go('/w/memos?tagIds=' + tag.id);
@@ -46798,7 +46809,7 @@ var MemoMix = (function () {
 })();
 exports.MemoMix = MemoMix;
 
-},{"./actions/login":192,"./actions/memo":193,"./router":214}],207:[function(require,module,exports){
+},{"./actions/login":192,"./actions/memo":193,"./router":214,"lodash":40}],207:[function(require,module,exports){
 var MemoIndexData = (function () {
     function MemoIndexData(memos, page, par, total, tagIds) {
         if (memos === void 0) { memos = []; }
@@ -46812,11 +46823,11 @@ var MemoIndexData = (function () {
         this.total = total;
         this.tagIds = tagIds;
         if (tagIds === '') {
-            this.tagIds = '-';
+            this.tagIds = null;
         }
     }
     MemoIndexData.prototype.isSelectedTag = function () {
-        return this.tagIds !== '-';
+        return this.tagIds !== null;
     };
     MemoIndexData.prototype.clone = function () {
         return new MemoIndexData(this.memos.concat(), this.page, this.par, this.total, this.tagIds);

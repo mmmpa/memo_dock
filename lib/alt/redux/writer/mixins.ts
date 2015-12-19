@@ -4,6 +4,7 @@ import * as React from 'react'
 import WriterRouter from "./router";
 import * as LoginAction from './actions/login'
 import * as MemoAction from './actions/memo'
+import * as _ from 'lodash'
 
 export default class Mixin {
   static dispatch:Function;
@@ -33,8 +34,21 @@ export class MemoMix {
     this.goMemoEditById(memo.id);
   }
 
-  static loadMemoIndex(page:number = 1, tagIds:string = '-') {
-    WriterRouter.go('/w/memos?tagIds=' + tagIds + '&pageNum=' + page);
+  static loadMemoIndex(pageNum:number = null, tagIds:string = null) {
+    WriterRouter.go('/w/memos' + this.buildQuery({pageNum, tagIds}));
+  }
+
+  static buildQuery(hash:any):string {
+    let result:string[] = []
+    _.pairs(hash).map((kv)=> {
+      if (kv[1]) {
+        result.push(kv.join('='))
+      }
+    });
+    if (result.length === 0) {
+      return '';
+    }
+    return '?' + result.join('&');
   }
 
   static goTaggedIndex(tag:Tag) {
