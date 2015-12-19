@@ -66,12 +66,13 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
       mode: "slim",
       lineWrapping: true
     });
-    this.cm.on('change', this.changeSrc.bind(this));
-    this.cm.setSize('100%', '100%');
-    this.cm.setValue(this.props.memoData.src || '');
-
-    $(window).resize((e)=> setTimeout(this.resize.bind(this), 2));
-    this.resize();
+    setTimeout(()=> {
+      this.cm.on('change', this.changeSrc.bind(this));
+      this.cm.setSize('100%', '100%');
+      this.cm.setValue(this.props.memoData.src || '');
+      $(window).resize((e)=> setTimeout(this.resize.bind(this), 2));
+      this.resize();
+    }, 2);
   }
 
   changeSrc(e) {
@@ -146,17 +147,17 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
       return null;
     }
 
-    let messages = _.pairs(memoMessage.messages).map((kv)=>{
+    let messages = _.pairs(memoMessage.messages).map((kv)=> {
       return <li className="message" key={kv.join('')}>
-        <Fa icon="comment-o" />
+        <Fa icon="comment-o"/>
         {kv.join(':')}
       </li>
     });
 
 
-    let errors = _.pairs(memoMessage.errors).map((kv)=>{
+    let errors = _.pairs(memoMessage.errors).map((kv)=> {
       return <li className="error" key={kv.join('')}>
-        <Fa icon="ban" />
+        <Fa icon="ban"/>
         {kv.join(':')}
       </li>
     });

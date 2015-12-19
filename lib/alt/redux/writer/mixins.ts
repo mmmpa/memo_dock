@@ -33,14 +33,13 @@ export class MemoMix {
     this.goMemoEditById(memo.id);
   }
 
-  static loadMemoIndex(page:number = 1) {
-    WriterRouter.go('/w/tags/-/memos/' + page);
+  static loadMemoIndex(page:number = 1, tagIds:string = '-') {
+    WriterRouter.go('/w/tags/' + tagIds + '/memos/' + page);
   }
 
 
   static goTaggedIndex(tag:Tag) {
-    console.log(Mixin.dispatch);
-    console.log(tag);
+    WriterRouter.go('/w/tags/' + tag.id + '/memos/1');
   }
 
 
@@ -48,7 +47,7 @@ export class MemoMix {
     Mixin.dispatch(MemoAction.saveMemo(memo));
   }
 
-  static renderSlim(slim:string){
+  static renderSlim(slim:string) {
     Mixin.dispatch(MemoAction.renderSlim(slim));
   }
 }

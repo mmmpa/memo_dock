@@ -13,7 +13,7 @@ class Memo < ActiveRecord::Base
   before_validation :convert_slim_to_html!
   before_validation :detect_tag_from_list!
 
-  scope :on, ->(*tag_ids) {
+  scope :on_support, ->(*tag_ids) {
     joins { memo_tags }
       .where { memo_tags.tag_id.in(tag_ids) }
       .group { id }
@@ -23,12 +23,22 @@ class Memo < ActiveRecord::Base
   scope :page, ->(page_par, page_num) { order { created_at.desc }.limit(page_par).offset(page_par * (page_num - 1)) }
 
   class << self
-    def total_pages(par)
-      (Memo.count.to_f / par).ceil
+    def on(*tag_ids)
+      return self if tag_ids.empty?
+      on_support(*tag_ids)
     end
 
     def convert(slim)
       Slim::Template.new(pretty: false) { slim }.render
+    end
+
+    def total_pages(par)
+      base = count
+      if Hash === base
+        (count.keys.length.to_f / par).ceil
+      else
+        (base.to_f / par).ceil
+      end
     end
   end
 

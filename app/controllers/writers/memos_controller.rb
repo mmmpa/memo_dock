@@ -36,7 +36,8 @@ module Writers
       response.headers['Total-Pages'] = total_pages.to_s
       response.headers['Page'] = page.to_s
       response.headers['Par'] = par.to_s
-      render json: MemoWriterIndex.page(par, page)
+      response.headers['Tag-ids'] = !!tag_ids ? tag_ids.join(',') : ''
+        render json: MemoWriterIndex.on(*tag_ids).page(par, page)
     end
 
     def update
@@ -48,12 +49,20 @@ module Writers
 
     private
 
+    def tag_ids
+      normalized = params['tag_ids'].to_s.split(',').map(&:to_i).select { |id|
+        id != 0
+      }
+
+      @stored_tag_ids ||= normalized.length == 0 ? nil : normalized
+    end
+
     def target_memo
       MemoDetail.find(params[:memo_id])
     end
 
     def memo_params
-      pp params.require(:memo).permit(:title, :tag_list, :src, :public)
+      params.require(:memo).permit(:title, :tag_list, :src, :public)
     end
 
     def page
@@ -69,7 +78,7 @@ module Writers
     end
 
     def total_pages
-      @stored_total_pages ||= Memo.total_pages(par)
+      @stored_total_pages ||= Memo.on(*tag_ids).total_pages(par)
     end
 
     def par

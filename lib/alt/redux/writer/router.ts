@@ -17,11 +17,11 @@ export default class WriterRouter {
     this.router.add('/w/memos/:memoId',
       (params) => this.dispatch(MemoAction.goEditMemoById(params['memoId'])));
     this.router.add('/w/tags/:tagIds/memos/:pageNum',
-      (params) => this.dispatch(MemoAction.loadMemoIndex(params['pageNum'])));
+      (params) => this.dispatch(MemoAction.loadMemoIndex(params['tagIds'], params['pageNum'])));
   }
 
   static go(url:string, recoarding:boolean = true):any {
-    if(recoarding){
+    if (recoarding) {
       history.pushState({}, null, url);
     }
     return this.router.execute(url);

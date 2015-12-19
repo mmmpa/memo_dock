@@ -46020,26 +46020,27 @@ function displayIndex() {
     return { type: Type.Memo.DisplayIndex };
 }
 // メモインデックス取得関係
-function loadMemoIndex(page) {
+function loadMemoIndex(tag_ids, page) {
+    if (tag_ids === void 0) { tag_ids = ''; }
     if (page === void 0) { page = 1; }
     return function (dispatch) {
         dispatch(displayIndex());
         dispatch(waitLoadedIndex());
         request
             .get('/w/api/memos')
-            .query({ page: page })
+            .query({ page: page, tag_ids: tag_ids })
             .end(function (err, res) {
             if (err) {
             }
             else {
-                dispatch(loadMemoIndexSuccess(res.body, +res.header.page, +res.header.par, +res.header['total-pages']));
+                dispatch(loadMemoIndexSuccess(res.body, +res.header.page, +res.header.par, +res.header['total-pages'], res.header['tag-ids']));
             }
         });
     };
 }
 exports.loadMemoIndex = loadMemoIndex;
-function loadMemoIndexSuccess(memos, page, par, total) {
-    return { type: Type.Memo.ShowIndex, memos: memos, page: page, par: par, total: total };
+function loadMemoIndexSuccess(memos, page, par, total, tagIds) {
+    return { type: Type.Memo.ShowIndex, memos: memos, page: page, par: par, total: total, tagIds: tagIds };
 }
 function waitLoadedIndex() {
     return { type: Type.Memo.WaitIndex };
@@ -46236,11 +46237,13 @@ var MemoEdit = (function (_super) {
             mode: "slim",
             lineWrapping: true
         });
-        this.cm.on('change', this.changeSrc.bind(this));
-        this.cm.setSize('100%', '100%');
-        this.cm.setValue(this.props.memoData.src || '');
-        $(window).resize(function (e) { return setTimeout(_this.resize.bind(_this), 2); });
-        this.resize();
+        setTimeout(function () {
+            _this.cm.on('change', _this.changeSrc.bind(_this));
+            _this.cm.setSize('100%', '100%');
+            _this.cm.setValue(_this.props.memoData.src || '');
+            $(window).resize(function (e) { return setTimeout(_this.resize.bind(_this), 2); });
+            _this.resize();
+        }, 2);
     };
     MemoEdit.prototype.changeSrc = function (e) {
         this.state.renderer();
@@ -46358,24 +46361,35 @@ var __extends = (this && this.__extends) || function (d, b) {
 var React = require('react');
 var _ = require('lodash');
 var mixins_1 = require("../mixins");
+var fa_1 = require('../lib/components/fa');
 var MemoIndexPager = (function (_super) {
     __extends(MemoIndexPager, _super);
     function MemoIndexPager() {
         _super.apply(this, arguments);
     }
+    MemoIndexPager.prototype.isEnable = function () {
+        return this.props.memoIndexData.memos.length !== 0;
+    };
+    MemoIndexPager.prototype.tagRemover = function () {
+        if (this.isEnable() && this.props.memoIndexData.isSelectedTag()) {
+            return React.createElement("li", {"className": "memo-index pager-container"}, React.createElement("a", {"className": "memo-index tag-remover", "onClick": function () { return mixins_1.MemoMix.loadMemoIndex(); }}, React.createElement(fa_1.default, {"icon": "times"}), "タグ解除"));
+        }
+        return null;
+    };
     MemoIndexPager.prototype.render = function () {
-        var _a = this.props.memoIndexData, memos = _a.memos, page = _a.page, par = _a.par, total = _a.total;
-        return React.createElement("ul", {"className": "memo-index pager"}, _.times(total, function (n) {
+        var _this = this;
+        var _a = this.props.memoIndexData, memos = _a.memos, page = _a.page, par = _a.par, total = _a.total, tagIds = _a.tagIds;
+        return React.createElement("ul", {"className": "memo-index memo-pager"}, _.times(total, function (n) {
             var now = n + 1;
-            return React.createElement("li", {"className": "memo-index pager-container", "key": "pager" + now}, React.createElement("a", {"className": "memo-index pager-link " + (now == page ? 'now' : 'not'), "onClick": function () { return mixins_1.MemoMix.loadMemoIndex(now); }, "disabled": memos.length === 0 ? true : false}, now));
-        }));
+            return React.createElement("li", {"className": "memo-index pager-container", "key": "pager" + now}, React.createElement("a", {"className": "memo-index pager-link " + (now == page ? 'now' : 'not-now'), "onClick": function () { return mixins_1.MemoMix.loadMemoIndex(now, tagIds); }, "disabled": !_this.isEnable()}, now));
+        }), this.tagRemover());
     };
     return MemoIndexPager;
 })(React.Component);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoIndexPager;
 
-},{"../mixins":206,"lodash":40,"react":178}],198:[function(require,module,exports){
+},{"../lib/components/fa":204,"../mixins":206,"lodash":40,"react":178}],198:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -46741,13 +46755,13 @@ var MemoMix = (function () {
     MemoMix.goMemoEdit = function (memo) {
         this.goMemoEditById(memo.id);
     };
-    MemoMix.loadMemoIndex = function (page) {
+    MemoMix.loadMemoIndex = function (page, tagIds) {
         if (page === void 0) { page = 1; }
-        router_1.default.go('/w/tags/-/memos/' + page);
+        if (tagIds === void 0) { tagIds = '-'; }
+        router_1.default.go('/w/tags/' + tagIds + '/memos/' + page);
     };
     MemoMix.goTaggedIndex = function (tag) {
-        console.log(Mixin.dispatch);
-        console.log(tag);
+        router_1.default.go('/w/tags/' + tag.id + '/memos/1');
     };
     MemoMix.saveMemo = function (memo) {
         Mixin.dispatch(MemoAction.saveMemo(memo));
@@ -46761,18 +46775,26 @@ exports.MemoMix = MemoMix;
 
 },{"./actions/login":192,"./actions/memo":193,"./router":214}],207:[function(require,module,exports){
 var MemoIndexData = (function () {
-    function MemoIndexData(memos, page, par, total) {
+    function MemoIndexData(memos, page, par, total, tagIds) {
         if (memos === void 0) { memos = []; }
         if (page === void 0) { page = 0; }
         if (par === void 0) { par = 0; }
         if (total === void 0) { total = 0; }
+        if (tagIds === void 0) { tagIds = ''; }
         this.memos = memos;
         this.page = page;
         this.par = par;
         this.total = total;
+        this.tagIds = tagIds;
+        if (tagIds === '') {
+            this.tagIds = '-';
+        }
     }
+    MemoIndexData.prototype.isSelectedTag = function () {
+        return this.tagIds !== '-';
+    };
     MemoIndexData.prototype.clone = function () {
-        return new MemoIndexData(this.memos.concat(), this.page, this.par, this.total);
+        return new MemoIndexData(this.memos.concat(), this.page, this.par, this.total, this.tagIds);
     };
     return MemoIndexData;
 })();
@@ -46894,9 +46916,9 @@ function memoIndexData(state, action) {
     if (state === void 0) { state = new memo_index_data_1.default(); }
     switch (action.type) {
         case Type.Memo.ShowIndex:
-            var memos = action.memos, page = action.page, par = action.par, total = action.total;
+            var memos = action.memos, page = action.page, par = action.par, total = action.total, tagIds = action.tagIds;
             var ms = _.map(memos, function (memo) { return new memo_1.default(memo); });
-            return new memo_index_data_1.default(ms, page, par, total);
+            return new memo_index_data_1.default(ms, page, par, total, tagIds);
         case Type.Memo.WaitIndex:
             if (!state) {
                 return state;
@@ -46994,7 +47016,7 @@ var WriterRouter = (function () {
         // メモの内容を取得
         this.router.add('/w/memos/new', function (params) { return _this.dispatch(MemoAction.goEditNewMemo()); });
         this.router.add('/w/memos/:memoId', function (params) { return _this.dispatch(MemoAction.goEditMemoById(params['memoId'])); });
-        this.router.add('/w/tags/:tagIds/memos/:pageNum', function (params) { return _this.dispatch(MemoAction.loadMemoIndex(params['pageNum'])); });
+        this.router.add('/w/tags/:tagIds/memos/:pageNum', function (params) { return _this.dispatch(MemoAction.loadMemoIndex(params['tagIds'], params['pageNum'])); });
     };
     WriterRouter.go = function (url, recoarding) {
         if (recoarding === void 0) { recoarding = true; }

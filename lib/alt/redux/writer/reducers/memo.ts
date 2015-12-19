@@ -9,9 +9,9 @@ import {EditMemoState} from '../constants/status';
 function memoIndexData(state:MemoIndexData = new MemoIndexData(), action) {
   switch (action.type) {
     case Type.Memo.ShowIndex:
-      let {memos, page, par, total} = action;
+      let {memos, page, par, total, tagIds} = action;
       let ms:Memo[] = _.map(memos, (memo)=> new Memo(memo));
-      return new MemoIndexData(ms, page, par, total);
+      return new MemoIndexData(ms, page, par, total, tagIds);
     case Type.Memo.WaitIndex:
       if (!state) {
         return state;

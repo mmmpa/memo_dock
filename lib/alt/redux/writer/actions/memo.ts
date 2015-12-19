@@ -18,25 +18,25 @@ function displayIndex(){
 
 // メモインデックス取得関係
 
-export function loadMemoIndex(page:number = 1) {
+export function loadMemoIndex(tag_ids:string = '', page:number = 1) {
   return (dispatch) => {
     dispatch(displayIndex());
     dispatch(waitLoadedIndex());
     request
       .get('/w/api/memos')
-      .query({page})
+      .query({page, tag_ids})
       .end((err, res)=> {
         if (err) {
           //dispatch(requestLogin());
         } else {
-          dispatch(loadMemoIndexSuccess(res.body, +res.header.page, +res.header.par, +res.header['total-pages']));
+          dispatch(loadMemoIndexSuccess(res.body, +res.header.page, +res.header.par, +res.header['total-pages'], res.header['tag-ids']));
         }
       })
   }
 }
 
-function loadMemoIndexSuccess(memos:any[], page:number, par:number, total:number) {
-  return {type: Type.Memo.ShowIndex, memos, page, par, total};
+function loadMemoIndexSuccess(memos:any[], page:number, par:number, total:number, tagIds:string) {
+  return {type: Type.Memo.ShowIndex, memos, page, par, total, tagIds};
 }
 
 function waitLoadedIndex() {
