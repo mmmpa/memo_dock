@@ -5,17 +5,10 @@ gem 'pg'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'therubyracer'
 gem 'authlogic'
-
-
-group :default do
-  gem 'slim-rails'
-  gem 'squeel'
-  gem 'tanemaki'
-  gem 'factory_girl_rails'
-end
-
-group :development, :test do
-end
+gem 'slim-rails'
+gem 'squeel'
+gem 'tanemaki'
+gem 'factory_girl_rails'
 
 group :development do
   gem 'annotate'

@@ -37,7 +37,7 @@ module Writers
       response.headers['Page'] = page.to_s
       response.headers['Par'] = par.to_s
       response.headers['Tag-ids'] = !!tag_ids ? tag_ids.join(',') : ''
-        render json: MemoWriterIndex.on(*tag_ids).page(par, page)
+      render json: MemoWriterIndex.on(*tag_ids).page(par, page)
     end
 
     def update
@@ -48,14 +48,6 @@ module Writers
     end
 
     private
-
-    def tag_ids
-      normalized = params['tag_ids'].to_s.split(',').map(&:to_i).select { |id|
-        id != 0
-      }
-
-      @stored_tag_ids ||= normalized.length == 0 ? nil : normalized
-    end
 
     def target_memo
       MemoDetail.find(params[:memo_id])

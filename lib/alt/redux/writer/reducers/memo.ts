@@ -8,6 +8,8 @@ import {EditMemoState, MemoIndexState} from '../constants/status';
 
 function memoIndexData(state:MemoIndexData = new MemoIndexData(), action) {
   switch (action.type) {
+    case Type.Login.Request:
+      return new MemoIndexData();
     case Type.Memo.ShowIndex:
       let {memos, page, par, total, tagIds} = action;
       let ms:MemoData[] = _.map(memos, (memo)=> new MemoData(memo));

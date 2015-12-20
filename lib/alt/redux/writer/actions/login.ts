@@ -47,8 +47,7 @@ export function checkInitialState(callback:Function){
       .get('/w/api/sessions')
       .end((err, res)=> {
         if (err) {
-          dispatch(displayForm());
-          dispatch(requestLogin());
+          Router.go('/w');
         } else {
           dispatch(login());
           callback();

@@ -12,8 +12,15 @@ class Tag < ActiveRecord::Base
       .group { id }
   }
 
-  scope :on, ->(*tag_ids) {
+  scope :on_support, ->(*tag_ids) {
     joins { memos.outer }
-      .where { memos.id.in(Memo.has_tag(tag_ids).select { id }) }
+      .where { memos.id.in(Memo.on(tag_ids).select { id }) }
   }
+
+  class << self
+    def on(*tag_ids)
+      return self if tag_ids.empty?
+      on_support(*tag_ids)
+    end
+  end
 end

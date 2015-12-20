@@ -45990,8 +45990,7 @@ function checkInitialState(callback) {
             .get('/w/api/sessions')
             .end(function (err, res) {
             if (err) {
-                dispatch(displayForm());
-                dispatch(requestLogin());
+                router_1.default.go('/w');
             }
             else {
                 dispatch(login());
@@ -47059,6 +47058,8 @@ var status_1 = require('../constants/status');
 function memoIndexData(state, action) {
     if (state === void 0) { state = new memo_index_data_1.default(); }
     switch (action.type) {
+        case Type.Login.Request:
+            return new memo_index_data_1.default();
         case Type.Memo.ShowIndex:
             var memos = action.memos, page = action.page, par = action.par, total = action.total, tagIds = action.tagIds;
             var ms = _.map(memos, function (memo) { return new memo_data_1.default(memo); });

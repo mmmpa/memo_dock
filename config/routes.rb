@@ -2,16 +2,23 @@ Rails.application.routes.draw do
 
   # api
 
-  namespace :api do
-    get 'tags/:tag_ids', to: 'tags#index'
+  scope :r, format: false, module: :readers do
+    scope :api do
+      scope :memos do
+        get '', to: 'memos#index', as: :readers_memos
+        get ':memo_id', to: 'memos#show', as: :readers_memo
+      end
 
-    get 'tags/:tag_ids/memos', to: 'memos#index'
-    get 'memos/:memo_id', to: 'memos#show'
+      scope :tags do
+        get '', to: 'tags#index', as: :readers_tags
+        get ':tag_ids', to: 'tags#index_on', as: :readers_tags_on
+      end
+    end
   end
 
   # 編集画面
 
-  scope :w, module: :writers  do
+  scope :w, format: false, module: :writers do
     scope :api do
       scope :sessions do
         get '', to: 'sessions#show', as: :api_log_in
@@ -28,7 +35,7 @@ Rails.application.routes.draw do
         patch ':memo_id', to: 'memos#update'
         delete ':memo_id', to: 'memos#destroy'
 
-        post 'slim', to:  'memos#convert', as: :slim
+        post 'slim', to: 'memos#convert', as: :slim
       end
 
       get '*path', to: ->(env) { [401, {'Content-Type' => 'text/plain'}, ['unauthorized']] }
@@ -40,6 +47,6 @@ Rails.application.routes.draw do
 
   # 閲覧画面
 
-  get '', to: 'portal#portal', as: :root
-  get '*path', to: 'portal#portal'
+  get '', to: 'readers/portal#portal', as: :root
+  get '*path', to: 'readers/portal#portal'
 end

@@ -29,7 +29,6 @@ interface IApp {
   afterLoginUri?:string
 }
 
-
 class App extends React.Component<IApp, {}> {
   private initialized:boolean = false;
 
