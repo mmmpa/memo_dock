@@ -105,7 +105,6 @@ export default class Router {
   };
 
   static pickParams(queryString:string):any{
-    console.log(queryString)
     if(!queryString){
       return {};
     }

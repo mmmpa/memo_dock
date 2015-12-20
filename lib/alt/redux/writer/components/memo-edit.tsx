@@ -1,10 +1,13 @@
-import * as React from 'react'
-import Menu from "../components/menu";
-import Memo from "../models/memo";
-import Fa from '../lib/components/fa'
 import * as _ from 'lodash'
-import {MemoMix} from "../mixins";
+import * as React from 'react'
+import {MemoWork} from "../mixins";
 import {EditMemoState} from '../constants/status'
+
+import Fa from '../lib/components/fa'
+import Menu from "../components/menu";
+
+import MemoData from "../models/memo-data";
+
 require("zepto/zepto.min");
 let $ = window.$;
 
@@ -20,14 +23,14 @@ require("codemirror/mode/xml/xml.js");
 import * as CodeMirror from 'codemirror'
 
 interface IMemoEdit {
-  memoData:Memo,
+  memoData:MemoData,
   editState:EditMemoState,
   rendered?:string,
   memoMessage?:any
 }
 
 interface IMemoEditState {
-  memoData?:Memo,
+  memoData?:MemoData,
   renderer?:Function
 }
 
@@ -42,7 +45,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
     this.state = {
       memoData: memoData,
       renderer: _.debounce(()=> {
-        MemoMix.renderSlim(this.state.memoData.src);
+        MemoWork.renderSlim(this.state.memoData.src);
         this.resize();
       }, 1000)
     }
@@ -135,7 +138,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   }
 
   save() {
-    MemoMix.saveMemo(this.state.memoData);
+    MemoWork.saveMemo(this.state.memoData);
   }
 
   writeError() {

@@ -1,31 +1,52 @@
 import * as React from 'react'
-import Memo from "../models/memo";
-import Tag from "../models/tag";
+import {MemoWork} from "../mixins";
+import {AppState, MemoIndexState} from '../constants/status'
+
+import MemoData from "../models/memo-data";
+import TagData from "../models/tag-data";
+
 import MemoIndexTagLink from "./memo-index-tag-link";
-import {MemoMix} from "../mixins";
+import Fa from '../lib/components/fa'
 
 interface IMemoIndexLine {
   key:number,
-  memo: Memo
+  memoData: MemoData,
 }
 
-export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}>  {
-  tagLinks(tags:Tag[] = []) {
-    return tags.map((tag)=> <MemoIndexTagLink key={tag.id} tag={tag}/>)
+export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
+  isEnable():boolean {
+    return AppState.index === MemoIndexState.Ready
+  }
+
+  tagLinks(tags:TagData[] = []) {
+    return tags.map((tagData)=> <MemoIndexTagLink
+      key={tagData.id}
+      tagData={tagData}
+    />)
   }
 
   detectPublicText() {
-    return this.props.memo.isPublic ? '公開' : '下書き';
+    return this.props.memoData.isPublic ? '公開' : '下書き';
   }
 
+  detectLinkEnabled():string {
+    return this.isEnable() ? '' : 'disabled';
+  }
+
+
   render() {
-    let {memo} = this.props;
+    let {memoData} = this.props;
     return <tr>
       <td className="title">
-        <a onClick={()=> MemoMix.goMemoEdit(memo)}>{memo.title}</a>
+        <a className={this.detectLinkEnabled()} onClick={()=> MemoWork.goMemoEdit(memoData)}>{memoData.title}</a>
       </td>
-      <td className="tags">{this.tagLinks(memo.tags)}</td>
+      <td className="tags">{this.tagLinks(memoData.tags)}</td>
       <td className="public">{this.detectPublicText()}</td>
+      <td className="delete">
+        <button disabled={!this.isEnable()} onClick={()=> MemoWork.deleteMemo(memoData)}>
+          <Fa icon="trash-o"/>
+        </button>
+      </td>
     </tr>
   }
 }

@@ -1,65 +1,98 @@
-import Tag from "./models/tag";
-import Memo from "./models/memo";
+import * as _ from 'lodash'
 import * as React from 'react'
-import WriterRouter from "./router";
+
 import * as LoginAction from './actions/login'
 import * as MemoAction from './actions/memo'
-import * as _ from 'lodash'
+import Router from "./router";
 
-export default class Mixin {
-  static dispatch:Function;
-  static router:WriterRouter;
-}
+import TagData from "./models/tag-data";
+import MemoData from "./models/memo-data";
 
-export class LoginMix {
-  static login(email, password) {
-    Mixin.dispatch(LoginAction.tryLogin(email, password, ()=> WriterRouter.goHere()));
-  }
-}
+export default class WorkBase {
+  static dispatchAction:Function;
+  static RouterClass:any;
 
-export class MemoMix {
-  static goMemoIndex() {
-    this.loadMemoIndex();
+  static dispatch(action:any) {
+    WorkBase.dispatchAction(action);
   }
 
-  static goNewMemo() {
-    WriterRouter.go('/w/memos/new');
+  static go(uri:string){
+    WorkBase.RouterClass.go(uri);
   }
 
-  static goMemoEditById(id:number) {
-    WriterRouter.go('/w/memos/' + id);
+  static Router(){
+    return WorkBase.RouterClass
   }
 
-  static goMemoEdit(memo:Memo) {
-    this.goMemoEditById(memo.id);
-  }
-
-  static loadMemoIndex(pageNum:number = null, tagIds:string = null) {
-    WriterRouter.go('/w/memos' + this.buildQuery({pageNum, tagIds}));
-  }
-
-  static buildQuery(hash:any):string {
-    let result:string[] = []
+  static buildQueryString(hash:any):string {
+    let result:string[] = [];
     _.pairs(hash).map((kv)=> {
       if (kv[1]) {
         result.push(kv.join('='))
       }
     });
-    if (result.length === 0) {
+    if (!result.length) {
       return '';
     }
     return '?' + result.join('&');
   }
+}
 
-  static goTaggedIndex(tag:Tag) {
-    WriterRouter.go('/w/memos?tagIds=' + tag.id);
+export class LoginWork extends WorkBase {
+  static login(email:string, password:string, afterLoginUri:string) {
+    this.dispatch(LoginAction.tryLogin(email, password, ()=> {
+      if(afterLoginUri){
+        this.Router().go(afterLoginUri);
+      }else{
+        this.Router().goHere();
+      }
+    }));
   }
 
-  static saveMemo(memo:Memo) {
-    Mixin.dispatch(MemoAction.saveMemo(memo));
+  static checkInitialState(callback:Function){
+    this.dispatch(LoginAction.checkInitialState(()=> callback()));
   }
+
+  static logout(){
+    this.dispatch(LoginAction.logout());
+  }
+}
+
+export class MemoWork extends WorkBase {
+  static goNewMemo() {
+    this.go('/w/memos/new');
+  }
+
+  static goMemoEditById(id:number) {
+    this.go('/w/memos/' + id);
+  }
+
+  static loadMemoIndex(pageNum:number = null, tagIds:string = null) {
+    this.go('/w/memos' + this.buildQueryString({pageNum, tagIds}));
+  }
+
+  static goTaggedIndex(tag:TagData) {
+    this.loadMemoIndex(null, tag.id.toString())
+  }
+
+  static goMemoIndex() {
+    this.loadMemoIndex();
+  }
+
+  static goMemoEdit(memo:MemoData) {
+    this.goMemoEditById(memo.id);
+  }
+
+  static saveMemo(memo:MemoData) {
+    this.dispatch(MemoAction.saveMemo(memo));
+  }
+
+  static deleteMemo(memo:MemoData) {
+    this.dispatch(MemoAction.deleteMemo(memo, ()=> this.Router().goHere()));
+  }
+
 
   static renderSlim(slim:string) {
-    Mixin.dispatch(MemoAction.renderSlim(slim));
+    this.dispatch(MemoAction.renderSlim(slim));
   }
 }

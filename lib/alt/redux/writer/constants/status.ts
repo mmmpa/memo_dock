@@ -1,4 +1,11 @@
-export enum Login{
+
+export class AppState{
+  static login:LoginState;
+  static edit:EditMemoState;
+  static index:MemoIndexState;
+}
+
+export enum LoginState{
   Ready = 101,
   Request = 102,
   Wait = 103,
@@ -17,4 +24,9 @@ export enum EditMemoState{
   Ready,
   Loading,
   Saving,
+}
+
+export enum MemoIndexState{
+  Ready,
+  Wait
 }

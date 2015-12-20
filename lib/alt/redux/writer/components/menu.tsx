@@ -1,6 +1,7 @@
 import * as React from 'react'
 import { Component, PropTypes } from 'react'
-import {MemoMix} from "../mixins";
+import {LoginWork, MemoWork} from "../mixins";
+import Fa from '../lib/components/fa'
 
 export default class Menu extends Component<{},{}> {
   render() {
@@ -9,10 +10,22 @@ export default class Menu extends Component<{},{}> {
         <nav className="global-menu menu-container">
           <ul className="global-menu menu-list">
             <li>
-              <a onClick={()=> MemoMix.goMemoIndex()}>メモ一覧</a>
+              <Fa icon="list"/>
+              <a onClick={()=> MemoWork.goMemoIndex()}>
+                メモ一覧
+              </a>
             </li>
             <li>
-              <a onClick={()=> MemoMix.goNewMemo()}>新規メモ</a>
+              <Fa icon="pencil"/>
+              <a onClick={()=> MemoWork.goNewMemo()}>
+                新規メモ
+              </a>
+            </li>
+            <li>
+              <Fa icon="remove"/>
+              <a onClick={()=> LoginWork.logout()}>
+                ログアウト
+              </a>
             </li>
           </ul>
         </nav>

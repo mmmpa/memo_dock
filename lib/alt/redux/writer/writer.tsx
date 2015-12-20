@@ -1,24 +1,22 @@
 /// <reference path="types/tsd.d.ts" />
 
 import * as React from 'react'
-import { render } from 'react-dom'
-import { createStore, applyMiddleware } from 'redux'
-import { Provider } from 'react-redux'
+import * as ReactDom from 'react-dom'
+import * as Redux from 'redux'
+import * as ReactRedux from 'react-redux'
+import thunkMiddleware = require("redux-thunk");
+
 import App from './containers/app'
 import reducers from './reducers/reducers'
-// to get default with typescript
-import thunkMiddleware = require("redux-thunk");
-import Store = Redux.Store;
 
-let store:Store = (applyMiddleware(thunkMiddleware)(createStore))(reducers);
-let rootElement:HTMLElement = document.getElementById('root');
+let store:Redux.Store = (Redux.applyMiddleware(thunkMiddleware)(Redux.createStore))(reducers);
 
-render(
-  <Provider store={store}>
+ReactDom.render(
+  <ReactRedux.Provider store={store}>
     <App />
-  </Provider>
+  </ReactRedux.Provider>
   ,
-  rootElement
+  document.getElementById('root')
 );
 
 

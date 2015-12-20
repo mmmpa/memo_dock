@@ -2,33 +2,32 @@
 
 import * as Type from '../constants/action-types'
 import * as _ from 'lodash'
-import * as Status from '../constants/status'
+import {LoginState} from '../constants/status'
 
-function loggedIn(state = false, action) {
-  switch (action.type) {
-    case Type.Login.LoggedIn:
-      return true;
-    case Type.Login.LoggedOut:
-      return false;
-    default:
-      return state;
-  }
-}
-
-function loginState(state:Status.Login = Status.Login.Ready, action) {
+function loginState(state:LoginState = LoginState.Ready, action) {
   switch (action.type) {
     case Type.Login.Wait:
-      return Status.Login.Wait;
+      return LoginState.Wait;
     case Type.Login.Request:
-      return Status.Login.Request;
+      return LoginState.Request;
+    case Type.Login.LoggedOut:
+      return LoginState.Request;
     case Type.Login.RequestRetry:
-      return Status.Login.Invalid;
+      return LoginState.Invalid;
     case Type.Login.LoggedIn:
-      return Status.Login.LoggedIn;
+      return LoginState.LoggedIn;
     default:
       return state;
   }
-
 }
 
-export default {loggedIn, loginState}
+function afterLoginUri(state:string = null, action){
+  switch (action.type) {
+    case Type.Login.Request:
+      return action.afterLoginUri;
+    default:
+      return state;
+  }
+}
+
+export default {loginState, afterLoginUri}

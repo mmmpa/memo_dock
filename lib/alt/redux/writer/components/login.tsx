@@ -1,10 +1,12 @@
 import * as React from 'react'
-import * as Status from '../constants/status'
+import {LoginWork} from "../mixins";
+import {LoginState} from '../constants/status'
+
 import Fa from '../lib/components/fa'
-import {LoginMix} from "../mixins";
 
 interface ILogin {
-  loginState: Status.Login
+  loginState: LoginState,
+  afterLoginUri:string
 }
 
 interface ILoginState {
@@ -28,7 +30,7 @@ export default class Login extends React.Component<ILogin, ILoginState> {
 
   detectMessage():string {
     switch (this.props.loginState) {
-      case Status.Login.Invalid:
+      case LoginState.Invalid:
         return 'Invalid. Please retry.';
       default:
         return '';
@@ -37,7 +39,7 @@ export default class Login extends React.Component<ILogin, ILoginState> {
 
   detectButton() {
     switch (this.props.loginState) {
-      case Status.Login.Wait:
+      case LoginState.Wait:
         return <button type="submit" className="login submit wait" disabled={true}>
           <Fa icon="spinner" animation="pulse"/>
           wait
@@ -52,7 +54,7 @@ export default class Login extends React.Component<ILogin, ILoginState> {
   }
 
   login(e) {
-    LoginMix.login(this.state.email, this.state.password);
+    LoginWork.login(this.state.email, this.state.password, this.props.afterLoginUri);
   }
 
   render() {

@@ -2,32 +2,37 @@
 
 import * as Type from '../constants/action-types'
 import * as _ from 'lodash'
-import Memo from '../models/memo'
+import MemoData from '../models/memo-data'
 import MemoIndexData from "../models/memo-index-data";
-import {EditMemoState} from '../constants/status';
+import {EditMemoState, MemoIndexState} from '../constants/status';
 
 function memoIndexData(state:MemoIndexData = new MemoIndexData(), action) {
   switch (action.type) {
     case Type.Memo.ShowIndex:
       let {memos, page, par, total, tagIds} = action;
-      let ms:Memo[] = _.map(memos, (memo)=> new Memo(memo));
+      let ms:MemoData[] = _.map(memos, (memo)=> new MemoData(memo));
       return new MemoIndexData(ms, page, par, total, tagIds);
-    case Type.Memo.WaitIndex:
-      if (!state) {
-        return state;
-      }
-      let newData:MemoIndexData = state.clone();
-      newData.memos = [];
-      return newData;
     default:
       return state;
   }
 }
 
-function memoData(state = new Memo(), action) {
+function memoIndexState(state:MemoIndexState = MemoIndexState.Wait, action) {
+  switch (action.type) {
+    case Type.Memo.ShowIndex:
+      return MemoIndexState.Ready;
+    case Type.Memo.WaitIndex:
+      return MemoIndexState.Wait;
+    default:
+      return state;
+  }
+}
+
+
+function memoData(state = new MemoData(), action) {
   switch (action.type) {
     case Type.Memo.WaitEditing:
-      return new Memo();
+      return new MemoData();
     case Type.Memo.StartEditing:
       return action.memo;
     case Type.Memo.SucceedSaving:
@@ -84,5 +89,5 @@ function editState(state:EditMemoState = EditMemoState.Ready, action) {
   }
 }
 
-export default {memoIndexData, memoData, rendered, editState, memoMessage}
+export default {memoIndexData, memoData, rendered, editState, memoMessage, memoIndexState}
 

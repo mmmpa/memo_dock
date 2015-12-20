@@ -21,7 +21,7 @@ module Writers
 
     def destroy
       WriterSession.find.destroy
-      redirect_to root_url
+      render nothing: true, status: 204
     end
 
     private

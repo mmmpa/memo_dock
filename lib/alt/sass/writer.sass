@@ -5,6 +5,8 @@
 
 a
 	cursor: pointer
+	&.disabled
+		color: $gray
 
 body
 	overflow: scroll
@@ -31,9 +33,11 @@ body
 		margin: 0
 		padding: 0
 		li
-			@extend %size-h4
+			@extend %size-h5
 			display: inline-block
 			margin-right: 20px
+		a
+			color: $gray-darker
 .memo-edit
 	&.edit-container
 		padding-top: 70px
@@ -112,9 +116,14 @@ body
 		.title,
 		.tags
 			width: 50%
-		.public
+		.public,
+		.delete
 			@extend %min-cell
 			text-align: center
+		.delete
+			button
+				@extend .btn, .btn-danger
+				padding: 5px 10px
 	&.tag-link-container
 		display: inline-block
 		margin-right: 1em

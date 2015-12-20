@@ -1,18 +1,18 @@
 /// <reference path="../types/tsd.d.ts" />
 
 import * as Type from '../constants/action-types';
-import Memo from "../models/memo";
+import MemoData from "../models/memo-data";
 import {token} from "./login"
 import Dispatch = Redux.Dispatch;
 const request = require('superagent');
 
 //　メモ関係画面遷移
 
-function displayEditor(){
+function displayEditor() {
   return {type: Type.Memo.DisplayEditor};
 }
 
-function displayIndex(){
+function displayIndex() {
   return {type: Type.Memo.DisplayIndex};
 }
 
@@ -30,7 +30,6 @@ export function loadMemoIndex(tag_ids:string = '', page:number = 1) {
           console.log(err);
           //dispatch(requestLogin());
         } else {
-          console.log(res);
           dispatch(loadMemoIndexSuccess(res.body, +res.header.page, +res.header.par, +res.header['total-pages'], res.header['tag-ids']));
         }
       })
@@ -47,7 +46,7 @@ function waitLoadedIndex() {
 
 // メモ保存関係
 
-export function saveMemo(memo:Memo) {
+export function saveMemo(memo:MemoData) {
   let requester = memo.isPersisted()
     ? request.patch('/w/api/memos/' + memo.id)
     : request.post('/w/api/memos/new');
@@ -61,7 +60,7 @@ export function saveMemo(memo:Memo) {
         if (err) {
           dispatch(saveMemoFail(res.body));
         } else {
-          dispatch(saveMemoSucceed(new Memo(res.body)));
+          dispatch(saveMemoSucceed(new MemoData(res.body)));
         }
       })
   }
@@ -75,8 +74,24 @@ function saveMemoFail(errors:any) {
   return {type: Type.Memo.FailSaving, errors};
 }
 
-function saveMemoSucceed(memo:Memo) {
+function saveMemoSucceed(memo:MemoData) {
   return {type: Type.Memo.SucceedSaving, memo};
+}
+
+export function deleteMemo(memo:MemoData, callback:Function) {
+  return (dispatch) => {
+    dispatch(waitLoadedIndex());
+    request
+      .delete('/w/api/memos/' + memo.id)
+      .set('X-CSRF-Token', token())
+      .end((err, res)=> {
+        if (err) {
+          callback();
+        } else {
+          callback();
+        }
+      })
+  }
 }
 
 // メモ編集画面
@@ -93,9 +108,9 @@ export function goEditMemoById(memoId:number) {
       .get('/w/api/memos/' + memoId)
       .end((err, res)=> {
         if (err) {
-          dispatch(injectMemoData(new Memo()));
+          dispatch(injectMemoData(new MemoData()));
         } else {
-          dispatch(injectMemoData(new Memo(res.body)));
+          dispatch(injectMemoData(new MemoData(res.body)));
         }
       })
   }
@@ -104,15 +119,15 @@ export function goEditMemoById(memoId:number) {
 export function goEditNewMemo() {
   return (dispatch) => {
     dispatch(displayEditor());
-    dispatch(injectMemoData(new Memo()));
+    dispatch(injectMemoData(new MemoData()));
   }
 }
 
-function injectMemoData(memo:Memo = null) {
+function injectMemoData(memo:MemoData = null) {
   return {type: Type.Memo.StartEditing, memo};
 }
 
-export function startEditMemo(memo:Memo) {
+export function startEditMemo(memo:MemoData) {
   return goEditMemoById(memo.id);
 }
 

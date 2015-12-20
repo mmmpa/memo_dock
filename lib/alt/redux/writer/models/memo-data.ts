@@ -1,10 +1,10 @@
-import Tag from "./tag";
+import TagData from "./tag-data";
 
-export default class Memo {
+export default class MemoData {
   public id:number;
   public title:string = '';
   public isPublic:boolean = false;
-  public tags:Tag[] = [];
+  public tags:TagData[] = [];
   public tagList:string = '';
   public src:string = '';
 
@@ -16,7 +16,7 @@ export default class Memo {
     this.title = json['title'];
     this.src = json['src'];
     this.isPublic = json['public'];
-    this.tags = json['tags'].map((tag)=> new Tag(tag));
+    this.tags = json['tags'].map((tag)=> new TagData(tag));
     this.tagList = this.tags.map((tag)=> tag.name).join(', ');
   }
 

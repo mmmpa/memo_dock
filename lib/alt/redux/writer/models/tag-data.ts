@@ -1,4 +1,4 @@
-export default class Tag {
+export default class TagData {
   public id:number;
   public name:string;
 

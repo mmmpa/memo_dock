@@ -1,14 +1,44 @@
 /// <reference path="../types/tsd.d.ts" />
 
 import * as Type from '../constants/action-types';
+import Router from "../router";
 const request = require('superagent');
 
 export function token():string {
   return document.getElementsByName('csrf-token')[0].getAttribute('content');
 }
 
-export function requestLogin() {
-  return {type: Type.Login.Request};
+function displayForm(){
+  return {type: Type.Login.DisplayForm};
+}
+
+export function requestLogin(afterLoginUri:string = null) {
+  return {type: Type.Login.Request, afterLoginUri};
+}
+
+export function logout(){
+  return (dispatch) => {
+    request
+      .delete('/w/api/sessions')
+      .set('X-CSRF-Token', token())
+      .end((err, res)=> {
+        if (err) {
+        } else {
+          Router.go('/w');
+        }
+      })
+  }
+}
+
+export function logoutFinish() {
+  return {type: Type.Login.LoggedOut};
+}
+
+export function start(){
+  return (dispatch) => {
+    dispatch(displayForm());
+    dispatch(requestLogin('/w/memos'));
+  }
 }
 
 export function checkInitialState(callback:Function){
@@ -17,6 +47,7 @@ export function checkInitialState(callback:Function){
       .get('/w/api/sessions')
       .end((err, res)=> {
         if (err) {
+          dispatch(displayForm());
           dispatch(requestLogin());
         } else {
           dispatch(login());
@@ -57,6 +88,3 @@ export function login() {
   return {type: Type.Login.LoggedIn};
 }
 
-export function logout() {
-  return {type: Type.Login.LoggedOut};
-}
