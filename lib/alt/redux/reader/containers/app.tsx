@@ -28,7 +28,7 @@ interface IApp {
   tagState?:TagState
 }
 
-interface IAppState{
+interface IAppState {
   windowHeight:number,
   memoWidth:number
 }
@@ -36,7 +36,7 @@ interface IAppState{
 class App extends React.Component<IApp, IAppState> {
   private initialized:boolean = false;
 
-  constructor(props){
+  constructor(props) {
     super(props);
 
     this.state = {
@@ -46,7 +46,7 @@ class App extends React.Component<IApp, IAppState> {
   }
 
   componentDidMount() {
-    $(window).resize(this.resize);
+    $(window).resize(this.resize.bind(this));
     this.resize();
   }
 
@@ -90,12 +90,17 @@ class App extends React.Component<IApp, IAppState> {
     }
 
     return <article className="reader-container">
-      <TagList tags={tags} tagState={tagState} height={windowHeight}/>
-      <TitleList titles={titles} memo={memo} memoState={memoState} height={windowHeight}/>
-      <Memo memo={memo} memoState={memoState}  height={windowHeight}  width={memoWidth}/>
+      <section className="selector-container" style={{height: windowHeight}}>
+        <div className="wrapper">
+          <TagList tags={tags} tagState={tagState} height={windowHeight}/>
+          <TitleList titles={titles} memo={memo} memoState={memoState} height={windowHeight}/>
+        </div>
+      </section>
+      <Memo memo={memo} memoState={memoState} height={windowHeight} width={memoWidth}/>
     </article>
   }
 }
+
 
 function select(state) {
   return {

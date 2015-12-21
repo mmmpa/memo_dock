@@ -3,6 +3,8 @@ import * as React from 'react'
 import {MemoState} from '../constants/status'
 import MemoData from "../models/memo-data";
 
+import Fa from '../lib/components/fa'
+
 interface ITitleList {
   titles:MemoData[],
   memo:MemoData,
@@ -12,8 +14,16 @@ interface ITitleList {
 
 export default class TitleList extends React.Component<ITitleList,{}> {
 
+  isActiveList(id:number){
+    return this.props.memo.id == id
+  }
+
   detectActiveClass(id:number){
-    return this.props.memo.id == id ? 'title-list title display-now' : 'title-list title';
+    return this.isActiveList(id) ? 'title-list title display-now' : 'title-list title';
+  }
+
+  detectIcon(id:number){
+    return this.isActiveList(id) ? 'check' : 'chevron-right';
   }
 
   writeTitleList() {
@@ -21,6 +31,7 @@ export default class TitleList extends React.Component<ITitleList,{}> {
 
     return titles.map((memo:MemoData)=> {
       return <li key={'memo' + memo.id} className={this.detectActiveClass(memo.id)}>
+        <div className="chevron"><Fa icon={this.detectIcon(memo.id)}/></div>
         <a onClick={()=> console.log(memo.id)}>{memo.title}</a>
       </li>
     });
@@ -29,7 +40,7 @@ export default class TitleList extends React.Component<ITitleList,{}> {
   render() {
     let {height} = this.props;
 
-    return <section id="titleList" style={{height}} className="title-list title-list-container">
+    return <section id="titleList" style={{minHeight: height}} className="title-list title-list-container">
       <ul className="title-list list">
         {this.writeTitleList()}
       </ul>

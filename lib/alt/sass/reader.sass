@@ -10,31 +10,55 @@ a
 
 %base-container
 	box-sizing: border-box
-	width: 300px
 	position: absolute
+	width: 300px
 	top: 0
 	color: #333
-	padding: 20px
 	overflow: hidden
 	overflow-y: auto
 
+.selector-container
+	@extend %base-container
+	width: 600px
+	direction: rtl
+	background: #000
+	.wrapper
+		direction: ltr
 .tag-list
 	&.tag-list-container
 		@extend %base-container
-		left: 0
-		background: #D1E0E8
-
+		position: fixed
+		background: #6E92A5
+		top: 0
 .title-list
 	&.title-list-container
 		@extend %base-container
 		left: 300px
-		background: #E6EFFF
+		background: #F2F7F9
 	&.list
+		direction: ltr
 		list-style: none
+		margin: 0
+		padding: 0
 	&.title
+		border-bottom: 1px solid #6E92A5
+		margin-bottom: -1px
+		position: relative
 		&.display-now
 			font-weight: bold
-
+		a
+			padding: 10px 20px
+			color: #6E92A5
+			display: block
+		.chevron
+			color: #6E92A5
+			position: absolute
+			right: 10px
+			top: 50%
+			bottom: 50%
+			line-height: 0
+			vertical-align: bottom
+			margin-top: -5px
 .memo
 	&.memo-container
 		@extend %base-container
