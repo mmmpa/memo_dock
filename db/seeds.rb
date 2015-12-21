@@ -16,7 +16,8 @@ if ENV['RAILS_ENV'] != 'production'
     Memo.create!(
       title: "タイトル#{n}",
       src: "h1 タイトル#{n}\np 本文#{n}",
-      tag_list: generate_tag_list(n)
+      tag_list: generate_tag_list(n),
+      public: ENV['RAILS_ENV'] != 'test'
     )
   end
 end

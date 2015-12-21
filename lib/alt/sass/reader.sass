@@ -1,1 +1,41 @@
+@import "./bootstrap/bootstrap"
+@import "./bootstrap/bootswatch"
+@import "./font-awesome/font-awesome"
+@import "./default"
 
+a
+	cursor: pointer
+	&.disabled
+		color: $gray
+
+%base-container
+	box-sizing: border-box
+	width: 300px
+	position: absolute
+	top: 0
+	color: #333
+	padding: 20px
+	overflow: hidden
+	overflow-y: auto
+
+.tag-list
+	&.tag-list-container
+		@extend %base-container
+		left: 0
+		background: #D1E0E8
+
+.title-list
+	&.title-list-container
+		@extend %base-container
+		left: 300px
+		background: #E6EFFF
+	&.list
+		list-style: none
+	&.title
+		&.display-now
+			font-weight: bold
+
+.memo
+	&.memo-container
+		@extend %base-container
+		left: 600px

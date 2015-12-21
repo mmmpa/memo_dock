@@ -51,17 +51,24 @@ gulp.task 'default', ->
     .pipe gulp.dest(publicJsPath)
     .pipe notify message: 'complete'
 
-gulp.task 'hardPacking', ->
+  gulp.watch('./redux/reader_built/built.js').on 'change', (e) ->
     gulp
-    .src path.join(publicJsPath, 'writer.min.js')
-    .pipe streamify(uglify())
-    .pipe gzip()
+    .src e.path
+    .pipe rename('reader.min.js')
     .pipe gulp.dest(publicJsPath)
     .pipe notify message: 'complete'
 
+gulp.task 'hardPacking', ->
+  gulp
+  .src [path.join(publicJsPath, 'writer.min.js'), path.join(publicJsPath, 'reader.min.js')]
+  .pipe streamify(uglify())
+  .pipe gzip()
+  .pipe gulp.dest(publicJsPath)
+  .pipe notify message: 'complete'
+
 gulp.task 'softPacking', ->
   gulp
-  .src path.join(publicJsPath, 'writer.min.js')
+  .src [path.join(publicJsPath, 'writer.min.js'), path.join(publicJsPath, 'reader.min.js')]
   .pipe streamify(uglify())
   .pipe gulp.dest(publicJsPath)
   .pipe notify message: 'complete'

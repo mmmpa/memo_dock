@@ -5,8 +5,8 @@
   "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "writerTsc": "cd redux/writer; tsc | sed -r $'s/[0-9]+/\\e[31m\\e[1m & \\e[0m/g'",
-    "writer": "watchify --extension=js ./redux/writer_built/writer.js -o ./redux/writer_built/built.js -v"
+    "writer": "watchify --extension=js ./redux/writer_built/writer.js -o ./redux/writer_built/built.js -v",
+    "reader": "watchify --extension=js ./redux/reader_built/reader.js -o ./redux/reader_built/built.js -v"
   },
   "author": "",
   "license": "MIT",
