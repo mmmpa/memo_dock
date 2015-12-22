@@ -10,6 +10,7 @@ gem 'squeel'
 gem 'tanemaki'
 gem 'factory_girl_rails'
 gem 'puma'
+gem 'rails_12factor', group: :production
 
 group :development do
   gem 'annotate'
