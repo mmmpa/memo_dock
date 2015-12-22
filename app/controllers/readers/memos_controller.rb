@@ -3,7 +3,6 @@ module Readers
     rescue_from ActiveRecord::RecordNotFound, with: -> { render nothing: true, status: 404 }
 
     def index
-      p tag_ids
       render json: MemoReaderIndex.on(*tag_ids).all
     end
 

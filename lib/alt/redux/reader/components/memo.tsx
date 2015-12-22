@@ -28,6 +28,7 @@ export default class Memo extends React.Component<IMemo,{}> {
     })
   }
 
+
   render() {
     let {height, width, memo} = this.props;
 

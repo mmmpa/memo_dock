@@ -3,7 +3,7 @@ class MemoReader < Memo
 
   def as_json(options={})
     options.merge!(
-      only: [:id, :title, :html, :created_at],
+      only: [:id, :title, :html, :updated_at],
       methods: [:tags]
     )
     super
