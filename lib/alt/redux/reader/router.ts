@@ -32,6 +32,6 @@ export default class Router extends AppRouter {
     if (!ids) {
       return [];
     }
-    ids.split(',').map((n)=> +n);
+    return ids.split(',').map((n)=> +n);
   }
 }

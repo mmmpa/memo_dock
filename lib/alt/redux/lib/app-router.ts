@@ -4,11 +4,11 @@ export default class AppRouter {
   static dispatch:Function;
   static router:RouterBase = new RouterBase();
 
-  static go(url:string, doRecord:boolean = true, doEexecute:boolean = true):any {
+  static go(url:string, doRecord:boolean = true, doExecute:boolean = true):any {
     if (doRecord) {
       history.pushState({}, null, url);
     }
-    if(doEexecute){
+    if(doExecute){
       return this.router.execute(url);
     }
   }

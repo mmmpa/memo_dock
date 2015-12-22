@@ -39,8 +39,10 @@ export default class TagList extends React.Component<ITagList,{}> {
     return tags.map((tag:TagData)=> {
       return <li key={'memo' + tag.id}>
         <label>
-          <input type="checkbox" checked={this.isSelected(tag.id)} onChange={()=> this.toggle(tag.id)}/>
-          {tag.name}
+          <span className="check">
+            <input type="checkbox" checked={this.isSelected(tag.id)} onChange={()=> this.toggle(tag.id)}/>
+          </span>
+          <span className="text">{tag.name}</span>
         </label>
       </li>
     });

@@ -40,11 +40,13 @@ a
 		direction: ltr
 		list-style: none
 		margin: 0
-		padding: 0
+		padding: 5px 0
 		label
 			display: block
-			margin: 10px 20px
-
+			padding: 5px 10px
+			.check,
+			.text
+				display: table-cell
 .title-list
 	&.title-list-container
 		@extend %base-container
@@ -63,7 +65,7 @@ a
 			font-weight: bold
 			background: #fff
 		a
-			padding: 10px 20px
+			padding: 10px 30px 10px 20px
 			color: #666
 			display: block
 		.chevron
@@ -81,3 +83,17 @@ a
 		@extend %base-container
 		left: 550px
 		padding: 10px 20px
+	&.memo-title
+		@extend %size-h3
+		margin: 0 0 10px
+	&.tag-list
+		margin: 0
+		padding: 0
+	&.tag
+		display: inline-block
+		list-style: none
+		margin-right: 20px
+		color: $gray
+	&.header
+		border-bottom: 1px solid $tag-base-color
+		padding: 15px 0 20px
