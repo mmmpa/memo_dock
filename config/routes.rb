@@ -11,7 +11,7 @@ Rails.application.routes.draw do
 
       scope :tags do
         get '', to: 'tags#index', as: :readers_tags
-        get ':tag_ids', to: 'tags#index_on', as: :readers_tags_on
+        get ':tag_ids', to: 'tags#index', as: :readers_tags_on
       end
     end
   end

@@ -1,5 +1,7 @@
 import * as React from 'react'
 
+import {MemoWork} from "../mixins";
+
 import {MemoState} from '../constants/status'
 import MemoData from "../models/memo-data";
 
@@ -23,7 +25,7 @@ export default class TitleList extends React.Component<ITitleList,{}> {
   }
 
   detectIcon(id:number){
-    return this.isActiveList(id) ? 'check' : 'chevron-right';
+    return this.isActiveList(id) ? null : <Fa icon='chevron-right'/>;
   }
 
   writeTitleList() {
@@ -31,8 +33,8 @@ export default class TitleList extends React.Component<ITitleList,{}> {
 
     return titles.map((memo:MemoData)=> {
       return <li key={'memo' + memo.id} className={this.detectActiveClass(memo.id)}>
-        <div className="chevron"><Fa icon={this.detectIcon(memo.id)}/></div>
-        <a onClick={()=> console.log(memo.id)}>{memo.title}</a>
+        <div className="chevron">{this.detectIcon(memo.id)}</div>
+        <a onClick={()=> MemoWork.show(memo.id)}>{memo.title}</a>
       </li>
     });
   }

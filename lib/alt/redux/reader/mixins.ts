@@ -16,12 +16,21 @@ export default class WorkBase {
     WorkBase.dispatchAction(action);
   }
 
-  static go(uri:string){
-    WorkBase.RouterClass.go(uri);
+  static go(...args) {
+    WorkBase.RouterClass.go(...args);
   }
 
-  static Router(){
+  static Router() {
     return WorkBase.RouterClass
+  }
+
+  static pickPath():string {
+    return location.href.replace(/.+?:\/\/(.+?)\//, '/').replace(/\?.+/, '');
+  }
+
+  static pickQueryString():string {
+    let result = location.href.match(/\?.+/);
+    return result ? result[0] : '';
   }
 
   static buildQueryString(hash:any):string {
@@ -39,17 +48,22 @@ export default class WorkBase {
 }
 
 export class TagWork extends WorkBase {
-  static logout(){
-    this.dispatch(TagAction.index());
+  static index(tagIdNumbers:number[]) {
+    let tagIds:string = tagIdNumbers.length ? tagIdNumbers.join(',') : null;
+    this.go(this.pickPath() + this.buildQueryString({tagIds}), true, false);
+    this.dispatch(TagAction.index(tagIdNumbers));
+    this.dispatch(MemoAction.index(tagIdNumbers));
   }
 }
 
+
 export class MemoWork extends WorkBase {
   static show(memoId:number) {
-
+    this.go('/memo/' + memoId + this.pickQueryString(), true, false);
+    this.dispatch(MemoAction.show(memoId));
   }
 
-  static index(tagIds:string) {
-
+  static index(tagIdNumbers:number[]) {
+    TagWork.index(tagIdNumbers);
   }
 }

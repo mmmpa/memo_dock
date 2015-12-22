@@ -3,10 +3,16 @@
 @import "./font-awesome/font-awesome"
 @import "./default"
 
+$tag-base-color: #f3f3f3
+$title-base-color: #fafafa
+
 a
 	cursor: pointer
 	&.disabled
 		color: $gray
+
+pre
+	border: 1px solid $gray-light
 
 %base-container
 	box-sizing: border-box
@@ -15,40 +21,53 @@ a
 	top: 0
 	color: #333
 	overflow: hidden
-	overflow-y: auto
+	overflow-y: scroll
 
 .selector-container
 	@extend %base-container
-	width: 600px
+	width: 550px
 	direction: rtl
-	background: #000
+	background: #fff
 	.wrapper
 		direction: ltr
+
 .tag-list
 	&.tag-list-container
+		direction: rtl
 		@extend %base-container
+		width: 250px
 		position: fixed
-		background: #6E92A5
+		background: $tag-base-color
 		top: 0
-.title-list
-	&.title-list-container
-		@extend %base-container
-		left: 300px
-		background: #F2F7F9
 	&.list
 		direction: ltr
 		list-style: none
 		margin: 0
 		padding: 0
+		label
+			display: block
+			margin: 10px 20px
+
+.title-list
+	&.title-list-container
+		@extend %base-container
+		left: 250px
+		background: $title-base-color
+	&.list
+		list-style: none
+		margin: 0
+		padding: 0
 	&.title
-		border-bottom: 1px solid #6E92A5
-		margin-bottom: -1px
+		border-right: 1px solid $tag-base-color
+		border-bottom: 1px solid $tag-base-color
 		position: relative
 		&.display-now
+			border-right: 0
 			font-weight: bold
+			background: #fff
 		a
 			padding: 10px 20px
-			color: #6E92A5
+			color: #666
 			display: block
 		.chevron
 			color: #6E92A5
@@ -59,7 +78,9 @@ a
 			line-height: 0
 			vertical-align: bottom
 			margin-top: -5px
+
 .memo
 	&.memo-container
 		@extend %base-container
-		left: 600px
+		left: 550px
+		padding: 10px 20px

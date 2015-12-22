@@ -33845,12 +33845,13 @@ function remove() {
     return { type: Type.Memo.Remove };
 }
 exports.remove = remove;
-function index(tagIds) {
-    if (tagIds === void 0) { tagIds = null; }
+function index(tagIdNumbers) {
+    if (tagIdNumbers === void 0) { tagIdNumbers = []; }
     return function (dispatch) {
+        var tagIds = tagIdNumbers.join(',');
         request
             .get('/r/api/memos')
-            .query({ tagIds: tagIds })
+            .query({ tag_ids: tagIds })
             .end(function (err, res) {
             if (err) {
                 console.log(err);
@@ -33867,19 +33868,44 @@ function index(tagIds) {
 exports.index = index;
 function indexSucceed(memos) {
     if (memos === void 0) { memos = []; }
-    console.log(memos);
     return { type: Type.Memo.Index, memos: memos };
 }
 
 },{"../constants/action-types":188,"../models/memo-data":195,"superagent":181}],184:[function(require,module,exports){
 var Type = require('../constants/action-types');
-function index(tagIds) {
-    if (tagIds === void 0) { tagIds = ''; }
-    return { type: Type.Tag.Index };
+var tag_data_1 = require("../models/tag-data");
+var request = require('superagent');
+function index(tagIdNumbers) {
+    if (tagIdNumbers === void 0) { tagIdNumbers = []; }
+    return function (dispatch) {
+        var tagIds = tagIdNumbers.join(',');
+        dispatch(selectTag(tagIdNumbers));
+        request
+            .get('/r/api/tags/' + tagIds)
+            .end(function (err, res) {
+            if (err) {
+                console.log(err);
+            }
+            else {
+                var tags = res.body.map(function (tag) {
+                    return new tag_data_1.default(tag);
+                });
+                dispatch(indexSucceed(tags));
+            }
+        });
+    };
 }
 exports.index = index;
+function indexSucceed(tags) {
+    if (tags === void 0) { tags = []; }
+    return { type: Type.Tag.Index, tags: tags };
+}
+function selectTag(tagIds) {
+    if (tagIds === void 0) { tagIds = []; }
+    return { type: Type.Tag.Select, tagIds: tagIds };
+}
 
-},{"../constants/action-types":188}],185:[function(require,module,exports){
+},{"../constants/action-types":188,"../models/tag-data":196,"superagent":181}],185:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -33891,6 +33917,10 @@ var Memo = (function (_super) {
     function Memo() {
         _super.apply(this, arguments);
     }
+    Memo.prototype.componentDidUpdate = function () {
+        hljs.initHighlighting.called = false;
+        hljs.initHighlighting();
+    };
     Memo.prototype.render = function () {
         var _a = this.props, height = _a.height, width = _a.width, memo = _a.memo;
         return React.createElement("section", {"id": "memo", "style": { height: height, width: width }, "className": "memo memo-container"}, React.createElement("div", {"dangerouslySetInnerHTML": { __html: memo.html }}));
@@ -33906,28 +33936,55 @@ var __extends = (this && this.__extends) || function (d, b) {
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
+var _ = require('lodash');
 var React = require('react');
+var mixins_1 = require("../mixins");
 var TagList = (function (_super) {
     __extends(TagList, _super);
     function TagList() {
         _super.apply(this, arguments);
     }
+    TagList.prototype.isSelected = function (id) {
+        return _.include(this.props.selecedTagIds, id);
+    };
+    TagList.prototype.toggle = function (id) {
+        mixins_1.TagWork.index(this.generateNextTagIds(id));
+    };
+    TagList.prototype.generateNextTagIds = function (id) {
+        var selecedTagIds = this.props.selecedTagIds;
+        if (this.isSelected(id)) {
+            return _.without(selecedTagIds, id);
+        }
+        else {
+            var ids = selecedTagIds.concat();
+            ids.push(id);
+            return ids;
+        }
+    };
+    TagList.prototype.writeTagList = function () {
+        var _this = this;
+        var tags = this.props.tags;
+        return tags.map(function (tag) {
+            return React.createElement("li", {"key": 'memo' + tag.id}, React.createElement("label", null, React.createElement("input", {"type": "checkbox", "checked": _this.isSelected(tag.id), "onChange": function () { return _this.toggle(tag.id); }}), tag.name));
+        });
+    };
     TagList.prototype.render = function () {
         var height = this.props.height;
-        return React.createElement("section", {"id": "tagList", "style": { height: height }, "className": "tag-list tag-list-container"}, "tags");
+        return React.createElement("section", {"id": "tagList", "style": { height: height }, "className": "tag-list tag-list-container"}, React.createElement("ul", {"className": "tag-list list"}, this.writeTagList()));
     };
     return TagList;
 })(React.Component);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TagList;
 
-},{"react":169}],187:[function(require,module,exports){
+},{"../mixins":194,"lodash":31,"react":169}],187:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var React = require('react');
+var mixins_1 = require("../mixins");
 var fa_1 = require('../lib/components/fa');
 var TitleList = (function (_super) {
     __extends(TitleList, _super);
@@ -33941,13 +33998,13 @@ var TitleList = (function (_super) {
         return this.isActiveList(id) ? 'title-list title display-now' : 'title-list title';
     };
     TitleList.prototype.detectIcon = function (id) {
-        return this.isActiveList(id) ? 'check' : 'chevron-right';
+        return this.isActiveList(id) ? null : React.createElement(fa_1.default, {"icon": 'chevron-right'});
     };
     TitleList.prototype.writeTitleList = function () {
         var _this = this;
         var titles = this.props.titles;
         return titles.map(function (memo) {
-            return React.createElement("li", {"key": 'memo' + memo.id, "className": _this.detectActiveClass(memo.id)}, React.createElement("div", {"className": "chevron"}, React.createElement(fa_1.default, {"icon": _this.detectIcon(memo.id)})), React.createElement("a", {"onClick": function () { return console.log(memo.id); }}, memo.title));
+            return React.createElement("li", {"key": 'memo' + memo.id, "className": _this.detectActiveClass(memo.id)}, React.createElement("div", {"className": "chevron"}, _this.detectIcon(memo.id)), React.createElement("a", {"onClick": function () { return mixins_1.MemoWork.show(memo.id); }}, memo.title));
         });
     };
     TitleList.prototype.render = function () {
@@ -33959,10 +34016,11 @@ var TitleList = (function (_super) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = TitleList;
 
-},{"../lib/components/fa":192,"react":169}],188:[function(require,module,exports){
+},{"../lib/components/fa":192,"../mixins":194,"react":169}],188:[function(require,module,exports){
 (function (Tag) {
     Tag[Tag["Index"] = 1] = "Index";
     Tag[Tag["Pick"] = 2] = "Pick";
+    Tag[Tag["Select"] = 3] = "Select";
 })(exports.Tag || (exports.Tag = {}));
 var Tag = exports.Tag;
 (function (Memo) {
@@ -34025,17 +34083,15 @@ var App = (function (_super) {
     App.prototype.resize = function (e) {
         if (e === void 0) { e = null; }
         var $window = $(window);
-        var $tagList = $('#tagList');
-        var $titleList = $('#titleList');
-        var $memo = $('#memo');
+        var $selectorContainer = $('#selectorContainer');
         this.setState({
             windowHeight: $window.height(),
-            memoWidth: $window.width() - $tagList.width() - $titleList.width()
+            memoWidth: $window.width() - $selectorContainer.width()
         });
     };
     App.prototype.render = function () {
         // injected by connect
-        var _a = this.props, dispatch = _a.dispatch, memo = _a.memo, titles = _a.titles, tags = _a.tags, memoState = _a.memoState, tagState = _a.tagState;
+        var _a = this.props, dispatch = _a.dispatch, memo = _a.memo, titles = _a.titles, tags = _a.tags, memoState = _a.memoState, tagState = _a.tagState, selecedTagIds = _a.selecedTagIds;
         var _b = this.state, windowHeight = _b.windowHeight, memoWidth = _b.memoWidth;
         mixins_1.default.dispatchAction = dispatch;
         mixins_1.default.RouterClass = router_1.default;
@@ -34047,7 +34103,7 @@ var App = (function (_super) {
             window.addEventListener('popstate', function (e) { return router_1.default.goHere(false); });
             router_1.default.goHere();
         }
-        return React.createElement("article", {"className": "reader-container"}, React.createElement("section", {"className": "selector-container", "style": { height: windowHeight }}, React.createElement("div", {"className": "wrapper"}, React.createElement(tag_list_1.default, {"tags": tags, "tagState": tagState, "height": windowHeight}), React.createElement(title_list_1.default, {"titles": titles, "memo": memo, "memoState": memoState, "height": windowHeight}))), React.createElement(memo_1.default, {"memo": memo, "memoState": memoState, "height": windowHeight, "width": memoWidth}));
+        return React.createElement("article", {"className": "reader-container"}, React.createElement("section", {"id": "selectorContainer", "className": "selector-container", "style": { height: windowHeight }}, React.createElement("div", {"className": "wrapper"}, React.createElement(tag_list_1.default, {"tags": tags, "tagState": tagState, "selecedTagIds": selecedTagIds, "height": windowHeight}), React.createElement(title_list_1.default, {"titles": titles, "memo": memo, "memoState": memoState, "height": windowHeight}))), React.createElement(memo_1.default, {"memo": memo, "memoState": memoState, "height": windowHeight, "width": memoWidth}));
     };
     return App;
 })(React.Component);
@@ -34055,9 +34111,10 @@ function select(state) {
     return {
         memo: state.memo,
         titles: state.titles,
-        tags: state.tag,
+        tags: state.tags,
         memoState: state.memoState,
         tagState: state.tagState,
+        selecedTagIds: state.selecedTagIds
     };
 }
 Object.defineProperty(exports, "__esModule", { value: true });
@@ -34068,12 +34125,15 @@ var router_1 = require('./router');
 var AppRouter = (function () {
     function AppRouter() {
     }
-    AppRouter.go = function (url, isRecord) {
-        if (isRecord === void 0) { isRecord = true; }
-        if (isRecord) {
+    AppRouter.go = function (url, doRecord, doEexecute) {
+        if (doRecord === void 0) { doRecord = true; }
+        if (doEexecute === void 0) { doEexecute = true; }
+        if (doRecord) {
             history.pushState({}, null, url);
         }
-        return this.router.execute(url);
+        if (doEexecute) {
+            return this.router.execute(url);
+        }
     };
     AppRouter.goHere = function (isRecord) {
         if (isRecord === void 0) { isRecord = true; }
@@ -34250,17 +34310,30 @@ var __extends = (this && this.__extends) || function (d, b) {
 };
 var _ = require('lodash');
 var TagAction = require('./actions/tag');
+var MemoAction = require('./actions/memo');
 var WorkBase = (function () {
     function WorkBase() {
     }
     WorkBase.dispatch = function (action) {
         WorkBase.dispatchAction(action);
     };
-    WorkBase.go = function (uri) {
-        WorkBase.RouterClass.go(uri);
+    WorkBase.go = function () {
+        var args = [];
+        for (var _i = 0; _i < arguments.length; _i++) {
+            args[_i - 0] = arguments[_i];
+        }
+        (_a = WorkBase.RouterClass).go.apply(_a, args);
+        var _a;
     };
     WorkBase.Router = function () {
         return WorkBase.RouterClass;
+    };
+    WorkBase.pickPath = function () {
+        return location.href.replace(/.+?:\/\/(.+?)\//, '/').replace(/\?.+/, '');
+    };
+    WorkBase.pickQueryString = function () {
+        var result = location.href.match(/\?.+/);
+        return result ? result[0] : '';
     };
     WorkBase.buildQueryString = function (hash) {
         var result = [];
@@ -34283,8 +34356,11 @@ var TagWork = (function (_super) {
     function TagWork() {
         _super.apply(this, arguments);
     }
-    TagWork.logout = function () {
-        this.dispatch(TagAction.index());
+    TagWork.index = function (tagIdNumbers) {
+        var tagIds = tagIdNumbers.length ? tagIdNumbers.join(',') : null;
+        this.go(this.pickPath() + this.buildQueryString({ tagIds: tagIds }), true, false);
+        this.dispatch(TagAction.index(tagIdNumbers));
+        this.dispatch(MemoAction.index(tagIdNumbers));
     };
     return TagWork;
 })(WorkBase);
@@ -34295,14 +34371,17 @@ var MemoWork = (function (_super) {
         _super.apply(this, arguments);
     }
     MemoWork.show = function (memoId) {
+        this.go('/memo/' + memoId + this.pickQueryString(), true, false);
+        this.dispatch(MemoAction.show(memoId));
     };
-    MemoWork.index = function (tagIds) {
+    MemoWork.index = function (tagIdNumbers) {
+        TagWork.index(tagIdNumbers);
     };
     return MemoWork;
 })(WorkBase);
 exports.MemoWork = MemoWork;
 
-},{"./actions/tag":184,"lodash":31}],195:[function(require,module,exports){
+},{"./actions/memo":183,"./actions/tag":184,"lodash":31}],195:[function(require,module,exports){
 var tag_data_1 = require("./tag-data");
 var MemoData = (function () {
     function MemoData(json) {
@@ -34369,7 +34448,6 @@ function titles(state, action) {
     if (state === void 0) { state = []; }
     switch (action.type) {
         case Type.Memo.Index:
-            console.log(action);
             return action.memos;
         default:
             return state;
@@ -34395,10 +34473,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = redux_1.combineReducers(_.assign({}, memo_1.default, tag_1.default));
 
 },{"./memo":198,"./tag":200,"lodash":31,"redux":173}],200:[function(require,module,exports){
+var Type = require('../constants/action-types');
 var status_1 = require('../constants/status');
 function tags(state, action) {
     if (state === void 0) { state = []; }
     switch (action.type) {
+        case Type.Tag.Index:
+            return action.tags;
         default:
             return state;
     }
@@ -34410,10 +34491,19 @@ function tagState(state, action) {
             return state;
     }
 }
+function selecedTagIds(state, action) {
+    if (state === void 0) { state = []; }
+    switch (action.type) {
+        case Type.Tag.Select:
+            return action.tagIds;
+        default:
+            return state;
+    }
+}
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = { tags: tags, tagState: tagState };
+exports.default = { tags: tags, tagState: tagState, selecedTagIds: selecedTagIds };
 
-},{"../constants/status":189}],201:[function(require,module,exports){
+},{"../constants/action-types":188,"../constants/status":189}],201:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -34430,20 +34520,29 @@ var Router = (function (_super) {
     Router.initialize = function () {
         var _this = this;
         this.router.add('/memo/:memoId', function (params) {
+            var tagIds = _this.split(params['tagIds']);
             _this.dispatch(MemoAction.show(+params['memoId']));
-            _this.dispatch(MemoAction.index(params['tagIds']));
-            _this.dispatch(TagAction.index(params['tagIds']));
+            _this.dispatch(MemoAction.index(tagIds));
+            _this.dispatch(TagAction.index(tagIds));
         });
         this.router.add('/', function (params) {
+            var tagIds = _this.split(params['tagIds']);
             _this.dispatch(MemoAction.remove());
-            _this.dispatch(MemoAction.index(params['tagIds']));
-            _this.dispatch(TagAction.index(params['tagIds']));
+            _this.dispatch(MemoAction.index(tagIds));
+            _this.dispatch(TagAction.index(tagIds));
         });
         this.router.add('', function (params) {
+            var tagIds = _this.split(params['tagIds']);
             _this.dispatch(MemoAction.remove());
             _this.dispatch(MemoAction.index());
-            _this.dispatch(TagAction.index(params['tagIds']));
+            _this.dispatch(TagAction.index(tagIds));
         });
+    };
+    Router.split = function (ids) {
+        if (!ids) {
+            return [];
+        }
+        ids.split(',').map(function (n) { return +n; });
     };
     return Router;
 })(app_router_1.default);

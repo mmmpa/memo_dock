@@ -18,7 +18,6 @@ function memo(state:MemoData = new MemoData(), action){
 function titles(state:MemoData[] = [], action){
   switch(action.type){
     case Type.Memo.Index:
-      console.log(action)
       return action.memos;
     default:
       return state;

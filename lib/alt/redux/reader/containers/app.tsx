@@ -25,7 +25,8 @@ interface IApp {
   titles?:MemoData[],
   tags?:TagData[],
   memoState?:MemoState,
-  tagState?:TagState
+  tagState?:TagState,
+  selecedTagIds?:number[]
 }
 
 interface IAppState {
@@ -52,12 +53,10 @@ class App extends React.Component<IApp, IAppState> {
 
   resize(e = null) {
     let $window = $(window);
-    let $tagList = $('#tagList');
-    let $titleList = $('#titleList');
-    let $memo = $('#memo');
+    let $selectorContainer = $('#selectorContainer');
     this.setState({
       windowHeight: $window.height(),
-      memoWidth: $window.width() - $tagList.width() - $titleList.width()
+      memoWidth: $window.width() - $selectorContainer.width()
     })
   }
 
@@ -69,7 +68,8 @@ class App extends React.Component<IApp, IAppState> {
       titles,
       tags,
       memoState,
-      tagState
+      tagState,
+      selecedTagIds
       } = this.props;
     const {
       windowHeight,
@@ -90,9 +90,9 @@ class App extends React.Component<IApp, IAppState> {
     }
 
     return <article className="reader-container">
-      <section className="selector-container" style={{height: windowHeight}}>
+      <section id="selectorContainer" className="selector-container" style={{height: windowHeight}}>
         <div className="wrapper">
-          <TagList tags={tags} tagState={tagState} height={windowHeight}/>
+          <TagList tags={tags} tagState={tagState} selecedTagIds={selecedTagIds} height={windowHeight}/>
           <TitleList titles={titles} memo={memo} memoState={memoState} height={windowHeight}/>
         </div>
       </section>
@@ -106,9 +106,10 @@ function select(state) {
   return {
     memo: state.memo,
     titles: state.titles,
-    tags: state.tag,
+    tags: state.tags,
     memoState: state.memoState,
     tagState: state.tagState,
+    selecedTagIds: state.selecedTagIds
   }
 }
 

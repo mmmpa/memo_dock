@@ -46274,6 +46274,8 @@ var MemoEdit = (function (_super) {
         if (this.cm.getValue() != memoData.src) {
             this.cm.setValue(memoData.src || '');
         }
+        hljs.initHighlighting.called = false;
+        hljs.initHighlighting();
     };
     MemoEdit.prototype.componentDidMount = function () {
         var _this = this;
@@ -46666,12 +46668,15 @@ var router_1 = require('./router');
 var AppRouter = (function () {
     function AppRouter() {
     }
-    AppRouter.go = function (url, isRecord) {
-        if (isRecord === void 0) { isRecord = true; }
-        if (isRecord) {
+    AppRouter.go = function (url, doRecord, doEexecute) {
+        if (doRecord === void 0) { doRecord = true; }
+        if (doEexecute === void 0) { doEexecute = true; }
+        if (doRecord) {
             history.pushState({}, null, url);
         }
-        return this.router.execute(url);
+        if (doEexecute) {
+            return this.router.execute(url);
+        }
     };
     AppRouter.goHere = function (isRecord) {
         if (isRecord === void 0) { isRecord = true; }

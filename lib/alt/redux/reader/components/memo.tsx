@@ -11,6 +11,11 @@ interface IMemo {
 
 export default class Memo extends React.Component<IMemo,{}> {
 
+  componentDidUpdate(){
+    hljs.initHighlighting.called = false
+    hljs.initHighlighting()
+  }
+
   render() {
     let {height, width, memo} = this.props;
 

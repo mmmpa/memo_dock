@@ -61,6 +61,8 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
     if (this.cm.getValue() != memoData.src) {
       this.cm.setValue(memoData.src || '');
     }
+    hljs.initHighlighting.called = false;
+    hljs.initHighlighting();
   }
 
   componentDidMount() {

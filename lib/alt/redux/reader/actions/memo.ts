@@ -24,11 +24,12 @@ export function remove() {
   return {type: Type.Memo.Remove};
 }
 
-export function index(tagIds:string = null) {
+export function index(tagIdNumbers:number[] = []) {
   return (dispatch) => {
+    let tagIds:string = tagIdNumbers.join(',');
     request
       .get('/r/api/memos')
-      .query({tagIds})
+      .query({tag_ids: tagIds})
       .end((err, res)=> {
         if (err) {
           console.log(err)
@@ -43,6 +44,5 @@ export function index(tagIds:string = null) {
 }
 
 function indexSucceed(memos:MemoData[] = []) {
-  console.log(memos);
   return {type: Type.Memo.Index, memos};
 }
