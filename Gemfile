@@ -9,6 +9,7 @@ gem 'slim-rails'
 gem 'squeel'
 gem 'tanemaki'
 gem 'factory_girl_rails'
+gem 'puma'
 
 group :development do
   gem 'annotate'
