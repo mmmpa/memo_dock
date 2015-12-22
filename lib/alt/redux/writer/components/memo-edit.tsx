@@ -66,7 +66,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   }
 
   componentDidMount() {
-    this.cm = CodeMirror.fromTextArea($('#editor')[0], {
+    this.cm = CodeMirror.fromTextArea(this.refs['editor'], {
       lineNumbers: true,
       mode: "slim",
       lineWrapping: true
@@ -186,7 +186,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
           </section>
           <section className="memo-edit content" id="contentArea">
             <section className="memo-edit src" id="srcArea">
-              <textarea id="editor"/>
+              <textarea id="editor" ref="editor"/>
             </section>
             <section className="memo-edit html" id="htmlArea">
               <div className="memo-edit html-container" id="htmlDisplay">
