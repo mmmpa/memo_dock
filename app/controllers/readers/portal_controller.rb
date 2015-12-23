@@ -23,7 +23,7 @@ module Readers
     end
 
     def write_title(title = nil)
-      return ENV['MEMO_DOCK_TITLE'] if title.present?
+      return ENV['MEMO_DOCK_TITLE'] unless title.present?
       [title, ENV['MEMO_DOCK_TITLE']].join(' : ')
     end
   end
