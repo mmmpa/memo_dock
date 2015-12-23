@@ -47,6 +47,7 @@ Rails.application.routes.draw do
 
   # 閲覧画面
 
+  get 'memo/:memo_id', to: 'readers/portal#show_memo', as: :show_memo
   get '', to: 'readers/portal#portal', as: :root
   get '*path', to: 'readers/portal#portal'
 end

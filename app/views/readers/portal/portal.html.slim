@@ -1,2 +1,14 @@
 article#root
+  article#nojs
+    - if @memos
+      ul
+        - @memos.each do |memo|
+          li
+            a[href=show_memo_path(memo_id: memo.id)]=memo.title
+    - if @memo
+      article
+        h1#firstTitle= @memo.title
+        section#firstHtml= @memo.html.html_safe
+        a[href='/'] もどる
+
 script src="/js/reader.min.js"

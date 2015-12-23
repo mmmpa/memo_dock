@@ -8,8 +8,10 @@ import thunkMiddleware = require("redux-thunk");
 
 import App from './containers/app'
 import reducers from './reducers/reducers'
+import {MemoWork} from "./mixins";
 
 let store:Redux.Store = (Redux.applyMiddleware(thunkMiddleware)(Redux.createStore))(reducers);
+MemoWork.nojs = document.getElementById('nojs');
 
 ReactDom.render(
   <ReactRedux.Provider store={store}>

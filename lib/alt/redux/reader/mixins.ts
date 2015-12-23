@@ -58,6 +58,25 @@ export class TagWork extends WorkBase {
 
 
 export class MemoWork extends WorkBase {
+  static nojs:any;
+
+  static setTitle(title:string){
+    document.title = title;
+  }
+
+  static getPortal(){
+    let memo:MemoData = new MemoData();
+    try{
+      let title:string = this.nojs.getElementsByTagName('h1')[0].innerHTML;
+      let html:string = this.nojs.getElementsByTagName('section')[0].innerHTML;
+      memo.title = title;
+      memo.html = html;
+    }catch(e){
+
+    }
+    return memo;
+  }
+
   static show(memoId:number) {
     this.go('/memo/' + memoId + this.pickQueryString(), true, false);
     this.dispatch(MemoAction.show(memoId));
