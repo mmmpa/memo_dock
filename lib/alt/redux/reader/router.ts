@@ -9,21 +9,18 @@ export default class Router extends AppRouter {
       (params) => {
         let tagIds:number[] = this.split(params['tagIds']);
         this.dispatch(MemoAction.show(+params['memoId']));
-        this.dispatch(MemoAction.index(tagIds));
         this.dispatch(TagAction.index(tagIds));
       });
     this.router.add('/',
       (params) => {
         let tagIds:number[] = this.split(params['tagIds']);
         this.dispatch(MemoAction.remove());
-        this.dispatch(MemoAction.index(tagIds));
         this.dispatch(TagAction.index(tagIds));
       });
     this.router.add('',
       (params) => {
         let tagIds:number[] = this.split(params['tagIds']);
         this.dispatch(MemoAction.remove());
-        this.dispatch(MemoAction.index());
         this.dispatch(TagAction.index(tagIds));
       });
   }

@@ -3,13 +3,14 @@ import {MemoState} from '../constants/status'
 import MemoData from "../models/memo-data";
 import TagData from "../models/tag-data";
 import Fa from '../lib/components/fa'
-import {TagWork, MemoWork} from "../mixins";
+import {MemoWork} from "../mixins";
 
 interface IMemo {
   memo:MemoData,
   memoState:MemoState,
   height:number,
-  width:number
+  width:number,
+  works:any
 }
 
 export default class Memo extends React.Component<IMemo,{}> {
@@ -28,7 +29,7 @@ export default class Memo extends React.Component<IMemo,{}> {
     return this.props.memo.tags.map((tagData:TagData)=> {
       return <li className="memo tag" key={'memoTag' + tagData.id}>
         <Fa icon="tag"/>
-        <a onClick={()=>TagWork.index([tagData.id])}>{tagData.name}</a>
+        <a onClick={()=>this.props.works.tag.index([tagData.id])}>{tagData.name}</a>
       </li>
     })
   }

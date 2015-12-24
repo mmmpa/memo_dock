@@ -1,7 +1,5 @@
 import * as React from 'react'
 
-import {MemoWork} from "../mixins";
-
 import {MemoState} from '../constants/status'
 import MemoData from "../models/memo-data";
 
@@ -11,7 +9,8 @@ interface ITitleList {
   titles:MemoData[],
   memo:MemoData,
   memoState:MemoState,
-  height:number
+  height:number,
+  works:any
 }
 
 export default class TitleList extends React.Component<ITitleList,{}> {
@@ -29,12 +28,12 @@ export default class TitleList extends React.Component<ITitleList,{}> {
   }
 
   writeTitleList() {
-    let {titles} =  this.props;
+    let {titles, works} =  this.props;
 
     return titles.map((memo:MemoData)=> {
       return <li key={'memo' + memo.id} className={this.detectActiveClass(memo.id)}>
         <div className="chevron">{this.detectIcon(memo.id)}</div>
-        <a onClick={()=> MemoWork.show(memo.id)}>{memo.title}</a>
+        <a onClick={()=> works.memo.show(memo.id)}>{memo.title}</a>
       </li>
     });
   }

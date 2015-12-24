@@ -1,11 +1,17 @@
 import * as Type from '../constants/action-types';
 import TagData from "../models/tag-data";
 const request = require('superagent');
+import Router from "../router";
+import * as MemoAction from "./memo"
 
 export function index(tagIdNumbers:number[] = []) {
   return (dispatch) => {
-    let tagIds:string = tagIdNumbers.join(',');
     dispatch(selectTag(tagIdNumbers));
+    dispatch(MemoAction.index(tagIdNumbers));
+
+    let tagIds:string = tagIdNumbers.length ? tagIdNumbers.join(',') : null;
+    Router.go(Router.pickPath() + Router.buildQueryString({tagIds}), true, false);
+
     request
       .get('/r/api/tags/' + tagIds)
       .end((err, res)=> {
@@ -22,9 +28,9 @@ export function index(tagIdNumbers:number[] = []) {
 }
 
 function indexSucceed(tags:TagData[] = []) {
-  return {type: Type.Tag.Index, tags};
+  return {type: Type.TAG_INDEX, tags};
 }
 
 function selectTag(tagIds:number[] = []) {
-  return {type: Type.Tag.Select, tagIds};
+  return {type: Type.TAG_SELECT, tagIds};
 }

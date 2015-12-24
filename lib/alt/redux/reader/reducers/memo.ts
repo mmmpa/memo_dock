@@ -6,9 +6,9 @@ import MemoData from '../models/memo-data'
 
 function memo(state:MemoData = new MemoData(), action){
   switch(action.type){
-    case Type.Memo.Remove:
+    case Type.MEMO_REMOVE:
       return new MemoData();
-    case Type.Memo.Show:
+    case Type.MEMO_SHOW:
       return action.memo;
     default:
       return state;
@@ -17,7 +17,7 @@ function memo(state:MemoData = new MemoData(), action){
 
 function titles(state:MemoData[] = [], action){
   switch(action.type){
-    case Type.Memo.Index:
+    case Type.MEMO_INDEX:
       return action.memos;
     default:
       return state;

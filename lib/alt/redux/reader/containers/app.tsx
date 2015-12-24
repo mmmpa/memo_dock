@@ -1,14 +1,16 @@
 /// <reference path="../types/tsd.d.ts" />
 
 import * as React from 'react'
+import * as Redux from 'redux'
 import { connect } from 'react-redux'
-import Mixin from "../mixins";
 import Router from "../router";
 import {AppState, TagState, MemoState} from '../constants/status'
 
 import TagList from "../components/tag-list";
 import TitleList from "../components/title-list";
 import Memo from "../components/memo";
+import * as MemoAction from "../actions/memo"
+import * as TagAction from "../actions/tag"
 
 import MemoData from "../models/memo-data";
 import TagData from "../models/tag-data";
@@ -20,13 +22,8 @@ let $ = window.$;
 Router.initialize();
 
 interface IApp {
-  dispatch?:Function,
-  memo?:MemoData,
-  titles?:MemoData[],
-  tags?:TagData[],
-  memoState?:MemoState,
-  tagState?:TagState,
-  selecedTagIds?:number[]
+  state?:any,
+  works?:any
 }
 
 interface IAppState {
@@ -61,24 +58,21 @@ class App extends React.Component<IApp, IAppState> {
   }
 
   render() {
+    console.log(this.props);
     // injected by connect
     const {
-      dispatch,
       memo,
       titles,
       tags,
       memoState,
       tagState,
-      selecedTagIds
-      } = this.props;
+      selectedTagIds,
+      } = this.props.state;
+    const {works} = this.props;
     const {
       windowHeight,
       memoWidth
       } = this.state;
-
-    Mixin.dispatchAction = dispatch;
-    Mixin.RouterClass = Router;
-    Router.dispatch = dispatch;
 
     AppState.tag = tagState;
     AppState.memo = memoState;
@@ -92,25 +86,30 @@ class App extends React.Component<IApp, IAppState> {
     return <article className="reader-container">
       <section id="selectorContainer" className="selector-container" style={{height: windowHeight}}>
         <div className="wrapper">
-          <TagList tags={tags} tagState={tagState} selecedTagIds={selecedTagIds} height={windowHeight}/>
-          <TitleList titles={titles} memo={memo} memoState={memoState} height={windowHeight}/>
+          <TagList tags={tags} tagState={tagState} selectedTagIds={selectedTagIds} height={windowHeight} works={works}/>
+          <TitleList titles={titles} memo={memo} memoState={memoState} height={windowHeight} works={works}/>
         </div>
       </section>
-      <Memo memo={memo} memoState={memoState} height={windowHeight} width={memoWidth}/>
+      <Memo memo={memo} memoState={memoState} height={windowHeight} width={memoWidth} works={works}/>
     </article>
   }
 }
 
-
-function select(state) {
+function mapDispatchToProps(dispatch) {
+  Router.dispatch = dispatch;
   return {
-    memo: state.memo,
-    titles: state.titles,
-    tags: state.tags,
-    memoState: state.memoState,
-    tagState: state.tagState,
-    selecedTagIds: state.selecedTagIds
+    works: {
+      memo: Redux.bindActionCreators(MemoAction, dispatch),
+      tag: Redux.bindActionCreators(TagAction, dispatch)
+    }
   }
 }
 
-export default connect(select)(App)
+function mapStateToProps(state) {
+  return {state}
+}
+
+export default connect(
+  mapStateToProps,
+  mapDispatchToProps
+)(App)

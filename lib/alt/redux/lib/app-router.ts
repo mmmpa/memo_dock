@@ -1,4 +1,5 @@
 import RouterBase from './router'
+import * as _ from 'lodash'
 
 export default class AppRouter {
   static dispatch:Function;
@@ -25,5 +26,27 @@ export default class AppRouter {
 
   static strippedPath():string {
     return location.href.replace(/.+?:\/\/(.+?)\//, '/');
+  }
+
+  static pickQueryString():string {
+    let result = location.href.match(/\?.+/);
+    return result ? result[0] : '';
+  }
+
+  static pickPath():string {
+    return location.href.replace(/.+?:\/\/(.+?)\//, '/').replace(/\?.+/, '');
+  }
+
+  static buildQueryString(hash:any):string {
+    let result:string[] = [];
+    _.pairs(hash).map((kv)=> {
+      if (kv[1]) {
+        result.push(kv.join('='))
+      }
+    });
+    if (!result.length) {
+      return '';
+    }
+    return '?' + result.join('&');
   }
 }

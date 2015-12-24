@@ -6,7 +6,7 @@ import TagData from '../models/tag-data'
 
 function tags(state:TagData[] = [], action) {
   switch (action.type) {
-    case Type.Tag.Index:
+    case Type.TAG_INDEX:
       return action.tags;
     default:
       return state;
@@ -20,13 +20,13 @@ function tagState(state:TagState = TagState.Ready, action) {
   }
 }
 
-function selecedTagIds(state:number[] = [], action) {
+function selectedTagIds(state:number[] = [], action) {
   switch (action.type) {
-    case Type.Tag.Select:
+    case Type.TAG_SELECT:
       return action.tagIds;
     default:
       return state;
   }
 }
 
-export default {tags, tagState, selecedTagIds}
+export default {tags, tagState, selectedTagIds}

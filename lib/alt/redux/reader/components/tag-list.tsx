@@ -1,33 +1,32 @@
 import * as _ from 'lodash'
 import * as React from 'react'
 
-import {TagWork} from "../mixins";
-
 import {TagState} from '../constants/status'
 import TagData from "../models/tag-data";
 
 interface ITagList {
   tags:TagData[],
   tagState:TagState,
-  selecedTagIds:number[],
-  height:number
+  selectedTagIds:number[],
+  height:number,
+  works:any
 }
 
 export default class TagList extends React.Component<ITagList,{}> {
   isSelected(id:number) {
-    return _.include(this.props.selecedTagIds, id);
+    return _.include(this.props.selectedTagIds, id);
   }
 
   toggle(id) {
-    TagWork.index(this.generateNextTagIds(id));
+    this.props.works.tag.index(this.generateNextTagIds(id));
   }
 
   generateNextTagIds(id):number[] {
-    let {selecedTagIds} = this.props;
+    let {selectedTagIds} = this.props;
     if (this.isSelected(id)) {
-      return _.without(selecedTagIds, id);
+      return _.without(selectedTagIds, id);
     } else {
-      let ids = selecedTagIds.concat();
+      let ids = selectedTagIds.concat();
       ids.push(id)
       return ids;
     }
