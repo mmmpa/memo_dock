@@ -7,28 +7,34 @@ import {MemoIndexState} from '../constants/status'
 import MemoIndexData from "../models/memo-index-data";
 import MemoData from "../models/memo-data";
 
-import Menu from "./menu";
 import MemoIndexLine from "./memo-index-line";
 import MemoIndexPager from "./memo-index-pager";
 import Fa from '../lib/components/fa'
 
 interface IMemoIndex {
   memoIndexData:MemoIndexData,
-  works:any
+  memoIndexState:MemoIndexState,
+  memoAction:any
 }
 
 export default class MemoIndex extends React.Component<IMemoIndex, {}> {
   constructor(props) {
     super(props);
+
+    this.isEnable = this.isEnable.bind(this);
+  }
+
+  isEnable():boolean{
+    return this.props.memoIndexState === MemoIndexState.Ready
   }
 
   memoLines() {
     let {memos} = this.props.memoIndexData;
-    let {works} = this.props;
+    let {memoIndexState} = this.props;
+    let isEnable = this.isEnable
     return memos.map((memoData)=> <MemoIndexLine
       key={memoData.id}
-      memoData={memoData}
-      works={works}
+      {...{memoData, isEnable}}
     />)
   }
 
@@ -41,14 +47,14 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
   }
 
   render() {
-    let {memos} = this.props.memoIndexData;
-    let {memoIndexData, works} = this.props;
+    let {memoIndexData} = this.props;
+    let isEnable = this.isEnable;
+
     return (
-      <article className="memo-index">
-        <Menu works={works}/>
+      <div>
         <section className="memo-index index-container">
           <h1 className="memo-index index-title">メモ一覧</h1>
-          <MemoIndexPager {...this.props}/>
+          <MemoIndexPager {...{memoIndexData, isEnable}}/>
           <table className="memo-index index-table">
             <thead>
               <tr>
@@ -62,10 +68,9 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
               {this.memoLines()}
             </tbody>
           </table>
-          {this.loading(memos)}
-          <MemoIndexPager {...this.props}/>
+          <MemoIndexPager {...{memoIndexData, isEnable}}/>
         </section>
-      </article>
+      </div>
     )
   }
 }

@@ -9,12 +9,12 @@ interface IMemo {
   memoState:MemoState,
   height:number,
   width:number,
-  works:any
+  app:any
 }
 
 export default class Memo extends React.Component<IMemo,{}> {
   componentDidUpdate() {
-    let {app} = this.props.works
+    let {app} = this.props;
     if (this.props.memo.html === '') {
       let portal = app.getPortal();
       this.props.memo.title = portal.title;
@@ -29,7 +29,7 @@ export default class Memo extends React.Component<IMemo,{}> {
     return this.props.memo.tags.map((tagData:TagData)=> {
       return <li className="memo tag" key={'memoTag' + tagData.id}>
         <Fa icon="tag"/>
-        {this.props.works.app.createTagLink(tagData.id, tagData.name)}
+        {this.props.app.createTagLink(tagData.id, tagData.name)}
       </li>
     })
   }

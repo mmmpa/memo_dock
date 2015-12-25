@@ -68,13 +68,12 @@ class App extends React.Component<IApp, IAppState> {
     return <Link to={path}>{children}</Link>
   }
 
-  selectTag(tagIdNumbers:number[]){
-    if(tagIdNumbers.length){
+  selectTag(tagIdNumbers:number[]) {
+    if (tagIdNumbers.length) {
       let tagIds:string = tagIdNumbers.join(',');
       let path:string = pickPath() + buildQueryString({tagIds});
-      console.log(this.props.pushState, path, pickPath(), buildQueryString({tagIds}));
       this.props.pushState(null, path);
-    }else{
+    } else {
       let path:string = pickPath();
       this.props.pushState(null, path);
     }
@@ -85,12 +84,12 @@ class App extends React.Component<IApp, IAppState> {
 
     if (!nowProps || !this.isSameMemoId(props, nowProps)) {
       let memoId:number = +params.memoId;
-      props.works.memo.show(memoId);
+      props.memoAction.show(memoId);
     }
 
     if (!nowProps || !this.isSameTagIds(props, nowProps)) {
       let tagIds:number[] = this.normalizeTagIds(location.query.tagIds);
-      props.works.tag.index(tagIds);
+      props.tagAction.index(tagIds);
     }
   }
 
@@ -144,16 +143,16 @@ class App extends React.Component<IApp, IAppState> {
       tagState,
       selectedTagIds,
       } = this.props.state;
-    const {works} = this.props;
+    const {app} = this.props;
     const {
       windowHeight,
       memoWidth
       } = this.state;
 
-    works.app.getPortal = this.getPortal.bind(this);
-    works.app.createMemoLink = this.createMemoLink.bind(this);
-    works.app.createTagLink = this.createTagLink.bind(this);
-    works.app.selectTag = this.selectTag.bind(this);
+    app.getPortal = this.getPortal.bind(this);
+    app.createMemoLink = this.createMemoLink.bind(this);
+    app.createTagLink = this.createTagLink.bind(this);
+    app.selectTag = this.selectTag.bind(this);
 
     AppState.tag = tagState;
     AppState.memo = memoState;
@@ -162,14 +161,14 @@ class App extends React.Component<IApp, IAppState> {
       <section id="selectorContainer" className="selector-container" style={{height: windowHeight}}>
         <div className="wrapper">
           <TagList
-            works={works}
+            app={app}
             tags={tags}
             tagState={tagState}
             selectedTagIds={selectedTagIds}
             height={windowHeight}
           />
           <TitleList
-            works={works}
+            app={app}
             titles={titles}
             memo={memo}
             memoState={memoState}
@@ -178,7 +177,7 @@ class App extends React.Component<IApp, IAppState> {
         </div>
       </section>
       <Memo
-        works={works}
+        app={app}
         memo={memo}
         memoState={memoState}
         height={windowHeight}
@@ -189,20 +188,17 @@ class App extends React.Component<IApp, IAppState> {
 }
 
 function mapDispatchToProps(dispatch) {
-  let dispatcher = {
-    works: {
-      memo: Redux.bindActionCreators(MemoAction, dispatch),
-      tag: Redux.bindActionCreators(TagAction, dispatch),
-      app: {
-        setTitle: (title:string)=> {
-          document.title = title;
-        },
-        getPortal: ():MemoData=> new MemoData()
-      }
+  return {
+    memoAction: Redux.bindActionCreators(MemoAction, dispatch),
+    tagAction: Redux.bindActionCreators(TagAction, dispatch),
+    app: {
+      setTitle: (title:string)=> {
+        document.title = title;
+      },
+      getPortal: ():MemoData=> new MemoData()
     },
     pushState: Redux.bindActionCreators(pushState, dispatch)
   };
-  return dispatcher;
 }
 
 function mapStateToProps(state) {

@@ -9,7 +9,7 @@ interface ITagList {
   tagState:TagState,
   selectedTagIds:number[],
   height:number,
-  works:any
+  app:any
 }
 
 export default class TagList extends React.Component<ITagList,{}> {
@@ -18,7 +18,7 @@ export default class TagList extends React.Component<ITagList,{}> {
   }
 
   toggle(id) {
-    this.props.works.app.selectTag(this.generateNextTagIds(id));
+    this.props.app.selectTag(this.generateNextTagIds(id));
   }
 
   generateNextTagIds(id):number[] {

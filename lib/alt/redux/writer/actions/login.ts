@@ -1,7 +1,6 @@
 /// <reference path="../types/tsd.d.ts" />
 
 import * as Type from '../constants/action-types';
-import Router from "../router";
 const request = require('superagent');
 
 export function token():string {
@@ -25,7 +24,6 @@ export function logout(){
       .end((err, res)=> {
         if (err) {
         } else {
-          Router.go('/w');
         }
       })
   }
@@ -42,36 +40,32 @@ export function start(){
   }
 }
 
-export function checkInitialState(callback:Function){
+export function checkInitialState(succeed:Function = null, fail:Function = null){
   return (dispatch) => {
     request
       .get('/w/api/sessions')
       .end((err, res)=> {
         if (err) {
-          Router.go('/w');
+          dispatch(setRequest());
+          fail && fail();
         } else {
-          dispatch(loginFinish());
-          callback();
+          dispatch(setLoggedIn());
+          succeed && succeed();
         }
       })
   }
 }
 
-export function login(email:string, password:string, afterLoginUri:string) {
-  return (dispatch)=>{
-    dispatch(tryLogin(email, password, ()=> {
-      if(afterLoginUri){
-        Router.go(afterLoginUri);
-      }else{
-        Router.goHere();
-      }
-    }));
-  }
+function setRequest(){
+  return {type: Type.Login.Request};
 }
 
-export function tryLogin(email:string, password:string, callback:Function) {
+function setLoggedIn(){
+  return {type: Type.Login.LoggedIn};
+}
+
+export function login(email:string, password:string, succeed:Function, fail:Function) {
   return (dispatch) => {
-    console.log('try')
     dispatch(waitLogin());
     request
       .post('/w/api/sessions')
@@ -81,9 +75,10 @@ export function tryLogin(email:string, password:string, callback:Function) {
       .end((err, res)=> {
         if (err) {
           dispatch(requestRetryLogin());
+          fail && fail();
         } else {
-          dispatch(loginFinish());
-          callback();
+          dispatch(setLoggedIn());
+          succeed && succeed();
         }
       })
   }
@@ -95,9 +90,5 @@ export function waitLogin() {
 
 export function requestRetryLogin() {
   return {type: Type.Login.RequestRetry};
-}
-
-export function loginFinish() {
-  return {type: Type.Login.LoggedIn};
 }
 

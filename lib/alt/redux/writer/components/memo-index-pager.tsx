@@ -6,18 +6,15 @@ import Fa from '../lib/components/fa'
 
 interface IMemoIndexPager {
   memoIndexData:MemoIndexData,
+  isEnable:Function,
   works:any
 }
 
 export default class MemoIndexPager extends React.Component<IMemoIndexPager, {}> {
-  isEnable():boolean{
-    return AppState.index === MemoIndexState.Ready
-  }
-
   tagRemover(){
-    let {works} = this.props
+    let {works, isEnable} = this.props
 
-    if(!this.isEnable() || !this.props.memoIndexData.isSelectedTag()){
+    if(!isEnable() || !this.props.memoIndexData.isSelectedTag()){
       return null;
     }
 
@@ -30,7 +27,7 @@ export default class MemoIndexPager extends React.Component<IMemoIndexPager, {}>
   }
 
   render() {
-    let {works} = this.props
+    let {isEnable} = this.props
     let {memos, page, par, total, tagIds} = this.props.memoIndexData;
     return <ul className="memo-index memo-pager">
       {_.times(total, (n:number)=>{
@@ -38,7 +35,7 @@ export default class MemoIndexPager extends React.Component<IMemoIndexPager, {}>
         return <li className="memo-index pager-container" key={"pager" + now}>
           <a className={"memo-index pager-link " + (now == page ? 'now' : 'not-now') }
              onClick={()=> works.memo.loadMemoIndex(tagIds, now) }
-             disabled={ !this.isEnable() }
+             disabled={ !isEnable() }
           >{now}</a>
         </li>
         })}

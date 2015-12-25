@@ -10,7 +10,7 @@ interface ITitleList {
   memo:MemoData,
   memoState:MemoState,
   height:number,
-  works:any
+  app:any
 }
 
 export default class TitleList extends React.Component<ITitleList,{}> {
@@ -28,12 +28,12 @@ export default class TitleList extends React.Component<ITitleList,{}> {
   }
 
   writeTitleList() {
-    let {titles, works} =  this.props;
+    let {titles, app} =  this.props;
 
     return titles.map((memo:MemoData)=> {
       return <li key={'memo' + memo.id} className={this.detectActiveClass(memo.id)}>
         <div className="chevron">{this.detectIcon(memo.id)}</div>
-        {works.app.createMemoLink(memo.id, memo.title)}
+        {app.createMemoLink(memo.id, memo.title)}
       </li>
     });
   }

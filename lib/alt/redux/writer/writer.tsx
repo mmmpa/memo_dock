@@ -3,23 +3,20 @@
 import * as React from 'react'
 import * as ReactDom from 'react-dom'
 import * as ReactRedux from 'react-redux'
+import * as Redux from 'react-redux'
+import {ReduxRouter} from 'redux-router'
+import {Route} from 'react-router'
 
 import App from './containers/app'
 
-import configureStore from './store/configureStore'
-const store = configureStore();
-
-console.log('routed')
+import configureStore from './store/configure-store'
+const store = configureStore({});
 
 ReactDom.render(
   <ReactRedux.Provider store={store}>
-    <App />
+    <ReduxRouter />
   </ReactRedux.Provider>
   ,
   document.getElementById('root')
 );
-
-
-
-
 

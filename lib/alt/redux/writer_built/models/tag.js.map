@@ -1,1 +1,0 @@
-{"version":3,"file":"tag.js","sourceRoot":"","sources":["../../writer/models/tag.ts"],"names":["Tag","Tag.constructor"],"mappings":"AAAA;IAIEA,aAAYA,IAAIA;QACdC,IAAIA,CAACA,EAAEA,GAAGA,CAACA,IAAIA,CAACA,IAAIA,CAACA,CAACA;QACtBA,IAAIA,CAACA,IAAIA,GAAGA,IAAIA,CAACA,MAAMA,CAACA,CAACA;IAC3BA,CAACA;IACHD,UAACA;AAADA,CAACA,AARD,IAQC;AARD;qBAQC,CAAA"}

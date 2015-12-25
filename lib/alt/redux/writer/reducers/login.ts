@@ -4,7 +4,7 @@ import * as Type from '../constants/action-types'
 import * as _ from 'lodash'
 import {LoginState} from '../constants/status'
 
-function loginState(state:LoginState = LoginState.Ready, action) {
+function loginState(state:LoginState = LoginState.Request, action) {
   switch (action.type) {
     case Type.Login.Wait:
       return LoginState.Wait;
@@ -21,13 +21,4 @@ function loginState(state:LoginState = LoginState.Ready, action) {
   }
 }
 
-function afterLoginUri(state:string = null, action){
-  switch (action.type) {
-    case Type.Login.Request:
-      return action.afterLoginUri;
-    default:
-      return state;
-  }
-}
-
-export default {loginState, afterLoginUri}
+export default {loginState}

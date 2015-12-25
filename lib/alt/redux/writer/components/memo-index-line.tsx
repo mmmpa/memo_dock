@@ -10,14 +10,11 @@ import Fa from '../lib/components/fa'
 interface IMemoIndexLine {
   key:number,
   memoData: MemoData,
-  works:any
+  isEnable:Function,
+  app:any
 }
 
 export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
-  isEnable():boolean {
-    return AppState.index === MemoIndexState.Ready
-  }
-
   tagLinks(tags:TagData[] = []) {
     let {works} = this.props;
     return tags.map((tagData)=> <MemoIndexTagLink
@@ -32,7 +29,7 @@ export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
   }
 
   detectLinkEnabled():string {
-    return this.isEnable() ? '' : 'disabled';
+    return this.props.isEnable() ? '' : 'disabled';
   }
 
 
@@ -45,7 +42,7 @@ export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
       <td className="tags">{this.tagLinks(memoData.tags)}</td>
       <td className="public">{this.detectPublicText()}</td>
       <td className="delete">
-        <button disabled={!this.isEnable()} onClick={()=> works.memo.deleteMemo(memoData)}>
+        <button disabled={!this.props.isEnable()} onClick={()=> works.memo.deleteMemo(memoData)}>
           <Fa icon="trash-o"/>
         </button>
       </td>

@@ -5,8 +5,7 @@ import Fa from '../lib/components/fa'
 
 interface ILogin {
   loginState: LoginState,
-  afterLoginUri:string,
-  works:any
+  login:Function
 }
 
 interface ILoginState {
@@ -54,7 +53,7 @@ export default class Login extends React.Component<ILogin, ILoginState> {
   }
 
   login(e) {
-    this.props.works.login.login(this.state.email, this.state.password, this.props.afterLoginUri);
+    this.props.login(this.state.email, this.state.password);
   }
 
   render() {

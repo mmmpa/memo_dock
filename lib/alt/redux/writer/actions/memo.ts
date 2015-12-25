@@ -3,49 +3,40 @@
 import * as Type from '../constants/action-types';
 import MemoData from "../models/memo-data";
 import TagData from "../models/tag-data";
-import {token} from "./login"
+import {token, checkInitialState} from "./login"
 import Dispatch = Redux.Dispatch;
-import Router from "../router";
 const request = require('superagent');
 
-//　メモ関係画面遷移
-
-function displayEditor() {
-  return {type: Type.Memo.DisplayEditor};
-}
-
-function displayIndex() {
-  return {type: Type.Memo.DisplayIndex};
+export function checkLogin(...args) {
+  return checkInitialState(...args);
 }
 
 // メモインデックス取得関係
 
-export function loadMemoIndex(tag_ids:string = '', page:number = 1) {
-  //    this.go('/w/memos' + this.buildQueryString({pageNum, tagIds}));
-
+export function index(tagIdNumbers:number[] = [], page:number = 1) {
   return (dispatch) => {
-    dispatch(displayIndex());
+    let tag_ids:string = tagIdNumbers.length ? tagIdNumbers.join(',') : null;
+
     dispatch(waitLoadedIndex());
     request
       .get('/w/api/memos')
       .query({page, tag_ids})
       .end((err, res)=> {
         if (err) {
-          console.log(err);
-          //dispatch(requestLogin());
+
         } else {
-          dispatch(loadMemoIndexSuccess(res.body, +res.header.page, +res.header.par, +res.header['total-pages'], res.header['tag-ids']));
+          dispatch(showIndex(res.body, +res.header.page, +res.header.par, +res.header['total-pages'], res.header['tag-ids']));
         }
       })
   }
 }
 
 export function loadTaggedIndex(tag:TagData) {
-  return loadMemoIndex(tag.id.toString());
+  return index(tag.id.toString());
 }
 
 
-function loadMemoIndexSuccess(memos:any[], page:number, par:number, total:number, tagIds:string) {
+function showIndex(memos:any[], page:number, par:number, total:number, tagIds:string) {
   return {type: Type.Memo.ShowIndex, memos, page, par, total, tagIds};
 }
 
@@ -88,8 +79,8 @@ function saveMemoSucceed(memo:MemoData) {
 }
 
 export function deleteMemo(memo:MemoData) {
-  return (dispatch)=>{
-    dispatch(tryDeleteMemo(memo, ()=> Router.goHere()));
+  return (dispatch)=> {
+    dispatch(tryDeleteMemo(memo, ()=> null));
   }
 }
 
@@ -116,10 +107,8 @@ function waitLoadedMemo() {
 }
 
 
-
 export function editMemoById(memoId:number) {
   return (dispatch) => {
-    dispatch(displayEditor());
     dispatch(waitLoadedMemo());
     request
       .get('/w/api/memos/' + memoId)
@@ -135,7 +124,6 @@ export function editMemoById(memoId:number) {
 
 export function editNewMemo() {
   return (dispatch) => {
-    dispatch(displayEditor());
     dispatch(injectMemoData(new MemoData()));
   }
 }
