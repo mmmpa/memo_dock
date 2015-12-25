@@ -12,7 +12,7 @@
       "commit": "5a8fc5ee71701431e4fdbb80c506e3c13f85a9ff"
     },
     "react/react.d.ts": {
-      "commit": "f8af639bf29b2b00e5d27ce93c0f046564b8525c"
+      "commit": "1da639a106527e0c4010b354a1efe52a3059a291"
     },
     "react/react-dom.d.ts": {
       "commit": "f8af639bf29b2b00e5d27ce93c0f046564b8525c"
@@ -31,6 +31,15 @@
     },
     "codemirror/codemirror.d.ts": {
       "commit": "8ea42cd8bb11863ed6f242d67c502288ebc45a7b"
+    },
+    "history/history.d.ts": {
+      "commit": "1da639a106527e0c4010b354a1efe52a3059a291"
+    },
+    "react-router/history.d.ts": {
+      "commit": "1da639a106527e0c4010b354a1efe52a3059a291"
+    },
+    "react-router/react-router.d.ts": {
+      "commit": "1da639a106527e0c4010b354a1efe52a3059a291"
     }
   }
 }

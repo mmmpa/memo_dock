@@ -8,6 +8,7 @@ export function token():string {
   return document.getElementsByName('csrf-token')[0].getAttribute('content');
 }
 
+
 function displayForm(){
   return {type: Type.Login.DisplayForm};
 }
@@ -49,15 +50,28 @@ export function checkInitialState(callback:Function){
         if (err) {
           Router.go('/w');
         } else {
-          dispatch(login());
+          dispatch(loginFinish());
           callback();
         }
       })
   }
 }
 
+export function login(email:string, password:string, afterLoginUri:string) {
+  return (dispatch)=>{
+    dispatch(tryLogin(email, password, ()=> {
+      if(afterLoginUri){
+        Router.go(afterLoginUri);
+      }else{
+        Router.goHere();
+      }
+    }));
+  }
+}
+
 export function tryLogin(email:string, password:string, callback:Function) {
   return (dispatch) => {
+    console.log('try')
     dispatch(waitLogin());
     request
       .post('/w/api/sessions')
@@ -68,7 +82,7 @@ export function tryLogin(email:string, password:string, callback:Function) {
         if (err) {
           dispatch(requestRetryLogin());
         } else {
-          dispatch(login());
+          dispatch(loginFinish());
           callback();
         }
       })
@@ -83,7 +97,7 @@ export function requestRetryLogin() {
   return {type: Type.Login.RequestRetry};
 }
 
-export function login() {
+export function loginFinish() {
   return {type: Type.Login.LoggedIn};
 }
 

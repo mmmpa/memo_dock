@@ -13,7 +13,8 @@ import MemoIndexPager from "./memo-index-pager";
 import Fa from '../lib/components/fa'
 
 interface IMemoIndex {
-  memoIndexData:MemoIndexData
+  memoIndexData:MemoIndexData,
+  works:any
 }
 
 export default class MemoIndex extends React.Component<IMemoIndex, {}> {
@@ -23,9 +24,11 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
 
   memoLines() {
     let {memos} = this.props.memoIndexData;
+    let {works} = this.props;
     return memos.map((memoData)=> <MemoIndexLine
       key={memoData.id}
       memoData={memoData}
+      works={works}
     />)
   }
 
@@ -39,10 +42,10 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
 
   render() {
     let {memos} = this.props.memoIndexData;
-    let {memoIndexData} = this.props;
+    let {memoIndexData, works} = this.props;
     return (
       <article className="memo-index">
-        <Menu/>
+        <Menu works={works}/>
         <section className="memo-index index-container">
           <h1 className="memo-index index-title">メモ一覧</h1>
           <MemoIndexPager {...this.props}/>

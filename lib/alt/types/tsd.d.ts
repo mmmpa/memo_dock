@@ -7,3 +7,6 @@
 /// <reference path="node/node.d.ts" />
 /// <reference path="superagent/superagent.d.ts" />
 /// <reference path="codemirror/codemirror.d.ts" />
+/// <reference path="history/history.d.ts" />
+/// <reference path="react-router/history.d.ts" />
+/// <reference path="react-router/react-router.d.ts" />

@@ -1,12 +1,10 @@
 import * as Type from '../constants/action-types';
 import MemoData from "../models/memo-data";
 const request = require('superagent');
-import Router from "../router";
 import * as TagAction from "./tag"
 
 export function show(memoId:number) {
   return (dispatch) => {
-    Router.go('/memo/' + memoId + Router.pickQueryString(), true, false);
     request
       .get('/r/api/memos/' + memoId)
       .end((err, res)=> {
@@ -30,8 +28,6 @@ export function remove() {
 export function index(tagIdNumbers:number[] = []) {
   return (dispatch) => {
     let tagIds:string = tagIdNumbers.length ? tagIdNumbers.join(',') : null;
-    Router.go(Router.pickPath() + Router.buildQueryString({tagIds}), true, false);
-
     request
       .get('/r/api/memos')
       .query({tag_ids: tagIds})

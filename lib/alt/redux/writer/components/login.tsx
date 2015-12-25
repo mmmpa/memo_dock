@@ -1,12 +1,12 @@
 import * as React from 'react'
-import {LoginWork} from "../mixins";
 import {LoginState} from '../constants/status'
 
 import Fa from '../lib/components/fa'
 
 interface ILogin {
   loginState: LoginState,
-  afterLoginUri:string
+  afterLoginUri:string,
+  works:any
 }
 
 interface ILoginState {
@@ -54,7 +54,7 @@ export default class Login extends React.Component<ILogin, ILoginState> {
   }
 
   login(e) {
-    LoginWork.login(this.state.email, this.state.password, this.props.afterLoginUri);
+    this.props.works.login.login(this.state.email, this.state.password, this.props.afterLoginUri);
   }
 
   render() {

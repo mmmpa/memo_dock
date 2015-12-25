@@ -1,6 +1,5 @@
 import * as _ from 'lodash'
 import * as React from 'react'
-import {MemoWork} from "../mixins";
 import {EditMemoState} from '../constants/status'
 
 import Fa from '../lib/components/fa'
@@ -26,7 +25,8 @@ interface IMemoEdit {
   memoData:MemoData,
   editState:EditMemoState,
   rendered?:string,
-  memoMessage?:any
+  memoMessage?:any,
+  works?:any
 }
 
 interface IMemoEditState {
@@ -40,12 +40,12 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   constructor(props) {
     super(props);
 
-    let {memoData} = this.props;
+    let {memoData, works} = this.props;
 
     this.state = {
       memoData: memoData,
       renderer: _.debounce(()=> {
-        MemoWork.renderSlim(this.state.memoData.src);
+        works.memo.renderSlim(this.state.memoData.src);
         this.resize();
       }, 1000)
     }
@@ -140,7 +140,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   }
 
   save() {
-    MemoWork.saveMemo(this.state.memoData);
+    this.props.works.memo.saveMemo(this.state.memoData);
   }
 
   writeError() {
@@ -173,10 +173,10 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
       return <div>loading...</div>
     }
     let {title, src, tagList, isPublic} = this.state.memoData;
-    let {rendered} = this.props;
+    let {rendered, works} = this.props;
     return (
       <article className="memo-edit">
-        <Menu/>
+        <Menu works={works}/>
         <section className="memo-edit edit-container">
           <section className="memo-edit title">
             <input type="text" placeholder="タイトル" value={title} onChange={this.changeTitle.bind(this)}/>

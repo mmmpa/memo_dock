@@ -3,7 +3,6 @@ import {MemoState} from '../constants/status'
 import MemoData from "../models/memo-data";
 import TagData from "../models/tag-data";
 import Fa from '../lib/components/fa'
-import {MemoWork} from "../mixins";
 
 interface IMemo {
   memo:MemoData,
@@ -15,12 +14,13 @@ interface IMemo {
 
 export default class Memo extends React.Component<IMemo,{}> {
   componentDidUpdate() {
-    if(this.props.memo.html === ''){
-      let portal = MemoWork.getPortal();
+    let {app} = this.props.works
+    if (this.props.memo.html === '') {
+      let portal = app.getPortal();
       this.props.memo.title = portal.title;
       this.props.memo.html = portal.html;
     }
-    MemoWork.setTitle(this.props.memo.title);
+    app.setTitle(this.props.memo.title);
     hljs.initHighlighting.called = false;
     hljs.initHighlighting();
   }
@@ -29,7 +29,7 @@ export default class Memo extends React.Component<IMemo,{}> {
     return this.props.memo.tags.map((tagData:TagData)=> {
       return <li className="memo tag" key={'memoTag' + tagData.id}>
         <Fa icon="tag"/>
-        <a onClick={()=>this.props.works.tag.index([tagData.id])}>{tagData.name}</a>
+        {this.props.works.app.createTagLink(tagData.id, tagData.name)}
       </li>
     })
   }

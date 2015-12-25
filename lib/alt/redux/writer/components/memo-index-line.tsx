@@ -1,5 +1,4 @@
 import * as React from 'react'
-import {MemoWork} from "../mixins";
 import {AppState, MemoIndexState} from '../constants/status'
 
 import MemoData from "../models/memo-data";
@@ -11,6 +10,7 @@ import Fa from '../lib/components/fa'
 interface IMemoIndexLine {
   key:number,
   memoData: MemoData,
+  works:any
 }
 
 export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
@@ -19,9 +19,11 @@ export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
   }
 
   tagLinks(tags:TagData[] = []) {
+    let {works} = this.props;
     return tags.map((tagData)=> <MemoIndexTagLink
       key={tagData.id}
       tagData={tagData}
+      works={works}
     />)
   }
 
@@ -35,15 +37,15 @@ export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
 
 
   render() {
-    let {memoData} = this.props;
+    let {memoData, works} = this.props;
     return <tr>
       <td className="title">
-        <a className={this.detectLinkEnabled()} onClick={()=> MemoWork.goMemoEdit(memoData)}>{memoData.title}</a>
+        <a className={this.detectLinkEnabled()} onClick={()=> works.memo.editMemoById(memoData.id)}>{memoData.title}</a>
       </td>
       <td className="tags">{this.tagLinks(memoData.tags)}</td>
       <td className="public">{this.detectPublicText()}</td>
       <td className="delete">
-        <button disabled={!this.isEnable()} onClick={()=> MemoWork.deleteMemo(memoData)}>
+        <button disabled={!this.isEnable()} onClick={()=> works.memo.deleteMemo(memoData)}>
           <Fa icon="trash-o"/>
         </button>
       </td>

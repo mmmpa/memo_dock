@@ -1,7 +1,6 @@
 import * as Type from '../constants/action-types';
 import TagData from "../models/tag-data";
 const request = require('superagent');
-import Router from "../router";
 import * as MemoAction from "./memo"
 
 export function index(tagIdNumbers:number[] = []) {
@@ -10,7 +9,6 @@ export function index(tagIdNumbers:number[] = []) {
     dispatch(MemoAction.index(tagIdNumbers));
 
     let tagIds:string = tagIdNumbers.length ? tagIdNumbers.join(',') : null;
-    Router.go(Router.pickPath() + Router.buildQueryString({tagIds}), true, false);
 
     request
       .get('/r/api/tags/' + tagIds)

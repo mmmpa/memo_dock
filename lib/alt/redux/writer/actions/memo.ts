@@ -2,8 +2,10 @@
 
 import * as Type from '../constants/action-types';
 import MemoData from "../models/memo-data";
+import TagData from "../models/tag-data";
 import {token} from "./login"
 import Dispatch = Redux.Dispatch;
+import Router from "../router";
 const request = require('superagent');
 
 //　メモ関係画面遷移
@@ -19,6 +21,8 @@ function displayIndex() {
 // メモインデックス取得関係
 
 export function loadMemoIndex(tag_ids:string = '', page:number = 1) {
+  //    this.go('/w/memos' + this.buildQueryString({pageNum, tagIds}));
+
   return (dispatch) => {
     dispatch(displayIndex());
     dispatch(waitLoadedIndex());
@@ -35,6 +39,11 @@ export function loadMemoIndex(tag_ids:string = '', page:number = 1) {
       })
   }
 }
+
+export function loadTaggedIndex(tag:TagData) {
+  return loadMemoIndex(tag.id.toString());
+}
+
 
 function loadMemoIndexSuccess(memos:any[], page:number, par:number, total:number, tagIds:string) {
   return {type: Type.Memo.ShowIndex, memos, page, par, total, tagIds};
@@ -78,7 +87,13 @@ function saveMemoSucceed(memo:MemoData) {
   return {type: Type.Memo.SucceedSaving, memo};
 }
 
-export function deleteMemo(memo:MemoData, callback:Function) {
+export function deleteMemo(memo:MemoData) {
+  return (dispatch)=>{
+    dispatch(tryDeleteMemo(memo, ()=> Router.goHere()));
+  }
+}
+
+export function tryDeleteMemo(memo:MemoData, callback:Function) {
   return (dispatch) => {
     dispatch(waitLoadedIndex());
     request
@@ -100,7 +115,9 @@ function waitLoadedMemo() {
   return {type: Type.Memo.WaitEditing};
 }
 
-export function goEditMemoById(memoId:number) {
+
+
+export function editMemoById(memoId:number) {
   return (dispatch) => {
     dispatch(displayEditor());
     dispatch(waitLoadedMemo());
@@ -116,7 +133,7 @@ export function goEditMemoById(memoId:number) {
   }
 }
 
-export function goEditNewMemo() {
+export function editNewMemo() {
   return (dispatch) => {
     dispatch(displayEditor());
     dispatch(injectMemoData(new MemoData()));
@@ -128,7 +145,7 @@ function injectMemoData(memo:MemoData = null) {
 }
 
 export function startEditMemo(memo:MemoData) {
-  return goEditMemoById(memo.id);
+  return editMemoById(memo.id);
 }
 
 // slimのリアルタイムレンダリング

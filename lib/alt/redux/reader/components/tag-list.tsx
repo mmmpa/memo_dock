@@ -18,7 +18,7 @@ export default class TagList extends React.Component<ITagList,{}> {
   }
 
   toggle(id) {
-    this.props.works.tag.index(this.generateNextTagIds(id));
+    this.props.works.app.selectTag(this.generateNextTagIds(id));
   }
 
   generateNextTagIds(id):number[] {

@@ -2,21 +2,21 @@
 
 import * as React from 'react'
 import * as ReactDom from 'react-dom'
-import * as Redux from 'redux'
-import * as ReactRedux from 'react-redux'
-import thunkMiddleware = require("redux-thunk");
+import * as Redux from 'react-redux'
+import {ReduxRouter} from 'redux-router'
+import DevTools from './containers/dev-tools'
+import {Route} from 'react-router'
 
 import App from './containers/app'
-import reducers from './reducers/reducers'
-import {MemoWork} from "./mixins";
 
-let store:Redux.Store = (Redux.applyMiddleware(thunkMiddleware)(Redux.createStore))(reducers);
-MemoWork.nojs = document.getElementById('nojs');
+const html = document.getElementById('nojs');
+import configureStore from './store/configure-store'
+const store = configureStore({html});
 
 ReactDom.render(
-  <ReactRedux.Provider store={store}>
-    <App />
-  </ReactRedux.Provider>
+  <Redux.Provider store={store}>
+    <ReduxRouter/>
+  </Redux.Provider>
   ,
   document.getElementById('root')
 );

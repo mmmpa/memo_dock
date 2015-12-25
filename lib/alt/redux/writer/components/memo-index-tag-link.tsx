@@ -2,7 +2,6 @@
 
 import * as _ from 'lodash'
 import * as React from 'react'
-import {MemoWork} from "../mixins";
 import {AppState, MemoIndexState} from '../constants/status'
 
 import MemoData from "../models/memo-data";
@@ -12,7 +11,8 @@ import MemoIndexLine from "./memo-index-line";
 
 interface IMemoIndexTagLink {
   key:number,
-  tagData:TagData
+  tagData:TagData,
+  works:any
 }
 
 export default class MemoIndexTagLink extends React.Component<IMemoIndexTagLink, {}> {
@@ -25,10 +25,10 @@ export default class MemoIndexTagLink extends React.Component<IMemoIndexTagLink,
   }
 
   render() {
-    let {tagData} = this.props;
+    let {tagData, works} = this.props;
     return (
       <div className="memo-index tag-link-container">
-        <a className={this.detectLinkEnabled()} onClick={()=> MemoWork.goTaggedIndex(tagData)}>{tagData.name}</a>
+        <a className={this.detectLinkEnabled()} onClick={()=> works.memo.loadTaggedIndex(tagData)}>{tagData.name}</a>
       </div>
     )
   }

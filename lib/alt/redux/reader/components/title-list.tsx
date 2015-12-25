@@ -33,7 +33,7 @@ export default class TitleList extends React.Component<ITitleList,{}> {
     return titles.map((memo:MemoData)=> {
       return <li key={'memo' + memo.id} className={this.detectActiveClass(memo.id)}>
         <div className="chevron">{this.detectIcon(memo.id)}</div>
-        <a onClick={()=> works.memo.show(memo.id)}>{memo.title}</a>
+        {works.app.createMemoLink(memo.id, memo.title)}
       </li>
     });
   }
