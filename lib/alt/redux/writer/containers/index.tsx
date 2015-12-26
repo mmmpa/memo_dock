@@ -17,7 +17,6 @@ import * as LoginAction from "../actions/login"
 
 import MemoData from "../models/memo-data";
 import MemoIndexData from "../models/memo-index-data";
-import {pickQueryString, pickPath, buildQueryString} from '../lib/path-manip'
 
 interface IIndex {
   state?:any,
@@ -90,10 +89,12 @@ class Index extends ContentCommon<IIndex, IIndexState> {
   }
 
   indexMemo(pageNumber:number = null, tagIdNumbers:number[] = null) {
-    let page = pageNumber ? pageNumber : this.props.location.query.page;
-    let tagIds = tagIdNumbers ? tagIdNumbers.join(',') : this.props.location.query.tagIds;
-    let path:string = pickPath() + buildQueryString({page, tagIds});
-    this.props.pushState(null, path);
+    let {pathname, query} = this.props.location;
+
+    let page = pageNumber ? pageNumber : query.page;
+    let tagIds = tagIdNumbers ? tagIdNumbers.join(',') : query.tagIds;
+
+    this.props.pushState(null, pathname, {page, tagIds});
   }
 
   editMemo(memo:MemoData) {
@@ -107,12 +108,12 @@ class Index extends ContentCommon<IIndex, IIndexState> {
   }
 
   createMemoLink(memoId:number, children:any) {
-    let path:string = '/memo/' + memoId + pickQueryString();
+    let {search} = this.props.location;
+    let path:string = '/memo/' + memoId + search;
     return <Link to={path}>{children}</Link>
   }
-  
+
   render() {
-    console.log(this.props)
     const {
       loginState,
       memoIndexData,

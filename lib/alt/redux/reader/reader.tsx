@@ -4,7 +4,6 @@ import * as React from 'react'
 import * as ReactDom from 'react-dom'
 import * as Redux from 'react-redux'
 import {ReduxRouter} from 'redux-router'
-import DevTools from './containers/dev-tools'
 import {Route} from 'react-router'
 
 import App from './containers/app'

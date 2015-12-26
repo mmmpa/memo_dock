@@ -6,9 +6,8 @@ import TagData from "../models/tag-data";
 
 interface ITagList {
   tags:TagData[],
-  tagState:TagState,
   selectedTagIds:number[],
-  height:number,
+  windowHeight:number,
   app:any
 }
 
@@ -48,9 +47,9 @@ export default class TagList extends React.Component<ITagList,{}> {
   }
 
   render() {
-    let {height} = this.props;
+    let {windowHeight} = this.props;
 
-    return <section id="tagList" style={{height}} className="tag-list tag-list-container">
+    return <section id="tagList" style={{height: windowHeight}} className="tag-list tag-list-container">
       <ul className="tag-list list">
         {this.writeTagList()}
       </ul>

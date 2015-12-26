@@ -55,7 +55,7 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
       <div>
         <section className="memo-index index-container">
           <h1 className="memo-index index-title">メモ一覧</h1>
-          <MemoIndexPager key="top-pager" {...{app, memoIndexData, isEnable}}/>
+          <MemoIndexPager {...{app, memoIndexData, isEnable}}/>
           <table className="memo-index index-table">
             <thead>
               <tr>
@@ -69,7 +69,7 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
               {this.memoLines()}
             </tbody>
           </table>
-          <MemoIndexPager key="bottom-pager" {...{app, memoIndexData, isEnable}}/>
+          <MemoIndexPager {...{app, memoIndexData, isEnable}}/>
         </section>
       </div>
     )

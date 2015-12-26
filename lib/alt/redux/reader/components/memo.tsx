@@ -6,9 +6,8 @@ import Fa from '../lib/components/fa'
 
 interface IMemo {
   memo:MemoData,
-  memoState:MemoState,
-  height:number,
-  width:number,
+  windowHeight:number,
+  memoWidth:number,
   app:any
 }
 
@@ -35,9 +34,9 @@ export default class Memo extends React.Component<IMemo,{}> {
   }
 
   render() {
-    let {height, width, memo} = this.props;
+    let {windowHeight, memoWidth, memo} = this.props;
 
-    return <section id="memo" style={{height, width}} className="memo memo-container">
+    return <section id="memo" style={{height: windowHeight, width: memoWidth}} className="memo memo-container">
       <header className="memo header">
         <h1 className="memo memo-title">{memo.title}</h1>
         <section className="memo tags">

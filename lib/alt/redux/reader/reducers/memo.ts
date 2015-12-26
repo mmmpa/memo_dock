@@ -4,8 +4,8 @@ import * as _ from 'lodash'
 import {MemoState} from '../constants/status'
 import MemoData from '../models/memo-data'
 
-function memo(state:MemoData = new MemoData(), action){
-  switch(action.type){
+function memo(state:MemoData = new MemoData(), action) {
+  switch (action.type) {
     case Type.MEMO_REMOVE:
       return new MemoData();
     case Type.MEMO_SHOW:
@@ -15,8 +15,8 @@ function memo(state:MemoData = new MemoData(), action){
   }
 }
 
-function titles(state:MemoData[] = [], action){
-  switch(action.type){
+function titles(state:MemoData[] = [], action) {
+  switch (action.type) {
     case Type.MEMO_INDEX:
       return action.memos;
     default:
@@ -24,11 +24,15 @@ function titles(state:MemoData[] = [], action){
   }
 }
 
-function memoState(state:MemoState = MemoState.Ready, action){
-  switch(action.type){
+function memoState(state:MemoState = MemoState.Ready, action) {
+  switch (action.type) {
     default:
       return state;
   }
 }
 
-export default {memo, titles, memoState}
+function html(state:HTMLElement = null, action) {
+  return state;
+}
+
+export default {memo, titles, memoState, html}

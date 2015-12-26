@@ -8,8 +8,7 @@ import Fa from '../lib/components/fa'
 interface ITitleList {
   titles:MemoData[],
   memo:MemoData,
-  memoState:MemoState,
-  height:number,
+  windowHeight:number,
   app:any
 }
 
@@ -39,9 +38,9 @@ export default class TitleList extends React.Component<ITitleList,{}> {
   }
 
   render() {
-    let {height} = this.props;
+    let {windowHeight} = this.props;
 
-    return <section id="titleList" style={{minHeight: height}} className="title-list title-list-container">
+    return <section id="titleList" style={{minHeight: windowHeight}} className="title-list title-list-container">
       <ul className="title-list list">
         {this.writeTitleList()}
       </ul>
