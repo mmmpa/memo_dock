@@ -6,15 +6,15 @@ import {LoginState} from '../constants/status'
 
 function loginState(state:LoginState = LoginState.Request, action) {
   switch (action.type) {
-    case Type.Login.Wait:
+    case Type.LOGIN_WAIT:
       return LoginState.Wait;
-    case Type.Login.Request:
+    case Type.LOGIN_REQUEST:
       return LoginState.Request;
-    case Type.Login.LoggedOut:
+    case Type.LOGIN_LOGGED_OUT:
       return LoginState.Request;
-    case Type.Login.RequestRetry:
+    case Type.LOGIN_REQUEST_RETRY:
       return LoginState.Invalid;
-    case Type.Login.LoggedIn:
+    case Type.LOGIN_LOGGED_IN:
       return LoginState.LoggedIn;
     default:
       return state;

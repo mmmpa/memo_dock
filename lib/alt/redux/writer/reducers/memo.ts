@@ -8,7 +8,7 @@ import {EditMemoState, MemoIndexState} from '../constants/status';
 
 function memoIndexData(state:MemoIndexData = null, action) {
   switch (action.type) {
-    case Type.Memo.ShowIndex:
+    case Type.MEMO_SHOW_INDEX:
       let {memos, page, par, total, tagIds} = action;
       let ms:MemoData[] = _.map(memos, (memo)=> new MemoData(memo));
       return new MemoIndexData(ms, page, par, total, tagIds);
@@ -19,9 +19,9 @@ function memoIndexData(state:MemoIndexData = null, action) {
 
 function memoIndexState(state:MemoIndexState = MemoIndexState.Wait, action) {
   switch (action.type) {
-    case Type.Memo.ShowIndex:
+    case Type.MEMO_SHOW_INDEX:
       return MemoIndexState.Ready;
-    case Type.Memo.WaitIndex:
+    case Type.MEMO_WAIT_INDEX:
       return MemoIndexState.Wait;
     default:
       return state;
@@ -31,13 +31,13 @@ function memoIndexState(state:MemoIndexState = MemoIndexState.Wait, action) {
 
 function memoData(state = null, action) {
   switch (action.type) {
-    case Type.Memo.EditNewMemo:
+    case Type.MEMO_EDIT_NEW_MEMO:
       return action.memo;
-    case Type.Memo.WaitEditing:
+    case Type.MEMO_WAIT_EDITING:
       return state;
-    case Type.Memo.StartEditing:
+    case Type.MEMO_START_EDITING:
       return action.memo;
-    case Type.Memo.SucceedSaving:
+    case Type.MEMO_SUCCEED_SAVING:
       return action.memo;
     default:
       return state;
@@ -46,15 +46,15 @@ function memoData(state = null, action) {
 
 function memoMessage(state:any = null, action) {
   switch (action.type) {
-    case Type.Memo.StartEditing:
+    case Type.MEMO_START_EDITING:
       return null;
-    case Type.Memo.WaitEditing:
+    case Type.MEMO_WAIT_EDITING:
       return null;
-    case Type.Memo.StartSaving:
+    case Type.MEMO_START_SAVING:
       return null;
-    case Type.Memo.SucceedSaving:
+    case Type.MEMO_SUCCEED_SAVING:
       return {messages: {memo: 'Saved'}};
-    case Type.Memo.FailSaving:
+    case Type.MEMO_FAIL_SAVING:
       return {errors: action.errors};
     default:
       return state;
@@ -63,11 +63,11 @@ function memoMessage(state:any = null, action) {
 
 function rendered(state:string = '', action) {
   switch (action.type) {
-    case Type.Memo.WaitEditing:
+    case Type.MEMO_WAIT_EDITING:
       return '';
-    case Type.Memo.StartEditing:
+    case Type.MEMO_START_EDITING:
       return '';
-    case Type.Memo.FinishRendering:
+    case Type.MEMO_FINISH_RENDERING:
       return action.html;
     default:
       return state;
@@ -76,17 +76,17 @@ function rendered(state:string = '', action) {
 
 function editState(state:EditMemoState = EditMemoState.Ready, action) {
   switch (action.type) {
-    case Type.Memo.WaitEditing:
+    case Type.MEMO_WAIT_EDITING:
       return EditMemoState.Loading;
-    case Type.Memo.EditNewMemo:
+    case Type.MEMO_EDIT_NEW_MEMO:
       return EditMemoState.Ready;
-    case Type.Memo.StartEditing:
+    case Type.MEMO_START_EDITING:
       return EditMemoState.Ready;
-    case Type.Memo.StartSaving:
+    case Type.MEMO_START_SAVING:
       return EditMemoState.Saving;
-    case Type.Memo.SucceedSaving:
+    case Type.MEMO_SUCCEED_SAVING:
       return EditMemoState.Ready;
-    case Type.Memo.FailSaving:
+    case Type.MEMO_FAIL_SAVING:
       return EditMemoState.Ready;
     default:
       return state;

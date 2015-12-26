@@ -38,11 +38,11 @@ export function loadTaggedIndex(tag:TagData) {
 
 
 function showIndex(memos:any[], page:number, par:number, total:number, tagIds:string) {
-  return {type: Type.Memo.ShowIndex, memos, page, par, total, tagIds};
+  return {type: Type.MEMO_SHOW_INDEX, memos, page, par, total, tagIds};
 }
 
 function waitLoadedIndex() {
-  return {type: Type.Memo.WaitIndex};
+  return {type: Type.MEMO_WAIT_INDEX};
 }
 
 // メモ保存関係
@@ -68,15 +68,15 @@ export function saveMemo(memo:MemoData) {
 }
 
 function saveMemoStart() {
-  return {type: Type.Memo.StartSaving};
+  return {type: Type.MEMO_START_SAVING};
 }
 
 function saveMemoFail(errors:any) {
-  return {type: Type.Memo.FailSaving, errors};
+  return {type: Type.MEMO_FAIL_SAVING, errors};
 }
 
 function saveMemoSucceed(memo:MemoData) {
-  return {type: Type.Memo.SucceedSaving, memo};
+  return {type: Type.MEMO_SUCCEED_SAVING, memo};
 }
 
 export function deleteMemo(memo:MemoData) {
@@ -104,7 +104,7 @@ export function tryDeleteMemo(memo:MemoData, callback:Function) {
 // メモ編集画面
 
 function waitLoadedMemo() {
-  return {type: Type.Memo.WaitEditing};
+  return {type: Type.MEMO_WAIT_EDITING};
 }
 
 
@@ -126,11 +126,11 @@ export function editMemoById(memoId:number) {
 
 export function editNewMemo() {
   let memo:MemoData = new MemoData();
-  return {type: Type.Memo.StartEditing, memo};
+  return {type: Type.MEMO_START_EDITING, memo};
 }
 
 function injectMemoData(memo:MemoData = null) {
-  return {type: Type.Memo.EditNewMemo, memo};
+  return {type: Type.MEMO_EDIT_NEW_MEMO, memo};
 }
 
 export function startEditMemo(memo:MemoData) {
@@ -156,5 +156,5 @@ export function renderSlim(slim:string) {
 }
 
 export function renderSlimFinish(html:string) {
-  return {type: Type.Memo.FinishRendering, html};
+  return {type: Type.MEMO_FINISH_RENDERING, html};
 }

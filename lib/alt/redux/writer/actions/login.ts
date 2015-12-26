@@ -7,13 +7,8 @@ export function token():string {
   return document.getElementsByName('csrf-token')[0].getAttribute('content');
 }
 
-
-function displayForm(){
-  return {type: Type.Login.DisplayForm};
-}
-
 export function requestLogin(afterLoginUri:string = null) {
-  return {type: Type.Login.Request, afterLoginUri};
+  return {type: Type.LOGIN_REQUEST, afterLoginUri};
 }
 
 export function logOut(succeed:Function = null, fail:Function = null){
@@ -33,12 +28,11 @@ export function logOut(succeed:Function = null, fail:Function = null){
 }
 
 export function logoutFinish() {
-  return {type: Type.Login.LoggedOut};
+  return {type: Type.LOGIN_LOGGED_OUT};
 }
 
 export function start(){
   return (dispatch) => {
-    dispatch(displayForm());
     dispatch(requestLogin('/w/memos'));
   }
 }
@@ -60,11 +54,11 @@ export function checkInitialState(succeed:Function = null, fail:Function = null)
 }
 
 function setRequest(){
-  return {type: Type.Login.Request};
+  return {type: Type.LOGIN_REQUEST};
 }
 
 function setLoggedIn(){
-  return {type: Type.Login.LoggedIn};
+  return {type: Type.LOGIN_LOGGED_IN};
 }
 
 export function login(email:string, password:string, succeed:Function, fail:Function) {
@@ -88,10 +82,10 @@ export function login(email:string, password:string, succeed:Function, fail:Func
 }
 
 export function waitLogin() {
-  return {type: Type.Login.Wait};
+  return {type: Type.LOGIN_WAIT};
 }
 
 export function requestRetryLogin() {
-  return {type: Type.Login.RequestRetry};
+  return {type: Type.LOGIN_REQUEST_RETRY};
 }
 

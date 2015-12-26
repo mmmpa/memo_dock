@@ -51041,12 +51041,9 @@ function token() {
     return document.getElementsByName('csrf-token')[0].getAttribute('content');
 }
 exports.token = token;
-function displayForm() {
-    return { type: Type.Login.DisplayForm };
-}
 function requestLogin(afterLoginUri) {
     if (afterLoginUri === void 0) { afterLoginUri = null; }
-    return { type: Type.Login.Request, afterLoginUri: afterLoginUri };
+    return { type: Type.LOGIN_REQUEST, afterLoginUri: afterLoginUri };
 }
 exports.requestLogin = requestLogin;
 function logOut(succeed, fail) {
@@ -51069,12 +51066,11 @@ function logOut(succeed, fail) {
 }
 exports.logOut = logOut;
 function logoutFinish() {
-    return { type: Type.Login.LoggedOut };
+    return { type: Type.LOGIN_LOGGED_OUT };
 }
 exports.logoutFinish = logoutFinish;
 function start() {
     return function (dispatch) {
-        dispatch(displayForm());
         dispatch(requestLogin('/w/memos'));
     };
 }
@@ -51099,10 +51095,10 @@ function checkInitialState(succeed, fail) {
 }
 exports.checkInitialState = checkInitialState;
 function setRequest() {
-    return { type: Type.Login.Request };
+    return { type: Type.LOGIN_REQUEST };
 }
 function setLoggedIn() {
-    return { type: Type.Login.LoggedIn };
+    return { type: Type.LOGIN_LOGGED_IN };
 }
 function login(email, password, succeed, fail) {
     return function (dispatch) {
@@ -51126,11 +51122,11 @@ function login(email, password, succeed, fail) {
 }
 exports.login = login;
 function waitLogin() {
-    return { type: Type.Login.Wait };
+    return { type: Type.LOGIN_WAIT };
 }
 exports.waitLogin = waitLogin;
 function requestRetryLogin() {
-    return { type: Type.Login.RequestRetry };
+    return { type: Type.LOGIN_REQUEST_RETRY };
 }
 exports.requestRetryLogin = requestRetryLogin;
 
@@ -51173,10 +51169,10 @@ function loadTaggedIndex(tag) {
 }
 exports.loadTaggedIndex = loadTaggedIndex;
 function showIndex(memos, page, par, total, tagIds) {
-    return { type: Type.Memo.ShowIndex, memos: memos, page: page, par: par, total: total, tagIds: tagIds };
+    return { type: Type.MEMO_SHOW_INDEX, memos: memos, page: page, par: par, total: total, tagIds: tagIds };
 }
 function waitLoadedIndex() {
-    return { type: Type.Memo.WaitIndex };
+    return { type: Type.MEMO_WAIT_INDEX };
 }
 // メモ保存関係
 function saveMemo(memo) {
@@ -51200,13 +51196,13 @@ function saveMemo(memo) {
 }
 exports.saveMemo = saveMemo;
 function saveMemoStart() {
-    return { type: Type.Memo.StartSaving };
+    return { type: Type.MEMO_START_SAVING };
 }
 function saveMemoFail(errors) {
-    return { type: Type.Memo.FailSaving, errors: errors };
+    return { type: Type.MEMO_FAIL_SAVING, errors: errors };
 }
 function saveMemoSucceed(memo) {
-    return { type: Type.Memo.SucceedSaving, memo: memo };
+    return { type: Type.MEMO_SUCCEED_SAVING, memo: memo };
 }
 function deleteMemo(memo) {
     return function (dispatch) {
@@ -51233,7 +51229,7 @@ function tryDeleteMemo(memo, callback) {
 exports.tryDeleteMemo = tryDeleteMemo;
 // メモ編集画面
 function waitLoadedMemo() {
-    return { type: Type.Memo.WaitEditing };
+    return { type: Type.MEMO_WAIT_EDITING };
 }
 function editMemoById(memoId) {
     return function (dispatch) {
@@ -51253,12 +51249,12 @@ function editMemoById(memoId) {
 exports.editMemoById = editMemoById;
 function editNewMemo() {
     var memo = new memo_data_1.default();
-    return { type: Type.Memo.StartEditing, memo: memo };
+    return { type: Type.MEMO_START_EDITING, memo: memo };
 }
 exports.editNewMemo = editNewMemo;
 function injectMemoData(memo) {
     if (memo === void 0) { memo = null; }
-    return { type: Type.Memo.EditNewMemo, memo: memo };
+    return { type: Type.MEMO_EDIT_NEW_MEMO, memo: memo };
 }
 function startEditMemo(memo) {
     return editMemoById(memo.id);
@@ -51283,7 +51279,7 @@ function renderSlim(slim) {
 }
 exports.renderSlim = renderSlim;
 function renderSlimFinish(html) {
-    return { type: Type.Memo.FinishRendering, html: html };
+    return { type: Type.MEMO_FINISH_RENDERING, html: html };
 }
 exports.renderSlimFinish = renderSlimFinish;
 
@@ -51678,29 +51674,22 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Menu;
 
 },{"../lib/components/fa":267,"react":223}],262:[function(require,module,exports){
-(function (Login) {
-    Login[Login["Request"] = 1] = "Request";
-    Login[Login["RequestRetry"] = 2] = "RequestRetry";
-    Login[Login["Wait"] = 3] = "Wait";
-    Login[Login["LoggedIn"] = 4] = "LoggedIn";
-    Login[Login["LoggedOut"] = 5] = "LoggedOut";
-    Login[Login["DisplayForm"] = 6] = "DisplayForm";
-})(exports.Login || (exports.Login = {}));
-var Login = exports.Login;
-(function (Memo) {
-    Memo[Memo["ShowIndex"] = 101] = "ShowIndex";
-    Memo[Memo["WaitIndex"] = 105] = "WaitIndex";
-    Memo[Memo["StartEditing"] = 102] = "StartEditing";
-    Memo[Memo["WaitEditing"] = 106] = "WaitEditing";
-    Memo[Memo["FinishRendering"] = 107] = "FinishRendering";
-    Memo[Memo["Create"] = 103] = "Create";
-    Memo[Memo["Delete"] = 104] = "Delete";
-    Memo[Memo["SucceedSaving"] = 108] = "SucceedSaving";
-    Memo[Memo["FailSaving"] = 109] = "FailSaving";
-    Memo[Memo["StartSaving"] = 110] = "StartSaving";
-    Memo[Memo["EditNewMemo"] = 111] = "EditNewMemo";
-})(exports.Memo || (exports.Memo = {}));
-var Memo = exports.Memo;
+exports.LOGIN_REQUEST = 'LOGIN_REQUEST';
+exports.LOGIN_REQUEST_RETRY = 'LOGIN_REQUEST_RETRY';
+exports.LOGIN_WAIT = 'LOGIN_WAIT';
+exports.LOGIN_LOGGED_IN = 'LOGIN_LOGGED_IN';
+exports.LOGIN_LOGGED_OUT = 'LOGIN_LOGGED_OUT';
+exports.MEMO_SHOW_INDEX = 'MEMO_SHOW_INDEX';
+exports.MEMO_WAIT_INDEX = 'MEMO_WAIT_INDEX';
+exports.MEMO_START_EDITING = 'MEMO_START_EDITING';
+exports.MEMO_WAIT_EDITING = 'MEMO_WAIT_EDITING';
+exports.MEMO_FINISH_RENDERING = 'MEMO_FINISH_RENDERING';
+exports.MEMO_CREATE = 'MEMO_CREATE';
+exports.MEMO_DELETE = 'MEMO_DELETE';
+exports.MEMO_SUCCEED_SAVING = 'MEMO_SUCCEED_SAVING';
+exports.MEMO_FAIL_SAVING = 'MEMO_FAIL_SAVING';
+exports.MEMO_START_SAVING = 'MEMO_START_SAVING';
+exports.MEMO_EDIT_NEW_MEMO = 'MEMO_EDIT_NEW_MEMO';
 
 },{}],263:[function(require,module,exports){
 var AppState = (function () {
@@ -52119,15 +52108,15 @@ var status_1 = require('../constants/status');
 function loginState(state, action) {
     if (state === void 0) { state = status_1.LoginState.Request; }
     switch (action.type) {
-        case Type.Login.Wait:
+        case Type.LOGIN_WAIT:
             return status_1.LoginState.Wait;
-        case Type.Login.Request:
+        case Type.LOGIN_REQUEST:
             return status_1.LoginState.Request;
-        case Type.Login.LoggedOut:
+        case Type.LOGIN_LOGGED_OUT:
             return status_1.LoginState.Request;
-        case Type.Login.RequestRetry:
+        case Type.LOGIN_REQUEST_RETRY:
             return status_1.LoginState.Invalid;
-        case Type.Login.LoggedIn:
+        case Type.LOGIN_LOGGED_IN:
             return status_1.LoginState.LoggedIn;
         default:
             return state;
@@ -52146,7 +52135,7 @@ var status_1 = require('../constants/status');
 function memoIndexData(state, action) {
     if (state === void 0) { state = null; }
     switch (action.type) {
-        case Type.Memo.ShowIndex:
+        case Type.MEMO_SHOW_INDEX:
             var memos = action.memos, page = action.page, par = action.par, total = action.total, tagIds = action.tagIds;
             var ms = _.map(memos, function (memo) { return new memo_data_1.default(memo); });
             return new memo_index_data_1.default(ms, page, par, total, tagIds);
@@ -52157,9 +52146,9 @@ function memoIndexData(state, action) {
 function memoIndexState(state, action) {
     if (state === void 0) { state = status_1.MemoIndexState.Wait; }
     switch (action.type) {
-        case Type.Memo.ShowIndex:
+        case Type.MEMO_SHOW_INDEX:
             return status_1.MemoIndexState.Ready;
-        case Type.Memo.WaitIndex:
+        case Type.MEMO_WAIT_INDEX:
             return status_1.MemoIndexState.Wait;
         default:
             return state;
@@ -52168,13 +52157,13 @@ function memoIndexState(state, action) {
 function memoData(state, action) {
     if (state === void 0) { state = null; }
     switch (action.type) {
-        case Type.Memo.EditNewMemo:
+        case Type.MEMO_EDIT_NEW_MEMO:
             return action.memo;
-        case Type.Memo.WaitEditing:
+        case Type.MEMO_WAIT_EDITING:
             return state;
-        case Type.Memo.StartEditing:
+        case Type.MEMO_START_EDITING:
             return action.memo;
-        case Type.Memo.SucceedSaving:
+        case Type.MEMO_SUCCEED_SAVING:
             return action.memo;
         default:
             return state;
@@ -52183,15 +52172,15 @@ function memoData(state, action) {
 function memoMessage(state, action) {
     if (state === void 0) { state = null; }
     switch (action.type) {
-        case Type.Memo.StartEditing:
+        case Type.MEMO_START_EDITING:
             return null;
-        case Type.Memo.WaitEditing:
+        case Type.MEMO_WAIT_EDITING:
             return null;
-        case Type.Memo.StartSaving:
+        case Type.MEMO_START_SAVING:
             return null;
-        case Type.Memo.SucceedSaving:
+        case Type.MEMO_SUCCEED_SAVING:
             return { messages: { memo: 'Saved' } };
-        case Type.Memo.FailSaving:
+        case Type.MEMO_FAIL_SAVING:
             return { errors: action.errors };
         default:
             return state;
@@ -52200,11 +52189,11 @@ function memoMessage(state, action) {
 function rendered(state, action) {
     if (state === void 0) { state = ''; }
     switch (action.type) {
-        case Type.Memo.WaitEditing:
+        case Type.MEMO_WAIT_EDITING:
             return '';
-        case Type.Memo.StartEditing:
+        case Type.MEMO_START_EDITING:
             return '';
-        case Type.Memo.FinishRendering:
+        case Type.MEMO_FINISH_RENDERING:
             return action.html;
         default:
             return state;
@@ -52213,17 +52202,17 @@ function rendered(state, action) {
 function editState(state, action) {
     if (state === void 0) { state = status_1.EditMemoState.Ready; }
     switch (action.type) {
-        case Type.Memo.WaitEditing:
+        case Type.MEMO_WAIT_EDITING:
             return status_1.EditMemoState.Loading;
-        case Type.Memo.EditNewMemo:
+        case Type.MEMO_EDIT_NEW_MEMO:
             return status_1.EditMemoState.Ready;
-        case Type.Memo.StartEditing:
+        case Type.MEMO_START_EDITING:
             return status_1.EditMemoState.Ready;
-        case Type.Memo.StartSaving:
+        case Type.MEMO_START_SAVING:
             return status_1.EditMemoState.Saving;
-        case Type.Memo.SucceedSaving:
+        case Type.MEMO_SUCCEED_SAVING:
             return status_1.EditMemoState.Ready;
-        case Type.Memo.FailSaving:
+        case Type.MEMO_FAIL_SAVING:
             return status_1.EditMemoState.Ready;
         default:
             return state;
