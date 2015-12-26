@@ -5,6 +5,7 @@ import MemoData from "../models/memo-data";
 import TagData from "../models/tag-data";
 import {token, checkInitialState} from "./login"
 import Dispatch = Redux.Dispatch;
+import MemoData from "../models/memo-data";
 const request = require('superagent');
 
 export function checkLogin(...args) {
@@ -122,14 +123,14 @@ export function editMemoById(memoId:number) {
   }
 }
 
+
 export function editNewMemo() {
-  return (dispatch) => {
-    dispatch(injectMemoData(new MemoData()));
-  }
+  let memo:MemoData = new MemoData();
+  return {type: Type.Memo.StartEditing, memo};
 }
 
 function injectMemoData(memo:MemoData = null) {
-  return {type: Type.Memo.StartEditing, memo};
+  return {type: Type.Memo.EditNewMemo, memo};
 }
 
 export function startEditMemo(memo:MemoData) {

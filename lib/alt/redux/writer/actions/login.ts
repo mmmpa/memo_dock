@@ -16,14 +16,17 @@ export function requestLogin(afterLoginUri:string = null) {
   return {type: Type.Login.Request, afterLoginUri};
 }
 
-export function logout(){
+export function logOut(succeed:Function = null, fail:Function = null){
   return (dispatch) => {
     request
       .delete('/w/api/sessions')
       .set('X-CSRF-Token', token())
       .end((err, res)=> {
         if (err) {
+          fail && fail();
         } else {
+          dispatch(setRequest());
+          succeed && succeed();
         }
       })
   }

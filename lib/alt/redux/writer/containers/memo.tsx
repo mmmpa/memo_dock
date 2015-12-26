@@ -3,10 +3,9 @@
 import * as React from 'react'
 import * as Redux from 'redux'
 import { connect } from 'react-redux'
-import {AppState, LoginState, Context, EditMemoState, MemoIndexState} from '../constants/status'
+import {LoginState, EditMemoState} from '../constants/status'
 
-import Login from "../components/login";
-import MemoIndex from "../components/memo-index";
+import ContentCommon from "../components/content-common";
 import MemoEdit from "../components/memo-edit";
 
 import * as MemoAction from "../actions/memo"
@@ -14,52 +13,98 @@ import * as LoginAction from "../actions/login"
 
 import MemoData from "../models/memo-data";
 import MemoIndexData from "../models/memo-index-data";
+import { pushState } from 'redux-router'
+import Menu from "../components/menu";
 
-interface IApp {
+interface IMemo {
   state?:any,
-  works?:any
+  memoAction?:any,
+  loginAction?:any,
+  pushState:Function,
+  location:any,
+  app:{}
 }
 
-class App extends React.Component<IApp, {}> {
-  private initialized:boolean = false;
+class Memo extends ContentCommon<IMemo, {}> {
+  constructor(props) {
+    super(props);
+
+    this.renderSlim = this.renderSlim.bind(this);
+    this.save = this.save.bind(this);
+  }
+
+  componentWillMount() {
+    super.componentWillMount();
+
+    this.loadData(this.props)
+  }
+
+  componentWillReceiveProps(nextProps) {
+    this.loadData(nextProps, this.props)
+  }
+
+  loadData(props, nowProps = null) {
+    const {memoData} = props.state;
+    const {memoId} = props.params;
+    const {memoAction} = props;
+
+    if (memoData && this.isSameMemo(props, nowProps)) {
+      return;
+    }
+
+    if (memoId) {
+      memoAction.editNewMemo();
+      memoAction.editMemoById(memoId);
+    } else {
+      memoAction.editNewMemo();
+    }
+  }
+
+  isSameMemo(a, b) {
+    if(!a || !b){
+      return false;
+    }
+    return a.params.memoId === b.params.memoId;
+  }
+
+  renderSlim(src:string) {
+    this.props.memoAction.renderSlim(src);
+  }
+
+  save(memo:MemoData) {
+    this.props.memoAction.saveMemo(memo);
+  }
 
   render() {
     const {
-      loginState,
-      context,
-      memoIndexData,
       memoData,
+      loginState,
       editState,
       rendered,
-      memoMessage,
-      memoIndexState,
-      afterLoginUri
+      memoMessage
       } = this.props.state;
-    const {works} = this.props;
 
-    AppState.login = loginState;
-    AppState.edit = editState;
-    AppState.index = memoIndexState;
+    const {renderSlim, save, createIndexLink, createNewMemoLink, logOut} = this;
 
-    if (!this.initialized) {
-      this.initialized = true;
-      window.addEventListener('popstate', (e)=> Router.goHere(false));
-      works.login.checkInitialState(()=> Router.goHere());
+    let app = {renderSlim, save};
+
+    if (!memoData || loginState !== LoginState.LoggedIn) {
       return <div>initializing...</div>;
     }
 
-    return <div>memo</div>;
+    return <article className="memo-edit">
+      <Menu {...{createIndexLink, createNewMemoLink, logOut}}/>
+      <MemoEdit {...{app, memoData, editState, rendered, memoMessage}}/>
+    </article>;
   }
 }
 
 function mapDispatchToProps(dispatch) {
-  let dispatcher = {
-    works: {
-      memo: Redux.bindActionCreators(MemoAction, dispatch),
-      login: Redux.bindActionCreators(LoginAction, dispatch)
-    }
+  return {
+    memoAction: Redux.bindActionCreators(MemoAction, dispatch),
+    loginAction: Redux.bindActionCreators(LoginAction, dispatch),
+    pushState: Redux.bindActionCreators(pushState, dispatch).bind(this)
   };
-  return dispatcher;
 }
 
 function mapStateToProps(state) {
@@ -69,4 +114,4 @@ function mapStateToProps(state) {
 export default connect(
   mapStateToProps,
   mapDispatchToProps
-)(App)
+)(Memo)

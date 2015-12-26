@@ -7,8 +7,6 @@ import * as Redux from 'react-redux'
 import {ReduxRouter} from 'redux-router'
 import {Route} from 'react-router'
 
-import App from './containers/app'
-
 import configureStore from './store/configure-store'
 const store = configureStore({});
 

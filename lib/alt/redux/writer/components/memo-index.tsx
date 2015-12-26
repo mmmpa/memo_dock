@@ -14,7 +14,6 @@ import Fa from '../lib/components/fa'
 interface IMemoIndex {
   memoIndexData:MemoIndexData,
   memoIndexState:MemoIndexState,
-  memoAction:any,
   app:any
 }
 

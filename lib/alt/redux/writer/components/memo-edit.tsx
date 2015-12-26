@@ -24,9 +24,9 @@ import * as CodeMirror from 'codemirror'
 interface IMemoEdit {
   memoData:MemoData,
   editState:EditMemoState,
-  rendered?:string,
-  memoMessage?:any,
-  works?:any
+  rendered:string,
+  memoMessage:any,
+  app:any
 }
 
 interface IMemoEditState {
@@ -40,17 +40,20 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   constructor(props) {
     super(props);
 
-    let {memoData, works} = this.props;
+    let {memoData, app} = this.props;
 
     this.state = {
       memoData: memoData,
       renderer: _.debounce(()=> {
-        works.memo.renderSlim(this.state.memoData.src);
+        app.renderSlim(this.state.memoData.src);
         this.resize();
       }, 1000)
     }
-  }
 
+    this.changeTitle = this.changeTitle.bind(this);
+    this.changeTags = this.changeTags.bind(this);
+    this.togglePublic = this.togglePublic.bind(this);
+  }
 
   componentDidUpdate() {
     let {memoData} = this.state;
@@ -98,21 +101,22 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   }
 
   detectSaveButton() {
-    if (this.props.editState === EditMemoState.Ready) {
-      return <button className="memo-edit submit" onClick={this.save.bind(this)}>
-        <Fa icon="paw"/>
-        Save
-      </button>
-    } else if (this.props.editState === EditMemoState.Loading) {
-      return <button className="memo-edit submit" onClick={this.save.bind(this)}>
-        <Fa icon="paw"/>
-        Wait...
-      </button>
-    } else {
-      return <button className="memo-edit submit" disabled={true}>
-        <Fa icon="spinner" animation="pulse"/>
-        Saving...
-      </button>
+    switch(this.props.editState){
+      case EditMemoState.Ready:
+        return <button className="memo-edit submit" onClick={()=> this.save()}>
+          <Fa icon="paw"/>
+          Save
+        </button>
+      case EditMemoState.Loading:
+        return <button className="memo-edit submit">
+          <Fa icon="paw"/>
+          Wait...
+        </button>
+      default:
+        return <button className="memo-edit submit" disabled={true}>
+          <Fa icon="spinner" animation="pulse"/>
+          Saving...
+        </button>
     }
   }
 
@@ -140,7 +144,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   }
 
   save() {
-    this.props.works.memo.saveMemo(this.state.memoData);
+    this.props.app.save(this.state.memoData);
   }
 
   writeError() {
@@ -169,20 +173,17 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   }
 
   render() {
-    if (!this.state.memoData) {
-      return <div>loading...</div>
-    }
     let {title, src, tagList, isPublic} = this.state.memoData;
-    let {rendered, works} = this.props;
+    let {changeTitle, changeTags, togglePublic} = this;
+    let {rendered} = this.props;
     return (
-      <article className="memo-edit">
-        <Menu works={works}/>
+      <div>
         <section className="memo-edit edit-container">
           <section className="memo-edit title">
-            <input type="text" placeholder="タイトル" value={title} onChange={this.changeTitle.bind(this)}/>
+            <input type="text" placeholder="タイトル" value={title} onChange={changeTitle}/>
           </section>
           <section className="memo-edit tags">
-            <input type="text" placeholder="タグ（カンマ区切り）" value={tagList} onChange={this.changeTags.bind(this)}/>
+            <input type="text" placeholder="タグ（カンマ区切り）" value={tagList} onChange={changeTags}/>
           </section>
           <section className="memo-edit content" id="contentArea">
             <section className="memo-edit src" id="srcArea">
@@ -198,7 +199,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
             {this.detectSaveButton()}
             <div className="memo-edit public">
               <label>
-                <input type="checkbox" checked={isPublic} onChange={this.togglePublic.bind(this)}/>
+                <input type="checkbox" checked={isPublic} onChange={togglePublic}/>
                 公開
               </label>
             </div>
@@ -207,7 +208,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
             </div>
           </section>
         </section>
-      </article>
+      </div>
     );
   }
 }

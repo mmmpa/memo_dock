@@ -29,10 +29,12 @@ function memoIndexState(state:MemoIndexState = MemoIndexState.Wait, action) {
 }
 
 
-function memoData(state = new MemoData(), action) {
+function memoData(state = null, action) {
   switch (action.type) {
+    case Type.Memo.EditNewMemo:
+      return action.memo;
     case Type.Memo.WaitEditing:
-      return new MemoData();
+      return state;
     case Type.Memo.StartEditing:
       return action.memo;
     case Type.Memo.SucceedSaving:
@@ -76,6 +78,8 @@ function editState(state:EditMemoState = EditMemoState.Ready, action) {
   switch (action.type) {
     case Type.Memo.WaitEditing:
       return EditMemoState.Loading;
+    case Type.Memo.EditNewMemo:
+      return EditMemoState.Ready;
     case Type.Memo.StartEditing:
       return EditMemoState.Ready;
     case Type.Memo.StartSaving:

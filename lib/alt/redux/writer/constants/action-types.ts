@@ -18,6 +18,5 @@ export enum Memo{
   SucceedSaving = 108,
   FailSaving = 109,
   StartSaving = 110,
-  DisplayEditor = 111,
-  DisplayIndex = 112,
+  EditNewMemo = 111,
 }

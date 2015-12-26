@@ -3,51 +3,43 @@
 import * as React from 'react'
 import * as Redux from 'redux'
 import { connect } from 'react-redux'
+import { pushState } from 'redux-router'
+
 import {LoginState, MemoIndexState} from '../constants/status'
 
+import Menu from "../components/menu";
 import MemoIndex from "../components/memo-index";
+import ContentCommon from "../components/content-common";
+import { Link } from 'react-router';
 
 import * as MemoAction from "../actions/memo"
 import * as LoginAction from "../actions/login"
 
 import MemoData from "../models/memo-data";
 import MemoIndexData from "../models/memo-index-data";
-import { pushState } from 'redux-router'
-import { Link } from 'react-router';
-import {createIndexLink, createNewMemoLink} from '../components/link'
-import Menu from "../components/menu";
 import {pickQueryString, pickPath, buildQueryString} from '../lib/path-manip'
 
-interface IApp {
+interface IIndex {
   state?:any,
   memoAction?:any,
   loginAction?:any,
   pushState:Function,
-  app:{}
+  location:any
 }
 
-class Index extends React.Component<IApp, {}> {
+class Index extends ContentCommon<IIndex, {}> {
   constructor(props) {
     super(props);
 
     this.indexMemo = this.indexMemo.bind(this);
+    this.editMemo = this.editMemo.bind(this);
+    this.deleteMemo = this.deleteMemo.bind(this);
   }
 
   componentWillMount() {
-    const {loginState} = this.props.state;
+    super.componentWillMount();
 
-    const {
-      memoAction,
-      pushState
-      } = this.props;
-
-    if (loginState !== LoginState.LoggedIn) {
-      memoAction.checkLogin(null, ()=> {
-        pushState(null, '/w');
-      });
-    } else {
-      this.loadData(this.props)
-    }
+    this.loadData(this.props)
   }
 
   componentWillReceiveProps(nextProps) {
@@ -58,7 +50,7 @@ class Index extends React.Component<IApp, {}> {
     const {memoIndexData} = props.state;
     const {memoAction} = props;
 
-    if (memoIndexData && this.isSameIndex(props, nowProps)) {
+    if (memoIndexData && nowProps && this.isSameIndex(props, nowProps)) {
       return;
     }
 
@@ -94,6 +86,14 @@ class Index extends React.Component<IApp, {}> {
     this.props.pushState(null, path);
   }
 
+  editMemo(memo:MemoData) {
+    this.props.pushState(null, '/w/memos/' + memo.id);
+  }
+
+  deleteMemo(memo:MemoData) {
+    this.props.pushState(null, '/w/memos/' + memo.id);
+  }
+
   createMemoLink(memoId:number, children:any) {
     let path:string = '/memo/' + memoId + pickQueryString();
     return <Link to={path}>{children}</Link>
@@ -107,16 +107,16 @@ class Index extends React.Component<IApp, {}> {
       memoIndexState
       } = this.props.state;
 
-    let app = {
-      indexMemo: this.indexMemo
-    }
+    const {indexMemo, editMemo, deleteMemo, createIndexLink, createNewMemoLink, logOut} = this;
+
+    let app = {indexMemo, editMemo, deleteMemo};
 
     if (!memoIndexData || loginState !== LoginState.LoggedIn) {
       return <div>initializing...</div>;
     }
 
     return <article className="memo-index">
-      <Menu {...{createIndexLink, createNewMemoLink}}/>
+      <Menu {...{createIndexLink, createNewMemoLink, logOut}}/>
       <MemoIndex {...{app, memoIndexData, memoIndexState}}/>
     </article>;
   }
@@ -126,8 +126,7 @@ function mapDispatchToProps(dispatch) {
   return {
     memoAction: Redux.bindActionCreators(MemoAction, dispatch),
     loginAction: Redux.bindActionCreators(LoginAction, dispatch),
-    pushState: Redux.bindActionCreators(pushState, dispatch).bind(this),
-    app: {}
+    pushState: Redux.bindActionCreators(pushState, dispatch).bind(this)
   };
 }
 

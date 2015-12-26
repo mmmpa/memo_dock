@@ -1,15 +1,13 @@
 import * as React from 'react'
-import { Component, PropTypes } from 'react'
-import {LoginWork, MemoWork} from "../mixins";
 import Fa from '../lib/components/fa'
 
 interface IMenu {
-  index:Function,
-  create:Function,
+  createIndexLink:Function,
+  createNewMemoLink:Function,
   logOut:Function
 }
 
-export default class Menu extends Component<IMenu,{}> {
+export default class Menu extends React.Component<IMenu,{}> {
   render() {
     let {createIndexLink, createNewMemoLink, logOut} = this.props;
     return (

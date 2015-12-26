@@ -35,15 +35,15 @@ export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
 
 
   render() {
-    let {memoData, works} = this.props;
+    let {memoData, app} = this.props;
     return <tr>
       <td className="title">
-        <a className={this.detectLinkEnabled()} onClick={()=> works.memo.editMemoById(memoData.id)}>{memoData.title}</a>
+        <a className={this.detectLinkEnabled()} onClick={()=> app.editMemo(memoData)}>{memoData.title}</a>
       </td>
       <td className="tags">{this.tagLinks(memoData.tags)}</td>
       <td className="public">{this.detectPublicText()}</td>
       <td className="delete">
-        <button disabled={!this.props.isEnable()} onClick={()=> works.memo.deleteMemo(memoData)}>
+        <button disabled={!this.props.isEnable()} onClick={()=> app.deleteMemo(memoData)}>
           <Fa icon="trash-o"/>
         </button>
       </td>
