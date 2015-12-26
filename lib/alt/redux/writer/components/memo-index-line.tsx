@@ -16,11 +16,12 @@ interface IMemoIndexLine {
 
 export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
   tagLinks(tags:TagData[] = []) {
-    let {works} = this.props;
+    let {app} = this.props;
     return tags.map((tagData)=> <MemoIndexTagLink
       key={tagData.id}
       tagData={tagData}
-      works={works}
+      app={app}
+      isEnable={this.props.isEnable}
     />)
   }
 

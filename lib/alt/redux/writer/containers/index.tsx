@@ -16,15 +16,23 @@ import { pushState } from 'redux-router'
 import { Link } from 'react-router';
 import {createIndexLink, createNewMemoLink} from '../components/link'
 import Menu from "../components/menu";
+import {pickQueryString, pickPath, buildQueryString} from '../lib/path-manip'
 
 interface IApp {
   state?:any,
   memoAction?:any,
   loginAction?:any,
-  pushState:Function
+  pushState:Function,
+  app:{}
 }
 
 class Index extends React.Component<IApp, {}> {
+  constructor(props) {
+    super(props);
+
+    this.indexMemo = this.indexMemo.bind(this);
+  }
+
   componentWillMount() {
     const {loginState} = this.props.state;
 
@@ -47,13 +55,50 @@ class Index extends React.Component<IApp, {}> {
   }
 
   loadData(props, nowProps = null) {
-    const {memoIndexData} = this.props.state;
-    const {memoAction} = this.props;
+    const {memoIndexData} = props.state;
+    const {memoAction} = props;
 
-    if (!memoIndexData) {
-      memoAction.index()
+    if (memoIndexData && this.isSameIndex(props, nowProps)) {
+      return;
     }
+
+    let {page, tagIds} = props.location.query;
+    let pageNumber:number = page ? +page : 1;
+    let TagIdNumbers:number[] = this.normalizeTagIds(tagIds);
+    memoAction.index(TagIdNumbers, pageNumber);
   }
+
+  normalizeTagIds(tagIds:string):number[] {
+    if (!tagIds || tagIds === '') {
+      return [];
+    }
+    return tagIds.split(',').map((n)=> +n);
+  }
+
+  isSameIndex(a, b) {
+    return this.isSamePage(a, b) && this.isSameTag(a, b)
+  }
+
+  isSamePage(a, b) {
+    return a.location.query.page == b.location.query.page;
+  }
+
+  isSameTag(a, b) {
+    return a.location.query.tagIds == b.location.query.tagIds;
+  }
+
+  indexMemo(pageNumber:number = null, tagIdNumbers:number[] = null) {
+    let page = pageNumber ? pageNumber : this.props.location.query.page;
+    let tagIds = tagIdNumbers ? tagIdNumbers.join(',') : this.props.location.query.tagIds;
+    let path:string = pickPath() + buildQueryString({page, tagIds});
+    this.props.pushState(null, path);
+  }
+
+  createMemoLink(memoId:number, children:any) {
+    let path:string = '/memo/' + memoId + pickQueryString();
+    return <Link to={path}>{children}</Link>
+  }
+
 
   render() {
     const {
@@ -62,13 +107,17 @@ class Index extends React.Component<IApp, {}> {
       memoIndexState
       } = this.props.state;
 
+    let app = {
+      indexMemo: this.indexMemo
+    }
+
     if (!memoIndexData || loginState !== LoginState.LoggedIn) {
       return <div>initializing...</div>;
     }
 
     return <article className="memo-index">
       <Menu {...{createIndexLink, createNewMemoLink}}/>
-      <MemoIndex {...{memoIndexData, memoIndexState}}/>
+      <MemoIndex {...{app, memoIndexData, memoIndexState}}/>
     </article>;
   }
 }
@@ -77,7 +126,8 @@ function mapDispatchToProps(dispatch) {
   return {
     memoAction: Redux.bindActionCreators(MemoAction, dispatch),
     loginAction: Redux.bindActionCreators(LoginAction, dispatch),
-    pushState: Redux.bindActionCreators(pushState, dispatch).bind(this)
+    pushState: Redux.bindActionCreators(pushState, dispatch).bind(this),
+    app: {}
   };
 }
 

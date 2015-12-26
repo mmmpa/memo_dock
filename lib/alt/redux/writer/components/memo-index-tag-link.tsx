@@ -12,23 +12,20 @@ import MemoIndexLine from "./memo-index-line";
 interface IMemoIndexTagLink {
   key:number,
   tagData:TagData,
-  works:any
+  isEnable:Function,
+  app:any
 }
 
 export default class MemoIndexTagLink extends React.Component<IMemoIndexTagLink, {}> {
-  isEnable():boolean {
-    return AppState.index === MemoIndexState.Ready
-  }
-
   detectLinkEnabled():string {
-    return this.isEnable() ? 'memo-index tag-link' : 'memo-index tag-link disabled';
+    return this.props.isEnable() ? 'memo-index tag-link' : 'memo-index tag-link disabled';
   }
 
   render() {
-    let {tagData, works} = this.props;
+    let {tagData, app} = this.props;
     return (
       <div className="memo-index tag-link-container">
-        <a className={this.detectLinkEnabled()} onClick={()=> works.memo.loadTaggedIndex(tagData)}>{tagData.name}</a>
+        <a className={this.detectLinkEnabled()} onClick={()=> app.indexMemo(1, [tagData.id])}>{tagData.name}</a>
       </div>
     )
   }
