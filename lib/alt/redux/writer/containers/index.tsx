@@ -27,9 +27,17 @@ interface IIndex {
   location:any
 }
 
-class Index extends ContentCommon<IIndex, {}> {
+interface IIndexState {
+  reloadForce:boolean
+}
+
+class Index extends ContentCommon<IIndex, IIndexState> {
   constructor(props) {
     super(props);
+
+    this.state = {
+      reloadForce: false
+    };
 
     this.indexMemo = this.indexMemo.bind(this);
     this.editMemo = this.editMemo.bind(this);
@@ -49,10 +57,12 @@ class Index extends ContentCommon<IIndex, {}> {
   loadData(props, nowProps = null) {
     const {memoIndexData} = props.state;
     const {memoAction} = props;
+    const {reloadForce} = this.state;
 
-    if (memoIndexData && nowProps && this.isSameIndex(props, nowProps)) {
+    if (!reloadForce && memoIndexData && nowProps && this.isSameIndex(props, nowProps)) {
       return;
     }
+    this.setState({reloadForce: false});
 
     let {page, tagIds} = props.location.query;
     let pageNumber:number = page ? +page : 1;
@@ -91,16 +101,18 @@ class Index extends ContentCommon<IIndex, {}> {
   }
 
   deleteMemo(memo:MemoData) {
-    this.props.pushState(null, '/w/memos/' + memo.id);
+    this.props.memoAction.deleteMemo(memo, ()=> {
+      this.loadData(this.props);
+    });
   }
 
   createMemoLink(memoId:number, children:any) {
     let path:string = '/memo/' + memoId + pickQueryString();
     return <Link to={path}>{children}</Link>
   }
-
-
+  
   render() {
+    console.log(this.props)
     const {
       loginState,
       memoIndexData,

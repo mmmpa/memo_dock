@@ -79,13 +79,7 @@ function saveMemoSucceed(memo:MemoData) {
   return {type: Type.MEMO_SUCCEED_SAVING, memo};
 }
 
-export function deleteMemo(memo:MemoData) {
-  return (dispatch)=> {
-    dispatch(tryDeleteMemo(memo, ()=> null));
-  }
-}
-
-export function tryDeleteMemo(memo:MemoData, callback:Function) {
+export function deleteMemo(memo:MemoData, callback:Function) {
   return (dispatch) => {
     dispatch(waitLoadedIndex());
     request

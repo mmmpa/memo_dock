@@ -24,7 +24,7 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
     this.isEnable = this.isEnable.bind(this);
   }
 
-  isEnable():boolean{
+  isEnable():boolean {
     return this.props.memoIndexState === MemoIndexState.Ready
   }
 
@@ -32,10 +32,11 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
     let {memos} = this.props.memoIndexData;
     let {app} = this.props;
     let isEnable = this.isEnable
-    return memos.map((memoData)=> <MemoIndexLine
-      key={memoData.id}
-      {...{memoData, isEnable, app}}
-    />)
+
+    return memos.map((memoData)=> {
+      let key = 'memoIndexLine' + memoData.id
+      return <MemoIndexLine {...{key, memoData, isEnable, app}}/>
+    });
   }
 
   loading(memos:MemoData[] = []) {
@@ -54,21 +55,21 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
       <div>
         <section className="memo-index index-container">
           <h1 className="memo-index index-title">メモ一覧</h1>
-          <MemoIndexPager {...{app, memoIndexData, isEnable}}/>
+          <MemoIndexPager key="top-pager" {...{app, memoIndexData, isEnable}}/>
           <table className="memo-index index-table">
             <thead>
               <tr>
                 <th className="title">タイトル</th>
                 <th className="tags">タグ</th>
                 <th className="public">公開</th>
-                <th className="delete"> </th>
+                <th className="delete"></th>
               </tr>
             </thead>
             <tbody>
               {this.memoLines()}
             </tbody>
           </table>
-          <MemoIndexPager {...{app, memoIndexData, isEnable}}/>
+          <MemoIndexPager key="bottom-pager" {...{app, memoIndexData, isEnable}}/>
         </section>
       </div>
     )

@@ -5,6 +5,8 @@ export default class MemoIndexData {
     if(tagIds === ''){
       this.tagIds = null
     }
+
+    this.isSelectedTag = this.isSelectedTag.bind(this)
   }
 
   isSelectedTag():boolean{

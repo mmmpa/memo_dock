@@ -34,5 +34,4 @@ export default class ContentCommon<P, S> extends React.Component<P, S> {
   createNewMemoLink(children) {
     return <Link to="/w/memos/new">{children}</Link>
   }
-
 }

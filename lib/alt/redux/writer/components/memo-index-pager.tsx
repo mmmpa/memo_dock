@@ -12,13 +12,12 @@ interface IMemoIndexPager {
 
 export default class MemoIndexPager extends React.Component<IMemoIndexPager, {}> {
   tagRemover(){
-    let {app, isEnable} = this.props;
+    let {app} = this.props;
+    let {isSelectedTag} = this.props.memoIndexData;
 
-    if(!isEnable() || !this.props.memoIndexData.isSelectedTag()){
-      return null;
-    }
+    let classString = isSelectedTag() ? "memo-index pager-container" : "memo-index pager-container hidden";
 
-    return <li className="memo-index pager-container">
+    return <li className={classString}>
       <a className="memo-index tag-remover" onClick={()=> app.indexMemo(1, []) }>
         <Fa icon="times"/>
         タグ解除
