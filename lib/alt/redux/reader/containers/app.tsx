@@ -29,9 +29,7 @@ interface IApp {
 
 interface IAppState {
   windowHeight:number,
-  memoWidth:number,
-  memoId?:number,
-  tagIds?:number[],
+  memoWidth:number
 }
 
 class App extends React.Component<IApp, IAppState> {
@@ -87,10 +85,21 @@ class App extends React.Component<IApp, IAppState> {
 
   loadData(props, nowProps = null) {
     let {params, location} = props;
+    let {memo} = props.state;
 
     if (params.memoId && !this.isSameMemoId(props, nowProps)) {
       let memoId:number = +params.memoId;
       props.memoAction.show(memoId);
+    }else if(!memo){
+      let portalMemo = new MemoData();
+      let portal = this.getPortal();
+      portalMemo.title = portal.title;
+      portalMemo.html = portal.html;
+      props.memoAction.showMemoData(portalMemo);
+    }
+
+    if(memo){
+      this.setTitle(memo.title);
     }
 
     if (!this.isSameTagIds(props, nowProps)) {
@@ -103,7 +112,7 @@ class App extends React.Component<IApp, IAppState> {
     if(!a || !b){
       return false;
     }
-    return a.params.memoId === b.params.memoId;
+    return (a.memo && a.memo == b.memo) || a.params.memoId === b.params.memoId;
   }
 
   isSameTagIds(a, b) {

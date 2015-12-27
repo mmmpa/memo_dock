@@ -1,5 +1,4 @@
 import * as React from 'react'
-import {MemoState} from '../constants/status'
 import MemoData from "../models/memo-data";
 import TagData from "../models/tag-data";
 import Fa from '../lib/components/fa'
@@ -13,13 +12,6 @@ interface IMemo {
 
 export default class Memo extends React.Component<IMemo,{}> {
   componentDidUpdate() {
-    let {app} = this.props;
-    if (this.props.memo.html === '') {
-      let portal = app.getPortal();
-      this.props.memo.title = portal.title;
-      this.props.memo.html = portal.html;
-    }
-    app.setTitle(this.props.memo.title);
     hljs.initHighlighting.called = false;
     hljs.initHighlighting();
   }
@@ -35,6 +27,10 @@ export default class Memo extends React.Component<IMemo,{}> {
 
   render() {
     let {windowHeight, memoWidth, memo} = this.props;
+
+    if (!memo) {
+      return <div>loading...</div>;
+    }
 
     return <section id="memo" style={{height: windowHeight, width: memoWidth}} className="memo memo-container">
       <header className="memo header">

@@ -2,18 +2,16 @@
 
 import * as React from 'react'
 import * as ReactDom from 'react-dom'
-import * as ReactRedux from 'react-redux'
-import * as Redux from 'react-redux'
+import {Provider} from 'react-redux'
 import {ReduxRouter} from 'redux-router'
-import {Route} from 'react-router'
 
 import configureStore from './store/configure-store'
 const store = configureStore({});
 
 ReactDom.render(
-  <ReactRedux.Provider store={store}>
+  <Provider store={store}>
     <ReduxRouter />
-  </ReactRedux.Provider>
+  </Provider>
   ,
   document.getElementById('root')
 );

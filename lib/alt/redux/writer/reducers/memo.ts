@@ -28,7 +28,6 @@ function memoIndexState(state:MemoIndexState = MemoIndexState.Wait, action) {
   }
 }
 
-
 function memoData(state = null, action) {
   switch (action.type) {
     case Type.MEMO_EDIT_NEW_MEMO:

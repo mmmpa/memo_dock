@@ -9,7 +9,7 @@ import {LoginState, MemoIndexState} from '../constants/status'
 
 import Menu from "../components/menu";
 import MemoIndex from "../components/memo-index";
-import ContentCommon from "../components/content-common";
+import ContentCommon from "./content-common";
 import { Link } from 'react-router';
 
 import * as MemoAction from "../actions/memo"

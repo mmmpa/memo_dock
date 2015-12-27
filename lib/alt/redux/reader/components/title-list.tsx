@@ -1,6 +1,5 @@
 import * as React from 'react'
 
-import {MemoState} from '../constants/status'
 import MemoData from "../models/memo-data";
 
 import Fa from '../lib/components/fa'

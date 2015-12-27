@@ -1,7 +1,6 @@
 import * as _ from 'lodash'
 import * as React from 'react'
 
-import {TagState} from '../constants/status'
 import TagData from "../models/tag-data";
 
 interface ITagList {

@@ -5,11 +5,10 @@ import MemoData from "../models/memo-data";
 import TagData from "../models/tag-data";
 import {token, checkInitialState} from "./login"
 import Dispatch = Redux.Dispatch;
-import MemoData from "../models/memo-data";
 const request = require('superagent');
 
-export function checkLogin(...args) {
-  return checkInitialState(...args);
+export function checkLogin(succeed:Function = null, fail:Function = null) {
+  return checkInitialState(succeed, fail);
 }
 
 // メモインデックス取得関係
@@ -31,11 +30,6 @@ export function index(tagIdNumbers:number[] = [], page:number = 1) {
       })
   }
 }
-
-export function loadTaggedIndex(tag:TagData) {
-  return index(tag.id.toString());
-}
-
 
 function showIndex(memos:any[], page:number, par:number, total:number, tagIds:string) {
   return {type: Type.MEMO_SHOW_INDEX, memos, page, par, total, tagIds};

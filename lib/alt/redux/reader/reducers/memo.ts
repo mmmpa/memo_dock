@@ -1,13 +1,12 @@
 import * as Type from '../constants/action-types'
 import * as _ from 'lodash'
 
-import {MemoState} from '../constants/status'
 import MemoData from '../models/memo-data'
 
-function memo(state:MemoData = new MemoData(), action) {
+function memo(state:MemoData = null, action) {
   switch (action.type) {
     case Type.MEMO_REMOVE:
-      return new MemoData();
+      return null;
     case Type.MEMO_SHOW:
       return action.memo;
     default:
@@ -24,15 +23,8 @@ function titles(state:MemoData[] = [], action) {
   }
 }
 
-function memoState(state:MemoState = MemoState.Ready, action) {
-  switch (action.type) {
-    default:
-      return state;
-  }
-}
-
 function html(state:HTMLElement = null, action) {
   return state;
 }
 
-export default {memo, titles, memoState, html}
+export default {memo, titles, html}

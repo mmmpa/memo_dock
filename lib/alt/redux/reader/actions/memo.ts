@@ -9,15 +9,15 @@ export function show(memoId:number) {
       .get('/r/api/memos/' + memoId)
       .end((err, res)=> {
         if (err) {
-          console.log(err)
+          dispatch(showMemoData(new MemoData({})));
         } else {
-          dispatch(showSucceed(new MemoData(res.body)));
+          dispatch(showMemoData(new MemoData(res.body)));
         }
       })
   }
 }
 
-function showSucceed(memo:MemoData){
+export function showMemoData(memo:MemoData){
   return {type: Type.MEMO_SHOW, memo};
 }
 
@@ -38,12 +38,12 @@ export function index(tagIdNumbers:number[] = []) {
           let memos = res.body.map((memo)=> {
             return new MemoData(memo);
           });
-          dispatch(indexSucceed(memos));
+          dispatch(indexSupport(memos));
         }
       })
   }
 }
 
-function indexSucceed(memos:MemoData[] = []) {
+function indexSupport(memos:MemoData[] = []) {
   return {type: Type.MEMO_INDEX, memos};
 }
