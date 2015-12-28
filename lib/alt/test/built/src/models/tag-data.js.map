@@ -1,1 +1,0 @@
-{"version":3,"file":"tag-data.js","sourceRoot":"","sources":["../../../reader/src/models/tag-data.ts"],"names":["TagData","TagData.constructor"],"mappings":"AAAA;IAIEA,iBAAYA,IAAIA;QACdC,IAAIA,CAACA,EAAEA,GAAGA,CAACA,IAAIA,CAACA,IAAIA,CAACA,CAACA;QACtBA,IAAIA,CAACA,IAAIA,GAAGA,IAAIA,CAACA,MAAMA,CAACA,CAACA;IAC3BA,CAACA;IACHD,cAACA;AAADA,CAACA,AARD,IAQC;AARD;yBAQC,CAAA"}

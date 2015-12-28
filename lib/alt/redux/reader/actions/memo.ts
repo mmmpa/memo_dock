@@ -9,7 +9,7 @@ export function show(memoId:number) {
       .get('/r/api/memos/' + memoId)
       .end((err, res)=> {
         if (err) {
-          dispatch(showMemoData(new MemoData({})));
+          dispatch(showMemoData(new MemoData({title: '404', html: '404'})));
         } else {
           dispatch(showMemoData(new MemoData(res.body)));
         }
@@ -27,13 +27,20 @@ export function remove() {
 
 export function index(tagIdNumbers:number[] = []) {
   return (dispatch) => {
-    let tagIds:string = tagIdNumbers.length ? tagIdNumbers.join(',') : null;
+    let query = (()=>{
+      if(tagIdNumbers.length){
+        let tag_ids:string = tagIdNumbers.join(',');
+        return {tag_ids};
+      }else{
+        return null;
+      }
+    })();
     request
       .get('/r/api/memos')
-      .query({tag_ids: tagIds})
+      .query(query)
       .end((err, res)=> {
         if (err) {
-          console.log(err)
+          dispatch(indexSupport([new MemoData({title: 'error', id: 0})]));
         } else {
           let memos = res.body.map((memo)=> {
             return new MemoData(memo);
@@ -44,6 +51,6 @@ export function index(tagIdNumbers:number[] = []) {
   }
 }
 
-function indexSupport(memos:MemoData[] = []) {
+function indexSupport(memos:MemoData[]) {
   return {type: Type.MEMO_INDEX, memos};
 }

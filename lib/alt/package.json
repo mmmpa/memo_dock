@@ -9,8 +9,8 @@
     "reader2": "watchify --extension=js -t babelify  ./redux/reader_built/reader.js -o  ./redux/reader_built/built.js -v",
     "reader3": "watchify --extension=js -t babelify  ./redux/reader_built/reader.js -o  'exorcist ./redux/reader_built/built.js.map > ./redux/reader_built/built.js' -v",
     "test": "istanbul cover --report text --report html _mocha -- test/built/**/*-test.js",
-    "testReader": "mocha --compilers ts:espower-typescript/guess test/reader/**/*.ts",
-    "testWriter": "mocha --compilers ts:espower-typescript/guess test/writer/**/*.ts"
+    "testReader": "mocha -w --compilers ts:espower-typescript/guess test/reader/**/*.ts",
+    "testWriter": "mocha -w --compilers ts:espower-typescript/guess test/writer/**/*.ts"
   },
   "author": "",
   "license": "MIT",
@@ -41,6 +41,7 @@
     "istanbul": "^0.4.1",
     "licensify": "^2.0.1",
     "mocha": "^2.3.4",
+    "nock": "^3.6.0",
     "power-assert": "^1.2.0",
     "sinon": "^1.17.2",
     "vinyl-source-stream": "^1.1.0",

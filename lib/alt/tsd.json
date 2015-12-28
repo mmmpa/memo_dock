@@ -55,6 +55,9 @@
     },
     "sinon/sinon.d.ts": {
       "commit": "a6ff9f6e195a334afd89e4b721d05e9520eee4c0"
+    },
+    "nock/nock.d.ts": {
+      "commit": "a6ff9f6e195a334afd89e4b721d05e9520eee4c0"
     }
   }
 }
