@@ -8,27 +8,29 @@ export function index(tagIdNumbers:number[] = []) {
     dispatch(selectTag(tagIdNumbers));
     dispatch(MemoAction.index(tagIdNumbers));
 
-    let tagIds:string = tagIdNumbers.length ? tagIdNumbers.join(',') : null;
+    let tagIds:string = tagIdNumbers.length
+      ? encodeURIComponent(tagIdNumbers.join(','))
+      : '';
 
     request
       .get('/r/api/tags/' + tagIds)
       .end((err, res)=> {
         if (err) {
-          console.log(err)
+          dispatch(indexSupport([new TagData({name: 'error', id: 0})]));
         } else {
           let tags = res.body.map((tag)=> {
             return new TagData(tag);
           });
-          dispatch(indexSucceed(tags));
+          dispatch(indexSupport(tags));
         }
       })
   }
 }
 
-function indexSucceed(tags:TagData[] = []) {
+function indexSupport(tags:TagData[]) {
   return {type: Type.TAG_INDEX, tags};
 }
 
-function selectTag(tagIds:number[] = []) {
+function selectTag(tagIds:number[]) {
   return {type: Type.TAG_SELECT, tagIds};
 }

@@ -115,7 +115,7 @@ describe("MemoAction", ()=> {
             done();
           });
         });
-      })
+      });
 
       context('with error', ()=>{
         it('error message', (done)=>{
