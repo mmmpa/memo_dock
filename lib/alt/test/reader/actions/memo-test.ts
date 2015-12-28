@@ -7,7 +7,7 @@ import MemoData from "../src/models/memo-data";
 import * as Type from '../src/constants/action-types';
 import * as nock from 'nock'
 
-describe("MemoAction", ()=> {
+describe('MemoAction', ()=> {
   before(()=> {
     nock('http://localhost')
       .get('/r/api/memos/1')
@@ -47,7 +47,7 @@ describe("MemoAction", ()=> {
       .reply(500);
   });
 
-  describe("show", ()=> {
+  describe('show', ()=> {
     it("show return a function", ()=> {
       assert.equal(_.isFunction(MemoAction.show(1)), true);
     });
@@ -74,7 +74,7 @@ describe("MemoAction", ()=> {
       });
     });
 
-    it("showMemoData return an object", ()=> {
+    it('showMemoData return an object', ()=> {
       let memo:MemoData = new MemoData();
       assert.deepEqual(MemoAction.showMemoData(memo), {type: Type.MEMO_SHOW, memo});
     });
