@@ -12,7 +12,7 @@
       "commit": "5a8fc5ee71701431e4fdbb80c506e3c13f85a9ff"
     },
     "react/react.d.ts": {
-      "commit": "1da639a106527e0c4010b354a1efe52a3059a291"
+      "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
     },
     "react/react-dom.d.ts": {
       "commit": "f8af639bf29b2b00e5d27ce93c0f046564b8525c"
@@ -58,6 +58,9 @@
     },
     "nock/nock.d.ts": {
       "commit": "a6ff9f6e195a334afd89e4b721d05e9520eee4c0"
+    },
+    "react/react-addons-test-utils.d.ts": {
+      "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
     }
   }
 }

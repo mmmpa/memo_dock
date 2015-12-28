@@ -1,7 +1,7 @@
 /// <reference path="../src/types/tsd.d.ts" />
 
 import * as _ from 'lodash';
-import * as assert from 'power-assert';
+import assert from 'power-assert';
 import * as TagAction from '../src/actions/tag';
 import TagData from "../src/models/tag-data";
 import * as Type from '../src/constants/action-types';

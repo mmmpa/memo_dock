@@ -1,7 +1,7 @@
 /// <reference path="../src/types/tsd.d.ts" />
 
 import * as _ from 'lodash';
-import * as assert from 'power-assert';
+import assert from 'power-assert';
 import * as MemoAction from '../src/actions/memo';
 import MemoData from "../src/models/memo-data";
 import * as Type from '../src/constants/action-types';
