@@ -2,6 +2,7 @@ import * as React from 'react'
 import MemoData from "../models/memo-data";
 import TagData from "../models/tag-data";
 import Fa from '../lib/components/fa'
+let hljs = window.hljs;
 
 interface IMemo {
   memo:MemoData,
@@ -11,9 +12,15 @@ interface IMemo {
 }
 
 export default class Memo extends React.Component<IMemo,{}> {
+  componentDidMount(){
+    this.componentDidUpdate();
+  }
+
   componentDidUpdate() {
-    hljs.initHighlighting.called = false;
-    hljs.initHighlighting();
+    if(hljs){
+      hljs.initHighlighting.called = false;
+      hljs.initHighlighting();
+    }
   }
 
   writeTagList() {

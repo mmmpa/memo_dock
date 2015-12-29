@@ -35,7 +35,6 @@ describe('MemoComponent', () => {
 
     assert.equal(dom.innerHTML, 'loading...');
     assert.equal(find('.memo.content'), null);
-    assert.ok(find('.memo.content'));
   });
 
   context(('with memo'), ()=> {
