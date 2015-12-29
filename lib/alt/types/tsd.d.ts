@@ -17,3 +17,5 @@
 /// <reference path="sinon/sinon.d.ts" />
 /// <reference path="nock/nock.d.ts" />
 /// <reference path="react/react-addons-test-utils.d.ts" />
+/// <reference path="jquery/jquery.d.ts" />
+/// <reference path="jsdom/jsdom.d.ts" />

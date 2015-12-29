@@ -27,7 +27,7 @@
       "commit": "5a8fc5ee71701431e4fdbb80c506e3c13f85a9ff"
     },
     "node/node.d.ts": {
-      "commit": "5a8fc5ee71701431e4fdbb80c506e3c13f85a9ff"
+      "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
     },
     "codemirror/codemirror.d.ts": {
       "commit": "8ea42cd8bb11863ed6f242d67c502288ebc45a7b"
@@ -60,6 +60,12 @@
       "commit": "a6ff9f6e195a334afd89e4b721d05e9520eee4c0"
     },
     "react/react-addons-test-utils.d.ts": {
+      "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
+    },
+    "jsdom/jsdom.d.ts": {
+      "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
+    },
+    "jquery/jquery.d.ts": {
       "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
     }
   }

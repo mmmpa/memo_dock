@@ -29,7 +29,7 @@ export default class Memo extends React.Component<IMemo,{}> {
     let {windowHeight, memoWidth, memo} = this.props;
 
     if (!memo) {
-      return <div>loading...</div>;
+      return <div className="memo now-loading">loading...</div>;
     }
 
     return <section id="memo" style={{height: windowHeight, width: memoWidth}} className="memo memo-container">
@@ -41,7 +41,7 @@ export default class Memo extends React.Component<IMemo,{}> {
           </ul>
         </section>
       </header>
-      <div dangerouslySetInnerHTML={{__html: memo.html}}/>
+      <div className="memo content" dangerouslySetInnerHTML={{__html: memo.html}}/>
     </section>
   }
 }

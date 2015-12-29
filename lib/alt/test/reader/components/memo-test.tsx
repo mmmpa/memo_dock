@@ -3,43 +3,68 @@
 import * as _ from 'lodash';
 import assert from 'power-assert';
 import * as React from 'react';
+import * as ReactDOM from 'react-dom';
 import * as TestUtils from 'react-addons-test-utils'
 
 import Memo from "../src/components/memo";
 import MemoData from "../src/models/memo-data";
 
 function setup(memoData:MemoData = null) {
+  let app = {
+    createTagLink: ()=> null
+  };
+
   let props = {
     memo: memoData,
     windowHeight: 800,
     memoWidth: 1000,
-    app: {}
+    app
   };
 
-  let renderer = TestUtils.createRenderer();
-  renderer.render((()=> <Memo {...props} />)());
-  let output = renderer.getRenderOutput();
+  let rendered = TestUtils.renderIntoDocument(<Memo {...props} />);
+  let dom = ReactDOM.findDOMNode(rendered);
+  let find = (selector)=> dom.querySelector(selector);
+  let findAll = (selector)=> dom.querySelectorAll(selector);
 
-  return {
-    props,
-    output,
-    renderer,
-    children: output.props.children
-  }
+  return {dom, find, findAll}
 }
 
 describe('MemoComponent', () => {
   it('with no memo', ()=> {
-    const { children } = setup();
+    const { dom, find } = setup();
 
-    assert.equal(children, 'loading...');
+    assert.equal(dom.innerHTML, 'loading...');
+    assert.equal(find('.memo.content'), null);
+    assert.ok(find('.memo.content'));
   });
 
-  it('with memo', ()=> {
-    const { output, children, renderer } = setup(new MemoData({title: 'test1', html: '<h1>test title 1</h1>'}));
+  context(('with memo'), ()=> {
+    it('with no tag', ()=> {
+      let memo:MemoData = new MemoData({title: 'test1', html: '<h1>test title 1</h1>'});
+      const { find } = setup(memo);
 
-    let tags = TestUtils.findRenderedDOMComponentWithClass(renderer, 'memo tag-list');
-    console.log(tags);
-    assert.equal(true, true);
+      let html = find('.memo.content');
+      assert.ok(html);
+      assert.equal(html.innerHTML, memo.html);
+    });
+
+    it('with tags', ()=> {
+      let memo:MemoData = new MemoData({
+        title: 'test1',
+        html: '<h1>test title 1</h1>',
+        tags: [
+          {id: 1, name: 'tag'},
+          {id: 2, name: 'tag'}
+        ],
+
+      });
+      const { find, findAll } = setup(memo);
+
+      let html = find('.memo.content');
+      assert.equal(html.innerHTML, memo.html);
+
+      let tags = findAll('.memo.tag');
+      assert.equal(tags.length, 2);
+    });
   });
 });
