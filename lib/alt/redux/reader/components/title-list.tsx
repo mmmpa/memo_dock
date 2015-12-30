@@ -13,15 +13,19 @@ interface ITitleList {
 
 export default class TitleList extends React.Component<ITitleList,{}> {
 
-  isActiveList(id:number){
-    return this.props.memo.id == id
+  isActiveList(id:number) {
+    let {memo} = this.props;
+    if (!memo) {
+      return false
+    }
+    return memo.id == id
   }
 
-  detectActiveClass(id:number){
+  detectActiveClass(id:number) {
     return this.isActiveList(id) ? 'title-list title display-now' : 'title-list title';
   }
 
-  detectIcon(id:number){
+  detectIcon(id:number) {
     return this.isActiveList(id) ? null : <Fa icon='chevron-right'/>;
   }
 
@@ -31,7 +35,7 @@ export default class TitleList extends React.Component<ITitleList,{}> {
     return titles.map((memo:MemoData)=> {
       return <li key={'memo' + memo.id} className={this.detectActiveClass(memo.id)}>
         <div className="chevron">{this.detectIcon(memo.id)}</div>
-        {app.createMemoLink(memo.id, memo.title)}
+        <a onClick={()=> app.linkMemo(memo.id)}>{memo.title}</a>
       </li>
     });
   }

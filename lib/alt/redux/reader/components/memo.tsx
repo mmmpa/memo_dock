@@ -24,10 +24,11 @@ export default class Memo extends React.Component<IMemo,{}> {
   }
 
   writeTagList() {
+    let {app} = this.props;
     return this.props.memo.tags.map((tagData:TagData)=> {
       return <li className="memo tag" key={'memoTag' + tagData.id}>
         <Fa icon="tag"/>
-        {this.props.app.createTagLink(tagData.id, tagData.name)}
+        <a onClick={()=> app.linkTag(tagData.id)}>{tagData.name}</a>
       </li>
     })
   }

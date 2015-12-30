@@ -8,26 +8,27 @@ import * as Type from '../src/constants/action-types';
 import * as nock from 'nock'
 
 describe('TagAction', ()=> {
+  after(()=> nock.cleanAll());
   before(()=> {
     nock('http://localhost')
       .get('/r/api/tags/')
       .reply(200, [
-        {id:1, name:'name1'},
-        {id:2, name:'name2'},
-        {id:3, name:'name3'},
+        {id: 1, name: 'name1'},
+        {id: 2, name: 'name2'},
+        {id: 3, name: 'name3'},
       ]);
 
     nock('http://localhost')
       .get('/r/api/tags/1')
       .reply(200, [
-        {id:1, name:'name1'},
-        {id:2, name:'name2'},
+        {id: 1, name: 'name1'},
+        {id: 2, name: 'name2'},
       ]);
 
     nock('http://localhost')
       .get('/r/api/tags/1%2C2')
       .reply(200, [
-        {id:1, name:'name1'},
+        {id: 1, name: 'name1'},
       ]);
 
     nock('http://localhost')
@@ -44,7 +45,7 @@ describe('TagAction', ()=> {
       context('with no tags', ()=> {
         it('get all tags', (done)=> {
           TagAction.index()((action)=> {
-            switch(action.type){
+            switch (action.type) {
               case Type.TAG_SELECT:
                 assert.deepEqual(action.tagIds, []);
                 break;
@@ -59,7 +60,7 @@ describe('TagAction', ()=> {
       context('with tags', ()=> {
         it('get 2 tags', (done)=> {
           TagAction.index([1])((action)=> {
-            switch(action.type){
+            switch (action.type) {
               case Type.TAG_SELECT:
                 assert.deepEqual(action.tagIds, [1]);
                 break;
@@ -73,7 +74,7 @@ describe('TagAction', ()=> {
 
         it('get a tag', (done)=> {
           TagAction.index([1, 2])((action)=> {
-            switch(action.type){
+            switch (action.type) {
               case Type.TAG_SELECT:
                 assert.deepEqual(action.tagIds, [1, 2]);
                 break;
@@ -88,7 +89,7 @@ describe('TagAction', ()=> {
       context('some error', ()=> {
         it('get all tags', (done)=> {
           TagAction.index([500])((action)=> {
-            switch(action.type){
+            switch (action.type) {
               case Type.TAG_INDEX:
                 let {tags} = action;
                 assert.equal(tags[0].name, 'error');

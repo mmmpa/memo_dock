@@ -43,8 +43,8 @@ class App extends React.Component<IApp, IAppState> {
 
     this.setTitle = this.setTitle.bind(this);
     this.getPortal = this.getPortal.bind(this);
-    this.createMemoLink = this.createMemoLink.bind(this);
-    this.createTagLink = this.createTagLink.bind(this);
+    this.linkMemo = this.linkMemo.bind(this);
+    this.linkTag = this.linkTag.bind(this);
     this.selectTag = this.selectTag.bind(this);
   }
 
@@ -61,16 +61,16 @@ class App extends React.Component<IApp, IAppState> {
     this.loadData(nextProps, this.props)
   }
 
-  createTagLink(tagIds:number, children:any) {
+  linkTag(tagIds:number){
     let {pathname} = this.props.location;
     let path:string = pathname + buildQueryString({tagIds});
-    return <Link to={path}>{children}</Link>
+    this.props.pushState(null, path);
   }
 
-  createMemoLink(memoId:number, children:any) {
+  linkMemo(memoId:number){
     let {search} = this.props.location;
     let path:string = '/memo/' + memoId + search;
-    return <Link to={path}>{children}</Link>
+    this.props.pushState(null, path);
   }
 
   selectTag(tagIdNumbers:number[]) {
@@ -168,8 +168,8 @@ class App extends React.Component<IApp, IAppState> {
       memoWidth
       } = this.state;
 
-    let {getPortal, createMemoLink, createTagLink, selectTag, setTitle} = this;
-    let app = {getPortal, createMemoLink, createTagLink, selectTag, setTitle};
+    let {getPortal, linkMemo, linkTag, selectTag, setTitle} = this;
+    let app = {getPortal, linkMemo, linkTag, selectTag, setTitle};
 
     return <article className="reader-container">
       <section id="selectorContainer" className="selector-container" style={{height: windowHeight}}>

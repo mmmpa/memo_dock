@@ -9,9 +9,9 @@ import * as TestUtils from 'react-addons-test-utils'
 import Memo from "../src/components/memo";
 import MemoData from "../src/models/memo-data";
 
-function setup(memoData:MemoData = null) {
+function setup(memoData:MemoData = null, linkTag:Function = ()=> null) {
   let app = {
-    createTagLink: ()=> null
+    linkTag: linkTag
   };
 
   let props = {
@@ -47,23 +47,28 @@ describe('MemoComponent', () => {
       assert.equal(html.innerHTML, memo.html);
     });
 
-    it('with tags', ()=> {
+    it('with tags', (done)=> {
       let memo:MemoData = new MemoData({
         title: 'test1',
         html: '<h1>test title 1</h1>',
         tags: [
           {id: 1, name: 'tag'},
           {id: 2, name: 'tag'}
-        ],
-
+        ]
       });
-      const { find, findAll } = setup(memo);
+      const { find, findAll } = setup(memo,(tagId)=>{
+        assert.equal(tagId, 1);
+        done();
+      });
 
       let html = find('.memo.content');
       assert.equal(html.innerHTML, memo.html);
 
-      let tags = findAll('.memo.tag');
+      let tags = findAll('.memo.tag a');
       assert.equal(tags.length, 2);
+
+      let tag = tags[0];
+      TestUtils.Simulate.click(tag);
     });
   });
 });

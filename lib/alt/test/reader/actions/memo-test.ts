@@ -8,6 +8,7 @@ import * as Type from '../src/constants/action-types';
 import * as nock from 'nock'
 
 describe('MemoAction', ()=> {
+  after(()=> nock.cleanAll());
   before(()=> {
     nock('http://localhost')
       .get('/r/api/memos/1')
