@@ -38885,6 +38885,7 @@ exports.remove = remove;
 function index(tagIdNumbers) {
     if (tagIdNumbers === void 0) { tagIdNumbers = []; }
     return function (dispatch) {
+        console.log('index');
         var query = (function () {
             if (tagIdNumbers.length) {
                 var tag_ids = tagIdNumbers.join(',');
@@ -39334,8 +39335,8 @@ var redux_router_1 = require('redux-router');
 var configure_store_1 = require('./store/configure-store');
 var html = document.getElementById('nojs');
 var store = configure_store_1.default({ html: html });
-console.log('reader');
-ReactDom.render(React.createElement(react_redux_1.Provider, {"store": store}, React.createElement(redux_router_1.ReduxRouter, null)), document.getElementById('root'));
+Object.defineProperty(exports, "__esModule", { value: true });
+exports.default = ReactDom.render(React.createElement(react_redux_1.Provider, {"store": store}, React.createElement(redux_router_1.ReduxRouter, null)), document.getElementById('root'));
 
 },{"./store/configure-store":259,"react":214,"react-dom":54,"react-redux":57,"redux-router":221}],255:[function(require,module,exports){
 var Type = require('../constants/action-types');

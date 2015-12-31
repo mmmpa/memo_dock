@@ -10,6 +10,7 @@ import * as nock from 'nock'
 describe('MemoAction', ()=> {
   after(()=> nock.cleanAll());
   before(()=> {
+    nock.cleanAll();
     nock('http://localhost')
       .get('/r/api/memos/1')
       .reply(200, {

@@ -27,6 +27,7 @@ export function remove() {
 
 export function index(tagIdNumbers:number[] = []) {
   return (dispatch) => {
+    console.log('index')
     let query = (()=>{
       if(tagIdNumbers.length){
         let tag_ids:string = tagIdNumbers.join(',');

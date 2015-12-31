@@ -11,9 +11,7 @@ import App from './containers/app'
 const html = document.getElementById('nojs');
 const store = configureStore({html});
 
-console.log('reader')
-
-ReactDom.render(
+export default ReactDom.render(
   <Provider store={store}>
     <ReduxRouter/>
   </Provider>

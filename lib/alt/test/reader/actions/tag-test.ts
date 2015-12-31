@@ -10,6 +10,7 @@ import * as nock from 'nock'
 describe('TagAction', ()=> {
   after(()=> nock.cleanAll());
   before(()=> {
+    nock.cleanAll();
     nock('http://localhost')
       .get('/r/api/tags/')
       .reply(200, [
