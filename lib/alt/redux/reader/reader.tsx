@@ -8,6 +8,7 @@ import configureStore from './store/configure-store'
 
 import App from './containers/app'
 
+
 const html = document.getElementById('nojs');
 const store = configureStore({html});
 

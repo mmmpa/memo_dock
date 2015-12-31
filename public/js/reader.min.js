@@ -38885,7 +38885,6 @@ exports.remove = remove;
 function index(tagIdNumbers) {
     if (tagIdNumbers === void 0) { tagIdNumbers = []; }
     return function (dispatch) {
-        console.log('index');
         var query = (function () {
             if (tagIdNumbers.length) {
                 var tag_ids = tagIdNumbers.join(',');
@@ -39073,6 +39072,7 @@ var TitleList = (function (_super) {
         });
     };
     TitleList.prototype.render = function () {
+        console.log('test');
         var windowHeight = this.props.windowHeight;
         return React.createElement("section", {"id": "titleList", "style": { minHeight: windowHeight }, "className": "title-list title-list-container"}, React.createElement("ul", {"className": "title-list list"}, this.writeTitleList()));
     };
