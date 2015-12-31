@@ -41,7 +41,6 @@ export default class TitleList extends React.Component<ITitleList,{}> {
   }
 
   render() {
-    console.log('test')
     let {windowHeight} = this.props;
 
     return <section id="titleList" style={{minHeight: windowHeight}} className="title-list title-list-container">

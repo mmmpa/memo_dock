@@ -62,6 +62,7 @@ class App extends React.Component<IApp, IAppState> {
   }
 
   linkTag(tagIds:number){
+    console.log('link tag')
     let {pathname} = this.props.location;
     let path:string = pathname + buildQueryString({tagIds});
     this.props.pushState(null, path);
