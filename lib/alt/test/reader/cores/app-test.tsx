@@ -11,15 +11,29 @@ import {Provider} from 'react-redux'
 import {ReduxRouter} from 'redux-router'
 import configureStore from '../src/store/configure-store'
 
+
+function combine(...args) {
+  let doTask = (taskList)=> {
+    let task = taskList.shift();
+    if (task) {
+      setTimeout(()=> {
+        task();
+        doTask(taskList);
+      }, 50);
+    }
+  };
+  doTask(args);
+}
+
 function setup() {
   const html = document.getElementById('nojs');
   const store = configureStore({html});
   let rendered = TestUtils.renderIntoDocument(<Provider store={store}>
     <ReduxRouter/>
   </Provider>);
-  ;
+
   let dom = ReactDOM.findDOMNode(rendered);
-  ;
+
   let find = (selector)=> dom.querySelector(selector);
   let findAll = (selector)=> Array.prototype.slice.call(dom.querySelectorAll(selector));
 
@@ -47,19 +61,33 @@ describe('Reader', ()=> {
           html: '<h1>title1</h1>'
         }
       })());
+    nock('http://localhost')
+      .get('/r/api/memos/2')
+      .reply(200, (()=> {
+        return {
+          id: 2,
+          title: 'title2',
+          html: '<h1>title2</h1>'
+        }
+      })());
   });
-
 
   it('initial view', (done)=> {
     const { dom, find, findAll } = setup();
-    setTimeout(()=> {
-      let titles = findAll('.title-list li a')
+    combine(()=> {
+      let titles = findAll('.title-list li a');
       assert.equal(titles.length, 4);
       TestUtils.Simulate.click(find('.title-list li a'));
-      setTimeout(()=>{
-        assert.equal(find('.memo.memo-title').innerHTML, 'title1');
-        done()
-      }, 50);
-    }, 50)
+    }, ()=> {
+      assert.equal(find('.memo.memo-title').innerHTML, 'title1');
+    }, ()=> {
+      let titles = findAll('.title-list li a');
+      TestUtils.Simulate.click(titles[1]);
+    }, ()=>{
+      assert.equal(find('.memo.memo-title').innerHTML, 'title2');
+      done()
+    });
   });
 });
+
+
