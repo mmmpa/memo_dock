@@ -7,5 +7,8 @@ global.window = document.defaultView;
 global.navigator = global.window.navigator;
 
 window.sessionStorage = {};
-window.sessionStorage.setItem = ()=> {};
-window.sessionStorage.readState = ()=> {};
+window.sessionStorage.setItem = ()=> null;
+window.sessionStorage.readState = ()=> null;
+
+window.hljs = {};
+window.hljs.initHighlighting = ()=> null;

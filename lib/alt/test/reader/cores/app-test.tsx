@@ -118,7 +118,7 @@ describe('Reader', ()=> {
       })());
   });
 
-  it('initial view', (done)=> {
+  it('futures', (done)=> {
     const { dom, find, findAll } = setup();
     combine(()=> {
       let titles = findAll('.title-list li a');
@@ -144,9 +144,7 @@ describe('Reader', ()=> {
       assert.equal(findAll('.title-list li a').length, 3);
       assert.equal(findAll('.tag-list.list input').length, 5);
     }, ()=> {
-      console.log(dom.innerHTML)
       done();
-
     });
   });
 });
