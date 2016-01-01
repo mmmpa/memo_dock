@@ -32,10 +32,11 @@ function setup() {
     <ReduxRouter/>
   </Provider>);
 
-  let dom = ReactDOM.findDOMNode(rendered);
+  let dom = ()=> ReactDOM.findDOMNode(rendered)
+    ;
 
-  let find = (selector)=> dom.querySelector(selector);
-  let findAll = (selector)=> Array.prototype.slice.call(dom.querySelectorAll(selector));
+  let find = (selector)=> dom().querySelector(selector);
+  let findAll = (selector)=> Array.prototype.slice.call(dom().querySelectorAll(selector));
 
   return {dom, find, findAll}
 }
@@ -48,9 +49,49 @@ describe('Reader', ()=> {
       .get('/r/api/memos')
       .reply(200, [
         {id: 1, title: 'title1'},
-        {id: 2, title: 'title2'},
+        {
+          id: 2, title: 'title2', tags: [
+          {id: 1, name: 'tag1'},
+          {id: 2, name: 'tag2'},
+          {id: 3, name: 'tag3'}
+        ]
+        },
         {id: 3, title: 'title3'},
         {id: 4, title: 'title4'}
+      ]);
+    nock('http://localhost')
+      .get('/r/api/memos?tag_ids=1')
+      .reply(200, [
+        {id: 1, title: 'title1'}
+      ]);
+    nock('http://localhost')
+      .get('/r/api/memos?tag_ids=2')
+      .reply(200, [
+        {id: 1, title: 'title1'},
+        {id: 3, title: 'title3'},
+        {id: 4, title: 'title4'}
+      ]);
+    nock('http://localhost')
+      .get('/r/api/tags/')
+      .reply(200, [
+        {id: 1, name: 'tag1'},
+        {id: 2, name: 'tag2'},
+        {id: 3, name: 'tag3'}
+      ]);
+    nock('http://localhost')
+      .get('/r/api/tags/1')
+      .reply(200, [
+        {id: 1, name: 'tag1'},
+        {id: 2, name: 'tag2'}
+      ]);
+    nock('http://localhost')
+      .get('/r/api/tags/2')
+      .reply(200, [
+        {id: 1, name: 'tag1'},
+        {id: 2, name: 'tag2'},
+        {id: 3, name: 'tag3'},
+        {id: 4, name: 'tag4'},
+        {id: 5, name: 'tag5'}
       ]);
     nock('http://localhost')
       .get('/r/api/memos/1')
@@ -67,7 +108,12 @@ describe('Reader', ()=> {
         return {
           id: 2,
           title: 'title2',
-          html: '<h1>title2</h1>'
+          html: '<h1>title2</h1>',
+          tags: [
+            {id: 1, name: 'tag1'},
+            {id: 2, name: 'tag2'},
+            {id: 3, name: 'tag3'}
+          ]
         }
       })());
   });
@@ -77,15 +123,30 @@ describe('Reader', ()=> {
     combine(()=> {
       let titles = findAll('.title-list li a');
       assert.equal(titles.length, 4);
+      assert.equal(findAll('.tag-list.list input').length, 3);
       TestUtils.Simulate.click(find('.title-list li a'));
     }, ()=> {
       assert.equal(find('.memo.memo-title').innerHTML, 'title1');
     }, ()=> {
       let titles = findAll('.title-list li a');
       TestUtils.Simulate.click(titles[1]);
-    }, ()=>{
+    }, ()=> {
       assert.equal(find('.memo.memo-title').innerHTML, 'title2');
-      done()
+    }, ()=> {
+      let tags = findAll('.tag-list.list input');
+      TestUtils.Simulate.change(tags[0]);
+    }, ()=> {
+      assert.equal(findAll('.title-list li a').length, 1);
+      assert.equal(findAll('.tag-list.list input').length, 2);
+    }, ()=> {
+      TestUtils.Simulate.click(findAll('.memo.tag a')[1]);
+    }, ()=> {
+      assert.equal(findAll('.title-list li a').length, 3);
+      assert.equal(findAll('.tag-list.list input').length, 5);
+    }, ()=> {
+      console.log(dom.innerHTML)
+      done();
+
     });
   });
 });
