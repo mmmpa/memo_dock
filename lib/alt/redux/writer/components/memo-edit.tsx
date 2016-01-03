@@ -6,9 +6,11 @@ import Fa from '../lib/components/fa'
 import Menu from "../components/menu";
 
 import MemoData from "../models/memo-data";
+import {mixChild} from "../components/eventer";
 
 require("zepto/zepto.min");
 let $ = window.$;
+let hljs = window.hljs;
 
 require("codemirror/addon/display/placeholder");
 require("codemirror/addon/lint/lint.js");
@@ -25,8 +27,7 @@ interface IMemoEdit {
   memoData:MemoData,
   editState:EditMemoState,
   rendered:string,
-  memoMessage:any,
-  app:any
+  memoMessage:any
 }
 
 interface IMemoEditState {
@@ -35,17 +36,18 @@ interface IMemoEditState {
 }
 
 export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState> {
+  dispatch:Function;
   private cm:any;
 
   constructor(props) {
     super(props);
 
-    let {memoData, app} = this.props;
+    let {memoData} = this.props;
 
     this.state = {
       memoData: memoData,
       renderer: _.debounce(()=> {
-        app.renderSlim(this.state.memoData.src);
+        this.dispatch('render', this.state.memoData.src);
         this.resize();
       }, 1000)
     }
@@ -144,7 +146,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   }
 
   save() {
-    this.props.app.save(this.state.memoData);
+    this.dispatch('save', this.state.memoData);
   }
 
   writeError() {
@@ -212,3 +214,5 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
     );
   }
 }
+
+mixChild(MemoEdit);

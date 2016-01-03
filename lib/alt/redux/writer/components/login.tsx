@@ -3,6 +3,8 @@ import {LoginState} from '../constants/status'
 
 import Fa from '../lib/components/fa'
 
+import {mixChild} from "../components/eventer";
+
 interface ILogin {
   loginState: LoginState,
   login:Function
@@ -14,6 +16,8 @@ interface ILoginState {
 }
 
 export default class Login extends React.Component<ILogin, ILoginState> {
+  dispatch:Function;
+
   constructor(props) {
     super(props);
     this.state = {email: '', password: ''};
@@ -53,10 +57,11 @@ export default class Login extends React.Component<ILogin, ILoginState> {
   }
 
   login(e) {
-    this.props.login(this.state.email, this.state.password);
+    this.dispatch('login', this.state.email, this.state.password);
   }
 
   render() {
+    console.log(this)
     return <article className="login container">
       <header className="login title-area">
         <h1 className="login title">Login</h1>
@@ -78,3 +83,5 @@ export default class Login extends React.Component<ILogin, ILoginState> {
     </article>;
   }
 }
+
+mixChild(Login);

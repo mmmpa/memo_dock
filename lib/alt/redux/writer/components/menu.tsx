@@ -1,32 +1,26 @@
 import * as React from 'react'
 import Fa from '../lib/components/fa'
+import {mixChild} from "../components/eventer";
 
-interface IMenu {
-  createIndexLink:Function,
-  createNewMemoLink:Function,
-  logOut:Function
-}
+export default class Menu extends React.Component<{},{}> {
+  dispatch:Function;
 
-export default class Menu extends React.Component<IMenu,{}> {
   render() {
-    let {createIndexLink, createNewMemoLink, logOut} = this.props;
     return (
       <article className="global-menu">
         <nav className="global-menu menu-container">
           <ul className="global-menu menu-list">
             <li>
               <Fa icon="list"/>
-              {createIndexLink('メモ一覧')}
+              <b onClick={()=> this.dispatch('link:index')}>メモ一覧</b>
             </li>
             <li>
               <Fa icon="pencil"/>
-              {createNewMemoLink('新規メモ')}
+              <a onClick={()=> this.dispatch('link:newMemo')}>新規メモ</a>
             </li>
             <li>
               <Fa icon="remove"/>
-              <a onClick={()=> logOut()}>
-                ログアウト
-              </a>
+              <a onClick={()=> this.dispatch('logOut')}>ログアウト</a>
             </li>
           </ul>
         </nav>
@@ -34,3 +28,5 @@ export default class Menu extends React.Component<IMenu,{}> {
     )
   }
 }
+
+mixChild(Menu);

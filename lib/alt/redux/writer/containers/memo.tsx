@@ -16,6 +16,10 @@ import MemoIndexData from "../models/memo-index-data";
 import { pushState } from 'redux-router'
 import Menu from "../components/menu";
 
+import {mixParent} from "../components/eventer";
+import {mixCommon} from "./content-common";
+
+
 interface IMemo {
   state?:any,
   memoAction?:any,
@@ -25,16 +29,26 @@ interface IMemo {
   app:{}
 }
 
-class Memo extends ContentCommon<IMemo, {}> {
-  constructor(props) {
-    super(props);
+class Memo extends React.Component<IMemo, {}> {
+  initializeAsEventing:Function;
+  initializeCommonListener:Function;
+  checkLogin:Function;
 
-    this.renderSlim = this.renderSlim.bind(this);
-    this.save = this.save.bind(this);
+  listen(register){
+    this.initializeCommonListener(register);
+    register('save', (memo:MemoData)=> this.props.memoAction.saveMemo(memo));
+    register('render', (src:string)=> this.props.memoAction.renderSlim(src));
+  }
+
+  constructor(props) {
+    this.initializeAsEventing();
+    super(props);
   }
 
   componentWillMount() {
-    super.componentWillMount();
+    if(!this.checkLogin()){
+      return;
+    }
 
     this.loadData(this.props)
   }
@@ -67,14 +81,6 @@ class Memo extends ContentCommon<IMemo, {}> {
     return a.params.memoId === b.params.memoId;
   }
 
-  renderSlim(src:string) {
-    this.props.memoAction.renderSlim(src);
-  }
-
-  save(memo:MemoData) {
-    this.props.memoAction.saveMemo(memo);
-  }
-
   render() {
     const {
       memoData,
@@ -84,20 +90,19 @@ class Memo extends ContentCommon<IMemo, {}> {
       memoMessage
       } = this.props.state;
 
-    const {renderSlim, save, createIndexLink, createNewMemoLink, logOut} = this;
-
-    let app = {renderSlim, save};
-
     if (!memoData || loginState !== LoginState.LoggedIn) {
       return <div>initializing...</div>;
     }
 
     return <article className="memo-edit">
-      <Menu {...{createIndexLink, createNewMemoLink, logOut}}/>
-      <MemoEdit {...{app, memoData, editState, rendered, memoMessage}}/>
+      <Menu/>
+      <MemoEdit {...{memoData, editState, rendered, memoMessage}}/>
     </article>;
   }
 }
+
+mixParent(Memo);
+mixCommon(Memo);
 
 function mapDispatchToProps(dispatch) {
   return {

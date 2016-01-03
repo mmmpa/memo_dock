@@ -18,6 +18,9 @@ import * as LoginAction from "../actions/login"
 import MemoData from "../models/memo-data";
 import MemoIndexData from "../models/memo-index-data";
 
+import {mixParent} from "../components/eventer";
+import {mixCommon} from "./content-common";
+
 interface IIndex {
   state?:any,
   memoAction?:any,
@@ -30,8 +33,17 @@ interface IIndexState {
   reloadForce:boolean
 }
 
-class Index extends ContentCommon<IIndex, IIndexState> {
+class Index extends React.Component<IIndex, IIndexState> {
+  initializeAsEventing:Function;
+  initializeCommonListener:Function;
+  checkLogin:Function;
+
+  listen(register){
+    this.initializeCommonListener(register);
+  }
+
   constructor(props) {
+    this.initializeAsEventing();
     super(props);
 
     this.state = {
@@ -44,7 +56,9 @@ class Index extends ContentCommon<IIndex, IIndexState> {
   }
 
   componentWillMount() {
-    super.componentWillMount();
+    if(!this.checkLogin()){
+      return;
+    }
 
     this.loadData(this.props)
   }
@@ -120,7 +134,7 @@ class Index extends ContentCommon<IIndex, IIndexState> {
       memoIndexState
       } = this.props.state;
 
-    const {indexMemo, editMemo, deleteMemo, createIndexLink, createNewMemoLink, logOut} = this;
+    const {indexMemo, editMemo, deleteMemo} = this;
 
     let app = {indexMemo, editMemo, deleteMemo};
 
@@ -129,11 +143,14 @@ class Index extends ContentCommon<IIndex, IIndexState> {
     }
 
     return <article className="memo-index">
-      <Menu {...{createIndexLink, createNewMemoLink, logOut}}/>
+      <Menu />
       <MemoIndex {...{app, memoIndexData, memoIndexState}}/>
     </article>;
   }
 }
+
+mixParent(Index);
+mixCommon(Index);
 
 function mapDispatchToProps(dispatch) {
   return {
