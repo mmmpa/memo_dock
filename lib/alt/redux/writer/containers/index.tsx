@@ -9,7 +9,6 @@ import {LoginState, MemoIndexState} from '../constants/status'
 
 import Menu from "../components/menu";
 import MemoIndex from "../components/memo-index";
-import ContentCommon from "./content-common";
 import { Link } from 'react-router';
 
 import * as MemoAction from "../actions/memo"
@@ -38,8 +37,13 @@ class Index extends React.Component<IIndex, IIndexState> {
   initializeCommonListener:Function;
   checkLogin:Function;
 
-  listen(register){
+  listen(register) {
     this.initializeCommonListener(register);
+    register('index:page', (page:number)=> this.indexMemo(page, null));
+    register('index:tag', (tags:number[])=> this.indexMemo(null, tags));
+    register('index:reset', ()=> this.indexMemo(1, []));
+    register('memo:edit', (id:number)=> this.editMemo(id));
+    register('memo:delete', (id:number)=> this.deleteMemo(id));
   }
 
   constructor(props) {
@@ -49,14 +53,10 @@ class Index extends React.Component<IIndex, IIndexState> {
     this.state = {
       reloadForce: false
     };
-
-    this.indexMemo = this.indexMemo.bind(this);
-    this.editMemo = this.editMemo.bind(this);
-    this.deleteMemo = this.deleteMemo.bind(this);
   }
 
   componentWillMount() {
-    if(!this.checkLogin()){
+    if (!this.checkLogin()) {
       return;
     }
 
@@ -102,6 +102,7 @@ class Index extends React.Component<IIndex, IIndexState> {
     return a.location.query.tagIds == b.location.query.tagIds;
   }
 
+
   indexMemo(pageNumber:number = null, tagIdNumbers:number[] = null) {
     let {pathname, query} = this.props.location;
 
@@ -111,20 +112,14 @@ class Index extends React.Component<IIndex, IIndexState> {
     this.props.pushState(null, pathname, {page, tagIds});
   }
 
-  editMemo(memo:MemoData) {
-    this.props.pushState(null, '/w/memos/' + memo.id);
+  editMemo(memoId:number) {
+    this.props.pushState(null, '/w/memos/' + memoId);
   }
 
-  deleteMemo(memo:MemoData) {
-    this.props.memoAction.deleteMemo(memo, ()=> {
+  deleteMemo(memoId:number) {
+    this.props.memoAction.deleteMemo(memoId, ()=> {
       this.loadData(this.props);
     });
-  }
-
-  createMemoLink(memoId:number, children:any) {
-    let {search} = this.props.location;
-    let path:string = '/memo/' + memoId + search;
-    return <Link to={path}>{children}</Link>
   }
 
   render() {
@@ -134,17 +129,13 @@ class Index extends React.Component<IIndex, IIndexState> {
       memoIndexState
       } = this.props.state;
 
-    const {indexMemo, editMemo, deleteMemo} = this;
-
-    let app = {indexMemo, editMemo, deleteMemo};
-
     if (!memoIndexData || loginState !== LoginState.LoggedIn) {
       return <div>initializing...</div>;
     }
 
     return <article className="memo-index">
       <Menu />
-      <MemoIndex {...{app, memoIndexData, memoIndexState}}/>
+      <MemoIndex {...{memoIndexData, memoIndexState}}/>
     </article>;
   }
 }

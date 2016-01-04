@@ -51464,11 +51464,11 @@ function saveMemoFail(errors) {
 function saveMemoSucceed(memo) {
     return { type: Type.MEMO_SUCCEED_SAVING, memo: memo };
 }
-function deleteMemo(memo, callback) {
+function deleteMemo(memoId, callback) {
     return function (dispatch) {
         dispatch(waitLoadedIndex());
         request
-            .delete('/w/api/memos/' + memo.id)
+            .delete('/w/api/memos/' + memoId)
             .set('X-CSRF-Token', login_1.token())
             .end(function (err, res) {
             if (err) {
@@ -51803,6 +51803,7 @@ var __extends = (this && this.__extends) || function (d, b) {
 var React = require('react');
 var memo_index_tag_link_1 = require("./memo-index-tag-link");
 var fa_1 = require('../lib/components/fa');
+var eventer_1 = require("../components/eventer");
 var MemoIndexLine = (function (_super) {
     __extends(MemoIndexLine, _super);
     function MemoIndexLine() {
@@ -51811,8 +51812,7 @@ var MemoIndexLine = (function (_super) {
     MemoIndexLine.prototype.tagLinks = function (tags) {
         var _this = this;
         if (tags === void 0) { tags = []; }
-        var app = this.props.app;
-        return tags.map(function (tagData) { return React.createElement(memo_index_tag_link_1.default, {"key": tagData.id, "tagData": tagData, "app": app, "isEnable": _this.props.isEnable}); });
+        return tags.map(function (tagData) { return React.createElement(memo_index_tag_link_1.default, {"key": tagData.id, "tagData": tagData, "isEnable": _this.props.isEnable}); });
     };
     MemoIndexLine.prototype.detectPublicText = function () {
         return this.props.memoData.isPublic ? '公開' : '下書き';
@@ -51821,15 +51821,17 @@ var MemoIndexLine = (function (_super) {
         return this.props.isEnable() ? '' : 'disabled';
     };
     MemoIndexLine.prototype.render = function () {
-        var _a = this.props, memoData = _a.memoData, app = _a.app;
-        return React.createElement("tr", null, React.createElement("td", {"className": "title"}, React.createElement("a", {"className": this.detectLinkEnabled(), "onClick": function () { return app.editMemo(memoData); }}, memoData.title)), React.createElement("td", {"className": "tags"}, this.tagLinks(memoData.tags)), React.createElement("td", {"className": "public"}, this.detectPublicText()), React.createElement("td", {"className": "delete"}, React.createElement("button", {"disabled": !this.props.isEnable(), "onClick": function () { return app.deleteMemo(memoData); }}, React.createElement(fa_1.default, {"icon": "trash-o"}))));
+        var _this = this;
+        var memoData = this.props.memoData;
+        return React.createElement("tr", null, React.createElement("td", {"className": "title"}, React.createElement("a", {"className": this.detectLinkEnabled(), "onClick": function () { return _this.dispatch('memo:edit', memoData.id); }}, memoData.title)), React.createElement("td", {"className": "tags"}, this.tagLinks(memoData.tags)), React.createElement("td", {"className": "public"}, this.detectPublicText()), React.createElement("td", {"className": "delete"}, React.createElement("button", {"disabled": !this.props.isEnable(), "onClick": function () { return _this.dispatch('memo:delete', memoData.id); }}, React.createElement(fa_1.default, {"icon": "trash-o"}))));
     };
     return MemoIndexLine;
 })(React.Component);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoIndexLine;
+eventer_1.mixChild(MemoIndexLine);
 
-},{"../lib/components/fa":269,"./memo-index-tag-link":260,"react":224}],259:[function(require,module,exports){
+},{"../components/eventer":255,"../lib/components/fa":269,"./memo-index-tag-link":260,"react":224}],259:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -51838,31 +51840,40 @@ var __extends = (this && this.__extends) || function (d, b) {
 var React = require('react');
 var _ = require('lodash');
 var fa_1 = require('../lib/components/fa');
+var eventer_1 = require("../components/eventer");
 var MemoIndexPager = (function (_super) {
     __extends(MemoIndexPager, _super);
     function MemoIndexPager() {
         _super.apply(this, arguments);
     }
+    MemoIndexPager.prototype.index = function (page) {
+        this.dispatch('index:page', page);
+    };
+    MemoIndexPager.prototype.reset = function () {
+        this.dispatch('index:reset');
+    };
     MemoIndexPager.prototype.tagRemover = function () {
-        var app = this.props.app;
+        var _this = this;
         var isSelectedTag = this.props.memoIndexData.isSelectedTag;
         var classString = isSelectedTag() ? "memo-index pager-container" : "memo-index pager-container hidden";
-        return React.createElement("li", {"className": classString}, React.createElement("a", {"className": "memo-index tag-remover", "onClick": function () { return app.indexMemo(1, []); }}, React.createElement(fa_1.default, {"icon": "times"}), "タグ解除"));
+        return React.createElement("li", {"className": classString}, React.createElement("a", {"className": "memo-index tag-remover", "onClick": function () { return _this.reset(); }}, React.createElement(fa_1.default, {"icon": "times"}), "タグ解除"));
     };
     MemoIndexPager.prototype.render = function () {
-        var _a = this.props, isEnable = _a.isEnable, app = _a.app;
-        var _b = this.props.memoIndexData, page = _b.page, total = _b.total;
+        var _this = this;
+        var isEnable = this.props.isEnable;
+        var _a = this.props.memoIndexData, page = _a.page, total = _a.total;
         return React.createElement("ul", {"className": "memo-index memo-pager"}, _.times(total, function (n) {
             var now = n + 1;
-            return React.createElement("li", {"className": "memo-index pager-container", "key": "pager" + now}, React.createElement("a", {"className": "memo-index pager-link " + (now == page ? 'now' : 'not-now'), "onClick": function () { return app.indexMemo(now); }, "disabled": !isEnable()}, now));
+            return React.createElement("li", {"className": "memo-index pager-container", "key": "pager" + now}, React.createElement("a", {"className": "memo-index pager-link " + (now == page ? 'now' : 'not-now'), "onClick": function () { return _this.index(now); }, "disabled": !isEnable()}, now));
         }), this.tagRemover());
     };
     return MemoIndexPager;
 })(React.Component);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoIndexPager;
+eventer_1.mixChild(MemoIndexPager);
 
-},{"../lib/components/fa":269,"lodash":61,"react":224}],260:[function(require,module,exports){
+},{"../components/eventer":255,"../lib/components/fa":269,"lodash":61,"react":224}],260:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -51870,6 +51881,7 @@ var __extends = (this && this.__extends) || function (d, b) {
     d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
 };
 var React = require('react');
+var eventer_1 = require("../components/eventer");
 var MemoIndexTagLink = (function (_super) {
     __extends(MemoIndexTagLink, _super);
     function MemoIndexTagLink() {
@@ -51879,15 +51891,17 @@ var MemoIndexTagLink = (function (_super) {
         return this.props.isEnable() ? 'memo-index tag-link' : 'memo-index tag-link disabled';
     };
     MemoIndexTagLink.prototype.render = function () {
-        var _a = this.props, tagData = _a.tagData, app = _a.app;
-        return (React.createElement("div", {"className": "memo-index tag-link-container"}, React.createElement("a", {"className": this.detectLinkEnabled(), "onClick": function () { return app.indexMemo(1, [tagData.id]); }}, tagData.name)));
+        var _this = this;
+        var tagData = this.props.tagData;
+        return (React.createElement("div", {"className": "memo-index tag-link-container"}, React.createElement("a", {"className": this.detectLinkEnabled(), "onClick": function () { return _this.dispatch('index:tag', [tagData.id]); }}, tagData.name)));
     };
     return MemoIndexTagLink;
 })(React.Component);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoIndexTagLink;
+eventer_1.mixChild(MemoIndexTagLink);
 
-},{"react":224}],261:[function(require,module,exports){
+},{"../components/eventer":255,"react":224}],261:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -51899,6 +51913,7 @@ var status_1 = require('../constants/status');
 var memo_index_line_1 = require("./memo-index-line");
 var memo_index_pager_1 = require("./memo-index-pager");
 var fa_1 = require('../lib/components/fa');
+var eventer_1 = require("../components/eventer");
 var MemoIndex = (function (_super) {
     __extends(MemoIndex, _super);
     function MemoIndex(props) {
@@ -51910,11 +51925,10 @@ var MemoIndex = (function (_super) {
     };
     MemoIndex.prototype.memoLines = function () {
         var memos = this.props.memoIndexData.memos;
-        var app = this.props.app;
         var isEnable = this.isEnable;
         return memos.map(function (memoData) {
-            var key = 'memoIndexLine' + memoData.id;
-            return React.createElement(memo_index_line_1.default, React.__spread({}, { key: key, memoData: memoData, isEnable: isEnable, app: app }));
+            var key = memoData.id;
+            return React.createElement(memo_index_line_1.default, React.__spread({}, { key: key, memoData: memoData, isEnable: isEnable }));
         });
     };
     MemoIndex.prototype.loading = function (memos) {
@@ -51927,16 +51941,17 @@ var MemoIndex = (function (_super) {
         }
     };
     MemoIndex.prototype.render = function () {
-        var _a = this.props, memoIndexData = _a.memoIndexData, app = _a.app;
+        var memoIndexData = this.props.memoIndexData;
         var isEnable = this.isEnable;
-        return (React.createElement("div", null, React.createElement("section", {"className": "memo-index index-container"}, React.createElement("h1", {"className": "memo-index index-title"}, "メモ一覧"), React.createElement(memo_index_pager_1.default, React.__spread({}, { app: app, memoIndexData: memoIndexData, isEnable: isEnable })), React.createElement("table", {"className": "memo-index index-table"}, React.createElement("thead", null, React.createElement("tr", null, React.createElement("th", {"className": "title"}, "タイトル"), React.createElement("th", {"className": "tags"}, "タグ"), React.createElement("th", {"className": "public"}, "公開"), React.createElement("th", {"className": "delete"}))), React.createElement("tbody", null, this.memoLines())), React.createElement(memo_index_pager_1.default, React.__spread({}, { app: app, memoIndexData: memoIndexData, isEnable: isEnable })))));
+        return (React.createElement("div", null, React.createElement("section", {"className": "memo-index index-container"}, React.createElement("h1", {"className": "memo-index index-title"}, "メモ一覧"), React.createElement(memo_index_pager_1.default, React.__spread({}, { memoIndexData: memoIndexData, isEnable: isEnable })), React.createElement("table", {"className": "memo-index index-table"}, React.createElement("thead", null, React.createElement("tr", null, React.createElement("th", {"className": "title"}, "タイトル"), React.createElement("th", {"className": "tags"}, "タグ"), React.createElement("th", {"className": "public"}, "公開"), React.createElement("th", {"className": "delete"}))), React.createElement("tbody", null, this.memoLines())), React.createElement(memo_index_pager_1.default, React.__spread({}, { memoIndexData: memoIndexData, isEnable: isEnable })))));
     };
     return MemoIndex;
 })(React.Component);
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = MemoIndex;
+eventer_1.mixChild(MemoIndex);
 
-},{"../constants/status":264,"../lib/components/fa":269,"./memo-index-line":258,"./memo-index-pager":259,"react":224}],262:[function(require,module,exports){
+},{"../components/eventer":255,"../constants/status":264,"../lib/components/fa":269,"./memo-index-line":258,"./memo-index-pager":259,"react":224}],262:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }
@@ -51952,7 +51967,7 @@ var Menu = (function (_super) {
     }
     Menu.prototype.render = function () {
         var _this = this;
-        return (React.createElement("article", {"className": "global-menu"}, React.createElement("nav", {"className": "global-menu menu-container"}, React.createElement("ul", {"className": "global-menu menu-list"}, React.createElement("li", null, React.createElement(fa_1.default, {"icon": "list"}), React.createElement("b", {"onClick": function () { return _this.dispatch('link:index'); }}, "メモ一覧")), React.createElement("li", null, React.createElement(fa_1.default, {"icon": "pencil"}), React.createElement("a", {"onClick": function () { return _this.dispatch('link:newMemo'); }}, "新規メモ")), React.createElement("li", null, React.createElement(fa_1.default, {"icon": "remove"}), React.createElement("a", {"onClick": function () { return _this.dispatch('logOut'); }}, "ログアウト"))))));
+        return (React.createElement("article", {"className": "global-menu"}, React.createElement("nav", {"className": "global-menu menu-container"}, React.createElement("ul", {"className": "global-menu menu-list"}, React.createElement("li", null, React.createElement(fa_1.default, {"icon": "list"}), React.createElement("a", {"onClick": function () { return _this.dispatch('link:index'); }}, "メモ一覧")), React.createElement("li", null, React.createElement(fa_1.default, {"icon": "pencil"}), React.createElement("a", {"onClick": function () { return _this.dispatch('link:newMemo'); }}, "新規メモ")), React.createElement("li", null, React.createElement(fa_1.default, {"icon": "remove"}), React.createElement("a", {"onClick": function () { return _this.dispatch('logOut'); }}, "ログアウト"))))));
     };
     return Menu;
 })(React.Component);
@@ -52013,50 +52028,8 @@ var EditMemoState = exports.EditMemoState;
 var MemoIndexState = exports.MemoIndexState;
 
 },{}],265:[function(require,module,exports){
-var __extends = (this && this.__extends) || function (d, b) {
-    for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
-    function __() { this.constructor = d; }
-    d.prototype = b === null ? Object.create(b) : (__.prototype = b.prototype, new __());
-};
-var React = require('react');
-var react_router_1 = require('react-router');
 var status_1 = require('../constants/status');
 var mix_1 = require('../lib/mix');
-var ContentCommon = (function (_super) {
-    __extends(ContentCommon, _super);
-    function ContentCommon(props) {
-        _super.call(this, props);
-        this.logOut = this.logOut.bind(this);
-        this.createIndexLink = this.createIndexLink.bind(this);
-        this.createNewMemoLink = this.createNewMemoLink.bind(this);
-    }
-    ContentCommon.prototype.componentWillMount = function () {
-        var loginState = this.props.state.loginState;
-        var _a = this.props, memoAction = _a.memoAction, pushState = _a.pushState;
-        if (loginState !== status_1.LoginState.LoggedIn) {
-            memoAction.checkLogin(null, function () {
-                pushState(null, '/w');
-            });
-            return;
-        }
-    };
-    ContentCommon.prototype.requireLogin = function () {
-        this.props.pushState(null, '/w');
-    };
-    ContentCommon.prototype.logOut = function () {
-        var _this = this;
-        this.props.loginAction.logOut(function () { return _this.props.pushState(null, '/w'); });
-    };
-    ContentCommon.prototype.createIndexLink = function (children) {
-        return React.createElement(react_router_1.Link, {"to": "/w/memos/"}, children);
-    };
-    ContentCommon.prototype.createNewMemoLink = function (children) {
-        return React.createElement(react_router_1.Link, {"to": "/w/memos/new"}, children);
-    };
-    return ContentCommon;
-})(React.Component);
-Object.defineProperty(exports, "__esModule", { value: true });
-exports.default = ContentCommon;
 var CommonContainer = (function () {
     function CommonContainer() {
     }
@@ -52104,7 +52077,7 @@ function mixCommon(target) {
 }
 exports.mixCommon = mixCommon;
 
-},{"../constants/status":264,"../lib/mix":270,"react":224,"react-router":91}],266:[function(require,module,exports){
+},{"../constants/status":264,"../lib/mix":270}],266:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -52118,7 +52091,6 @@ var redux_router_1 = require('redux-router');
 var status_1 = require('../constants/status');
 var menu_1 = require("../components/menu");
 var memo_index_1 = require("../components/memo-index");
-var react_router_1 = require('react-router');
 var MemoAction = require("../actions/memo");
 var LoginAction = require("../actions/login");
 var eventer_1 = require("../components/eventer");
@@ -52131,12 +52103,15 @@ var Index = (function (_super) {
         this.state = {
             reloadForce: false
         };
-        this.indexMemo = this.indexMemo.bind(this);
-        this.editMemo = this.editMemo.bind(this);
-        this.deleteMemo = this.deleteMemo.bind(this);
     }
     Index.prototype.listen = function (register) {
+        var _this = this;
         this.initializeCommonListener(register);
+        register('index:page', function (page) { return _this.indexMemo(page, null); });
+        register('index:tag', function (tags) { return _this.indexMemo(null, tags); });
+        register('index:reset', function () { return _this.indexMemo(1, []); });
+        register('memo:edit', function (id) { return _this.editMemo(id); });
+        register('memo:delete', function (id) { return _this.deleteMemo(id); });
     };
     Index.prototype.componentWillMount = function () {
         if (!this.checkLogin()) {
@@ -52184,28 +52159,21 @@ var Index = (function (_super) {
         var tagIds = tagIdNumbers ? tagIdNumbers.join(',') : query.tagIds;
         this.props.pushState(null, pathname, { page: page, tagIds: tagIds });
     };
-    Index.prototype.editMemo = function (memo) {
-        this.props.pushState(null, '/w/memos/' + memo.id);
+    Index.prototype.editMemo = function (memoId) {
+        this.props.pushState(null, '/w/memos/' + memoId);
     };
-    Index.prototype.deleteMemo = function (memo) {
+    Index.prototype.deleteMemo = function (memoId) {
         var _this = this;
-        this.props.memoAction.deleteMemo(memo, function () {
+        this.props.memoAction.deleteMemo(memoId, function () {
             _this.loadData(_this.props);
         });
     };
-    Index.prototype.createMemoLink = function (memoId, children) {
-        var search = this.props.location.search;
-        var path = '/memo/' + memoId + search;
-        return React.createElement(react_router_1.Link, {"to": path}, children);
-    };
     Index.prototype.render = function () {
         var _a = this.props.state, loginState = _a.loginState, memoIndexData = _a.memoIndexData, memoIndexState = _a.memoIndexState;
-        var _b = this, indexMemo = _b.indexMemo, editMemo = _b.editMemo, deleteMemo = _b.deleteMemo;
-        var app = { indexMemo: indexMemo, editMemo: editMemo, deleteMemo: deleteMemo };
         if (!memoIndexData || loginState !== status_1.LoginState.LoggedIn) {
             return React.createElement("div", null, "initializing...");
         }
-        return React.createElement("article", {"className": "memo-index"}, React.createElement(menu_1.default, null), React.createElement(memo_index_1.default, React.__spread({}, { app: app, memoIndexData: memoIndexData, memoIndexState: memoIndexState })));
+        return React.createElement("article", {"className": "memo-index"}, React.createElement(menu_1.default, null), React.createElement(memo_index_1.default, React.__spread({}, { memoIndexData: memoIndexData, memoIndexState: memoIndexState })));
     };
     return Index;
 })(React.Component);
@@ -52224,7 +52192,7 @@ function mapStateToProps(state) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(Index);
 
-},{"../actions/login":253,"../actions/memo":254,"../components/eventer":255,"../components/memo-index":261,"../components/menu":262,"../constants/status":264,"./content-common":265,"react":224,"react-redux":67,"react-router":91,"redux":241,"redux-router":231}],267:[function(require,module,exports){
+},{"../actions/login":253,"../actions/memo":254,"../components/eventer":255,"../components/memo-index":261,"../components/menu":262,"../constants/status":264,"./content-common":265,"react":224,"react-redux":67,"redux":241,"redux-router":231}],267:[function(require,module,exports){
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
     function __() { this.constructor = d; }

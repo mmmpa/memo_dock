@@ -73,11 +73,11 @@ function saveMemoSucceed(memo:MemoData) {
   return {type: Type.MEMO_SUCCEED_SAVING, memo};
 }
 
-export function deleteMemo(memo:MemoData, callback:Function) {
+export function deleteMemo(memoId:number, callback:Function) {
   return (dispatch) => {
     dispatch(waitLoadedIndex());
     request
-      .delete('/w/api/memos/' + memo.id)
+      .delete('/w/api/memos/' + memoId)
       .set('X-CSRF-Token', token())
       .end((err, res)=> {
         if (err) {

@@ -11,10 +11,11 @@ import MemoIndexLine from "./memo-index-line";
 import MemoIndexPager from "./memo-index-pager";
 import Fa from '../lib/components/fa'
 
+import {mixChild} from "../components/eventer";
+
 interface IMemoIndex {
   memoIndexData:MemoIndexData,
-  memoIndexState:MemoIndexState,
-  app:any
+  memoIndexState:MemoIndexState
 }
 
 export default class MemoIndex extends React.Component<IMemoIndex, {}> {
@@ -30,12 +31,11 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
 
   memoLines() {
     let {memos} = this.props.memoIndexData;
-    let {app} = this.props;
     let isEnable = this.isEnable
 
     return memos.map((memoData)=> {
-      let key = 'memoIndexLine' + memoData.id
-      return <MemoIndexLine {...{key, memoData, isEnable, app}}/>
+      let key = memoData.id;
+      return <MemoIndexLine {...{key, memoData, isEnable}}/>
     });
   }
 
@@ -48,14 +48,14 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
   }
 
   render() {
-    let {memoIndexData, app} = this.props;
+    let {memoIndexData} = this.props;
     let isEnable = this.isEnable;
 
     return (
       <div>
         <section className="memo-index index-container">
           <h1 className="memo-index index-title">メモ一覧</h1>
-          <MemoIndexPager {...{app, memoIndexData, isEnable}}/>
+          <MemoIndexPager {...{memoIndexData, isEnable}}/>
           <table className="memo-index index-table">
             <thead>
               <tr>
@@ -69,9 +69,11 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
               {this.memoLines()}
             </tbody>
           </table>
-          <MemoIndexPager {...{app, memoIndexData, isEnable}}/>
+          <MemoIndexPager {...{memoIndexData, isEnable}}/>
         </section>
       </div>
     )
   }
 }
+
+mixChild(MemoIndex);

@@ -5,7 +5,6 @@ import * as Redux from 'redux'
 import { connect } from 'react-redux'
 import {LoginState, EditMemoState} from '../constants/status'
 
-import ContentCommon from "./content-common";
 import MemoEdit from "../components/memo-edit";
 
 import * as MemoAction from "../actions/memo"

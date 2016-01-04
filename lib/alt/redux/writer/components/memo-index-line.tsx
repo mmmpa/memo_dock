@@ -7,20 +7,21 @@ import TagData from "../models/tag-data";
 import MemoIndexTagLink from "./memo-index-tag-link";
 import Fa from '../lib/components/fa'
 
+import {mixChild} from "../components/eventer";
+
 interface IMemoIndexLine {
   key:number,
   memoData: MemoData,
-  isEnable:Function,
-  app:any
+  isEnable:Function
 }
 
 export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
+  dispatch:Function;
+
   tagLinks(tags:TagData[] = []) {
-    let {app} = this.props;
     return tags.map((tagData)=> <MemoIndexTagLink
       key={tagData.id}
       tagData={tagData}
-      app={app}
       isEnable={this.props.isEnable}
     />)
   }
@@ -33,20 +34,21 @@ export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
     return this.props.isEnable() ? '' : 'disabled';
   }
 
-
   render() {
-    let {memoData, app} = this.props;
+    let {memoData} = this.props;
     return <tr>
       <td className="title">
-        <a className={this.detectLinkEnabled()} onClick={()=> app.editMemo(memoData)}>{memoData.title}</a>
+        <a className={this.detectLinkEnabled()} onClick={()=> this.dispatch('memo:edit', memoData.id)}>{memoData.title}</a>
       </td>
       <td className="tags">{this.tagLinks(memoData.tags)}</td>
       <td className="public">{this.detectPublicText()}</td>
       <td className="delete">
-        <button disabled={!this.props.isEnable()} onClick={()=> app.deleteMemo(memoData)}>
+        <button disabled={!this.props.isEnable()} onClick={()=> this.dispatch('memo:delete', memoData.id)}>
           <Fa icon="trash-o"/>
         </button>
       </td>
     </tr>
   }
 }
+
+mixChild(MemoIndexLine);

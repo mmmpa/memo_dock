@@ -4,21 +4,31 @@ import MemoIndexData from "../models/memo-index-data";
 import {AppState, MemoIndexState} from '../constants/status'
 import Fa from '../lib/components/fa'
 
+import {mixChild} from "../components/eventer";
+
 interface IMemoIndexPager {
   memoIndexData:MemoIndexData,
-  isEnable:Function,
-  app:any
+  isEnable:Function
 }
 
 export default class MemoIndexPager extends React.Component<IMemoIndexPager, {}> {
+  dispatch:Function;
+
+  index(page:number){
+    this.dispatch('index:page', page);
+  }
+
+  reset(){
+    this.dispatch('index:reset');
+  }
+
   tagRemover(){
-    let {app} = this.props;
     let {isSelectedTag} = this.props.memoIndexData;
 
     let classString = isSelectedTag() ? "memo-index pager-container" : "memo-index pager-container hidden";
 
     return <li className={classString}>
-      <a className="memo-index tag-remover" onClick={()=> app.indexMemo(1, []) }>
+      <a className="memo-index tag-remover" onClick={()=> this.reset() }>
         <Fa icon="times"/>
         タグ解除
       </a>
@@ -26,14 +36,14 @@ export default class MemoIndexPager extends React.Component<IMemoIndexPager, {}>
   }
 
   render() {
-    let {isEnable, app} = this.props;
+    let {isEnable} = this.props;
     let {page, total} = this.props.memoIndexData;
     return <ul className="memo-index memo-pager">
       {_.times(total, (n:number)=>{
         let now = n + 1;
         return <li className="memo-index pager-container" key={"pager" + now}>
           <a className={"memo-index pager-link " + (now == page ? 'now' : 'not-now') }
-             onClick={()=> app.indexMemo(now) }
+             onClick={()=> this.index(now) }
              disabled={ !isEnable() }
           >{now}</a>
         </li>
@@ -42,3 +52,5 @@ export default class MemoIndexPager extends React.Component<IMemoIndexPager, {}>
     </ul>
   }
 }
+
+mixChild(MemoIndexPager);

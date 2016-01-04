@@ -12,7 +12,7 @@ export default class Menu extends React.Component<{},{}> {
           <ul className="global-menu menu-list">
             <li>
               <Fa icon="list"/>
-              <b onClick={()=> this.dispatch('link:index')}>メモ一覧</b>
+              <a onClick={()=> this.dispatch('link:index')}>メモ一覧</a>
             </li>
             <li>
               <Fa icon="pencil"/>
