@@ -18,16 +18,17 @@ export class EventingParent {
   }
 
   initializeAsEventing() {
-    this.listen((eventname:String, callback:Function) => {
-      this._ep_getEmitter().on(eventname, callback);
-    })
+    let em:EventEmitter = this._ep_getEmitter();
+    this.listen((eventname:string, callback:Function) => {
+      em.on(eventname, callback);
+    });
   }
 
-  getChildContext() {
+  getChildContext():IEventingShared {
     return {emitter: this._ep_getEmitter()};
   }
 
-  _ep_getEmitter(){
+  _ep_getEmitter():EventEmitter {
     if (!this.emitter) {
       this.emitter = new EventEmitter();
     }
@@ -38,12 +39,12 @@ export class EventingParent {
 export class EventingChild {
   context:IEventingShared;
 
-  static get contextTypes() {
+  static get contextTypes():IEventingShared {
     return EventingShared;
   }
 
-  dispatch(...args) {
-    return this.context.emitter.emit(...args);
+  dispatch(event:string, ...args:any[]):boolean {
+    return this.context.emitter.emit(...[event, ...args]);
   }
 }
 

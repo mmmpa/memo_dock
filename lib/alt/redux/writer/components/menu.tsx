@@ -3,7 +3,7 @@ import Fa from '../lib/components/fa'
 import {mixChild} from "../components/eventer";
 
 export default class Menu extends React.Component<{},{}> {
-  dispatch:Function;
+  dispatch:(event: string, ...args: any[])=> boolean;
 
   render() {
     return (

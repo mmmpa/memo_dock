@@ -18,14 +18,9 @@ import MemoData from "../models/memo-data";
 import MemoIndexData from "../models/memo-index-data";
 
 import {mixParent} from "../components/eventer";
-import {mixCommon} from "./content-common";
+import {mixCommon, ICommon} from "./content-common";
 
-interface IIndex {
-  state?:any,
-  memoAction?:any,
-  loginAction?:any,
-  pushState:Function,
-  location:any
+interface IIndex extends ICommon {
 }
 
 interface IIndexState {
@@ -37,13 +32,13 @@ class Index extends React.Component<IIndex, IIndexState> {
   initializeCommonListener:Function;
   checkLogin:Function;
 
-  listen(register) {
-    this.initializeCommonListener(register);
-    register('index:page', (page:number)=> this.indexMemo(page, null));
-    register('index:tag', (tags:number[])=> this.indexMemo(null, tags));
-    register('index:reset', ()=> this.indexMemo(1, []));
-    register('memo:edit', (id:number)=> this.editMemo(id));
-    register('memo:delete', (id:number)=> this.deleteMemo(id));
+  listen(to) {
+    this.initializeCommonListener(to);
+    to('index:page', (page:number)=> this.indexMemo(page, null));
+    to('index:tag', (tags:number[])=> this.indexMemo(null, tags));
+    to('index:reset', ()=> this.indexMemo(1, []));
+    to('memo:edit', (id:number)=> this.editMemo(id));
+    to('memo:delete', (id:number)=> this.deleteMemo(id));
   }
 
   constructor(props) {

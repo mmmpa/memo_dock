@@ -12,7 +12,7 @@ interface IMemoIndexPager {
 }
 
 export default class MemoIndexPager extends React.Component<IMemoIndexPager, {}> {
-  dispatch:Function;
+  dispatch:(event: string, ...args: any[])=> boolean;
 
   index(page:number){
     this.dispatch('index:page', page);

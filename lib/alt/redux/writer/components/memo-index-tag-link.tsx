@@ -18,7 +18,7 @@ interface IMemoIndexTagLink {
 }
 
 export default class MemoIndexTagLink extends React.Component<IMemoIndexTagLink, {}> {
-  dispatch:Function;
+  dispatch:(event: string, ...args: any[])=> boolean;
 
   detectLinkEnabled():string {
     return this.props.isEnable() ? 'memo-index tag-link' : 'memo-index tag-link disabled';

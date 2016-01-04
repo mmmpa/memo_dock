@@ -51553,9 +51553,9 @@ var EventingParent = (function () {
         configurable: true
     });
     EventingParent.prototype.initializeAsEventing = function () {
-        var _this = this;
+        var em = this._ep_getEmitter();
         this.listen(function (eventname, callback) {
-            _this._ep_getEmitter().on(eventname, callback);
+            em.on(eventname, callback);
         });
     };
     EventingParent.prototype.getChildContext = function () {
@@ -51580,12 +51580,12 @@ var EventingChild = (function () {
         enumerable: true,
         configurable: true
     });
-    EventingChild.prototype.dispatch = function () {
+    EventingChild.prototype.dispatch = function (event) {
         var args = [];
-        for (var _i = 0; _i < arguments.length; _i++) {
-            args[_i - 0] = arguments[_i];
+        for (var _i = 1; _i < arguments.length; _i++) {
+            args[_i - 1] = arguments[_i];
         }
-        return (_a = this.context.emitter).emit.apply(_a, args);
+        return (_a = this.context.emitter).emit.apply(_a, [event].concat(args));
         var _a;
     };
     return EventingChild;
@@ -52033,11 +52033,11 @@ var mix_1 = require('../lib/mix');
 var CommonContainer = (function () {
     function CommonContainer() {
     }
-    CommonContainer.prototype.initializeCommonListener = function (register) {
+    CommonContainer.prototype.initializeCommonListener = function (to) {
         var _this = this;
-        register('link:index', function () { return _this._rac_linkIndex(); });
-        register('link:newMemo', function () { return _this._rac_linkNewMemo(); });
-        register('logOut', function () { return _this._rac_logOut(); });
+        to('link:index', function () { return _this._rac_linkIndex(); });
+        to('link:newMemo', function () { return _this._rac_linkNewMemo(); });
+        to('logOut', function () { return _this._rac_logOut(); });
     };
     CommonContainer.prototype.checkLogin = function () {
         var _this = this;
@@ -52104,14 +52104,14 @@ var Index = (function (_super) {
             reloadForce: false
         };
     }
-    Index.prototype.listen = function (register) {
+    Index.prototype.listen = function (to) {
         var _this = this;
-        this.initializeCommonListener(register);
-        register('index:page', function (page) { return _this.indexMemo(page, null); });
-        register('index:tag', function (tags) { return _this.indexMemo(null, tags); });
-        register('index:reset', function () { return _this.indexMemo(1, []); });
-        register('memo:edit', function (id) { return _this.editMemo(id); });
-        register('memo:delete', function (id) { return _this.deleteMemo(id); });
+        this.initializeCommonListener(to);
+        to('index:page', function (page) { return _this.indexMemo(page, null); });
+        to('index:tag', function (tags) { return _this.indexMemo(null, tags); });
+        to('index:reset', function () { return _this.indexMemo(1, []); });
+        to('memo:edit', function (id) { return _this.editMemo(id); });
+        to('memo:delete', function (id) { return _this.deleteMemo(id); });
     };
     Index.prototype.componentWillMount = function () {
         if (!this.checkLogin()) {
@@ -52202,7 +52202,6 @@ var React = require('react');
 var Redux = require('redux');
 var react_redux_1 = require('react-redux');
 var redux_router_1 = require('redux-router');
-var MemoAction = require("../actions/memo");
 var LoginAction = require("../actions/login");
 var status_1 = require('../constants/status');
 var login_1 = require("../components/login");
@@ -52214,10 +52213,10 @@ var Login = (function (_super) {
         _super.call(this, props);
         this.login = this.login.bind(this);
     }
-    Login.prototype.listen = function (register) {
+    Login.prototype.listen = function (to) {
         var _this = this;
-        register('test', function () { return console.log('dispatch test'); });
-        register('login', function (email, password) {
+        to('test', function () { return console.log('dispatch test'); });
+        to('login', function (email, password) {
             _this.props.loginAction.login(email, password);
         });
     };
@@ -52248,7 +52247,6 @@ var Login = (function (_super) {
 eventer_1.mixParent(Login);
 function mapDispatchToProps(dispatch) {
     return {
-        memoAction: Redux.bindActionCreators(MemoAction, dispatch),
         loginAction: Redux.bindActionCreators(LoginAction, dispatch),
         pushState: Redux.bindActionCreators(redux_router_1.pushState, dispatch)
     };
@@ -52259,7 +52257,7 @@ function mapStateToProps(state) {
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = react_redux_1.connect(mapStateToProps, mapDispatchToProps)(Login);
 
-},{"../actions/login":253,"../actions/memo":254,"../components/eventer":255,"../components/login":256,"../constants/status":264,"react":224,"react-redux":67,"redux":241,"redux-router":231}],268:[function(require,module,exports){
+},{"../actions/login":253,"../components/eventer":255,"../components/login":256,"../constants/status":264,"react":224,"react-redux":67,"redux":241,"redux-router":231}],268:[function(require,module,exports){
 /// <reference path="../types/tsd.d.ts" />
 var __extends = (this && this.__extends) || function (d, b) {
     for (var p in b) if (b.hasOwnProperty(p)) d[p] = b[p];
@@ -52283,11 +52281,11 @@ var Memo = (function (_super) {
         this.initializeAsEventing();
         _super.call(this, props);
     }
-    Memo.prototype.listen = function (register) {
+    Memo.prototype.listen = function (to) {
         var _this = this;
-        this.initializeCommonListener(register);
-        register('save', function (memo) { return _this.props.memoAction.saveMemo(memo); });
-        register('render', function (src) { return _this.props.memoAction.renderSlim(src); });
+        this.initializeCommonListener(to);
+        to('save', function (memo) { return _this.props.memoAction.saveMemo(memo); });
+        to('render', function (src) { return _this.props.memoAction.renderSlim(src); });
     };
     Memo.prototype.componentWillMount = function () {
         if (!this.checkLogin()) {
@@ -52377,11 +52375,13 @@ Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = Fa;
 
 },{"react":224}],270:[function(require,module,exports){
-function mix(derivedCtor, baseCtors) {
+function mix(derivedCtor, baseCtors, exclusion) {
+    if (exclusion === void 0) { exclusion = []; }
     baseCtors.forEach(function (baseCtor) {
-        console.log(baseCtor.prototype);
         Object.getOwnPropertyNames(baseCtor.prototype).forEach(function (name) {
-            derivedCtor.prototype[name] = baseCtor.prototype[name];
+            if (!include(exclusion, name)) {
+                derivedCtor.prototype[name] = baseCtor.prototype[name];
+            }
         });
     });
     if (Object.keys) {
@@ -52399,6 +52399,17 @@ function mix(derivedCtor, baseCtors) {
 }
 Object.defineProperty(exports, "__esModule", { value: true });
 exports.default = mix;
+function include(a, b) {
+    if (a.length === 0) {
+        return false;
+    }
+    for (var i = a.length; i--;) {
+        if (a[i] === b) {
+            return true;
+        }
+    }
+    return false;
+}
 
 },{}],271:[function(require,module,exports){
 var tag_data_1 = require("./tag-data");

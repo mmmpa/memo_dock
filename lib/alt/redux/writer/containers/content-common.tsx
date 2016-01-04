@@ -4,13 +4,21 @@ import {LoginState} from '../constants/status'
 
 import mix from '../lib/mix'
 
+export interface ICommon {
+  state?:any,
+  memoAction?:any,
+  loginAction?:any,
+  pushState:Function,
+  location:any
+}
+
 export class CommonContainer {
   props:any;
 
-  initializeCommonListener(register){
-    register('link:index', ()=> this._rac_linkIndex());
-    register('link:newMemo', ()=> this._rac_linkNewMemo());
-    register('logOut', ()=> this._rac_logOut());
+  initializeCommonListener(to){
+    to('link:index', ()=> this._rac_linkIndex());
+    to('link:newMemo', ()=> this._rac_linkNewMemo());
+    to('logOut', ()=> this._rac_logOut());
   }
 
   checkLogin() {

@@ -16,16 +16,10 @@ import { pushState } from 'redux-router'
 import Menu from "../components/menu";
 
 import {mixParent} from "../components/eventer";
-import {mixCommon} from "./content-common";
+import {mixCommon, ICommon} from "./content-common";
 
 
-interface IMemo {
-  state?:any,
-  memoAction?:any,
-  loginAction?:any,
-  pushState:Function,
-  location:any,
-  app:{}
+interface IMemo extends ICommon {
 }
 
 class Memo extends React.Component<IMemo, {}> {
@@ -33,10 +27,10 @@ class Memo extends React.Component<IMemo, {}> {
   initializeCommonListener:Function;
   checkLogin:Function;
 
-  listen(register){
-    this.initializeCommonListener(register);
-    register('save', (memo:MemoData)=> this.props.memoAction.saveMemo(memo));
-    register('render', (src:string)=> this.props.memoAction.renderSlim(src));
+  listen(to){
+    this.initializeCommonListener(to);
+    to('save', (memo:MemoData)=> this.props.memoAction.saveMemo(memo));
+    to('render', (src:string)=> this.props.memoAction.renderSlim(src));
   }
 
   constructor(props) {

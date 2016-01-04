@@ -16,7 +16,7 @@ interface ILoginState {
 }
 
 export default class Login extends React.Component<ILogin, ILoginState> {
-  dispatch:Function;
+  dispatch:(event: string, ...args: any[])=> boolean;
 
   constructor(props) {
     super(props);

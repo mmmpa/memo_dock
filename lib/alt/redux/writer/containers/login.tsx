@@ -16,9 +16,8 @@ interface Shared{
 
 }
 
-interface ILogin {
+interface ILogin  {
   state?:any,
-  memoAction?:any,
   loginAction?:any,
   pushState?:Function
 }
@@ -26,9 +25,9 @@ interface ILogin {
 class Login extends React.Component<ILogin, {}> {
   initializeAsEventing:Function;
 
-  listen(register){
-    register('test', ()=> console.log('dispatch test'));
-    register('login', (email: string, password:string)=>{
+  listen(to){
+    to('test', ()=> console.log('dispatch test'));
+    to('login', (email: string, password:string)=>{
       this.props.loginAction.login(email, password);
     });
   }
@@ -74,7 +73,6 @@ mixParent(Login);
 
 function mapDispatchToProps(dispatch) {
   return {
-    memoAction: Redux.bindActionCreators(MemoAction, dispatch),
     loginAction: Redux.bindActionCreators(LoginAction, dispatch),
     pushState: Redux.bindActionCreators(pushState, dispatch)
   };

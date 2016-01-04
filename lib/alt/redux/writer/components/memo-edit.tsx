@@ -36,7 +36,7 @@ interface IMemoEditState {
 }
 
 export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState> {
-  dispatch:Function;
+  dispatch:(event: string, ...args: any[])=> boolean;
   private cm:any;
 
   constructor(props) {

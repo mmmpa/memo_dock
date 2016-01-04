@@ -16,7 +16,7 @@ interface IMemoIndexLine {
 }
 
 export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
-  dispatch:Function;
+  dispatch:(event: string, ...args: any[])=> boolean;
 
   tagLinks(tags:TagData[] = []) {
     return tags.map((tagData)=> <MemoIndexTagLink
