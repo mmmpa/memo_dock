@@ -8,7 +8,7 @@ import {ReduxRouter} from 'redux-router'
 import configureStore from './store/configure-store'
 const store = configureStore({});
 
-ReactDom.render(
+export default ReactDom.render(
   <Provider store={store}>
     <ReduxRouter />
   </Provider>
