@@ -39,12 +39,12 @@ export class EventingParent {
 export class EventingChild {
   context:IEventingShared;
 
-  static get contextTypes():IEventingShared {
+  static get contextTypes() {
     return EventingShared;
   }
 
   dispatch(event:string, ...args:any[]):boolean {
-    return this.context.emitter.emit(...[event, ...args]);
+    return this.context.emitter.emit(event, ...args);
   }
 }
 

@@ -1,5 +1,6 @@
 import * as _ from 'lodash'
 import * as React from 'react'
+import * as ReactDOM from 'react-dom';
 import {EditMemoState} from '../constants/status'
 
 import Fa from '../lib/components/fa'
@@ -9,8 +10,6 @@ import MemoData from "../models/memo-data";
 import {mixChild} from "../components/eventer";
 
 require("zepto/zepto.min");
-let $ = window.$;
-let hljs = window.hljs;
 
 require("codemirror/addon/display/placeholder");
 require("codemirror/addon/lint/lint.js");
@@ -22,6 +21,9 @@ require("codemirror/mode/ruby/ruby.js");
 require("codemirror/mode/xml/xml.js");
 
 import * as CodeMirror from 'codemirror'
+
+declare let $:any;
+declare let hljs:any;
 
 interface IMemoEdit {
   memoData:MemoData,
@@ -36,7 +38,7 @@ interface IMemoEditState {
 }
 
 export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState> {
-  dispatch:(event: string, ...args: any[])=> boolean;
+  dispatch: (e:string, ...args:any[])=> boolean;
   private cm:any;
 
   constructor(props) {
@@ -71,7 +73,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
   }
 
   componentDidMount() {
-    this.cm = CodeMirror.fromTextArea(this.refs['editor'], {
+    this.cm = CodeMirror.fromTextArea(ReactDOM.findDOMNode(this.refs['editor']), {
       lineNumbers: true,
       mode: "slim",
       lineWrapping: true

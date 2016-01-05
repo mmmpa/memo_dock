@@ -3,6 +3,8 @@ import { Link } from 'react-router';
 import {LoginState} from '../constants/status'
 
 import mix from '../lib/mix'
+import {mixChild} from "../components/eventer";
+import MemoData from "../models/memo-data";
 
 export interface ICommon {
   state?:any,
@@ -15,7 +17,7 @@ export interface ICommon {
 export class CommonContainer {
   props:any;
 
-  initializeCommonListener(to){
+  initializeCommonListener(to) {
     to('link:index', ()=> this._rac_linkIndex());
     to('link:newMemo', ()=> this._rac_linkNewMemo());
     to('logOut', ()=> this._rac_logOut());

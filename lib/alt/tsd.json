@@ -66,7 +66,13 @@
       "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
     },
     "jquery/jquery.d.ts": {
-      "commit": "dc9dabe74a5be62613b17a3605309783a12ff28a"
+      "commit": "419793fb796b0e5c1ed11e018ad28475de0c3735"
+    },
+    "zepto/zepto.d.ts": {
+      "commit": "419793fb796b0e5c1ed11e018ad28475de0c3735"
+    },
+    "highlightjs/highlightjs.d.ts": {
+      "commit": "419793fb796b0e5c1ed11e018ad28475de0c3735"
     }
   }
 }

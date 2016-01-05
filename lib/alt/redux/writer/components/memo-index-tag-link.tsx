@@ -8,7 +8,6 @@ import MemoData from "../models/memo-data";
 import TagData from "../models/tag-data";
 
 import MemoIndexLine from "./memo-index-line";
-
 import {mixChild} from "../components/eventer";
 
 interface IMemoIndexTagLink {
