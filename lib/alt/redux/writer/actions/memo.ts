@@ -5,6 +5,7 @@ import MemoData from "../models/memo-data";
 import TagData from "../models/tag-data";
 import {token, checkInitialState} from "./login"
 import Dispatch = Redux.Dispatch;
+import MemoIndexData from "../models/memo-index-data";
 const request = require('superagent');
 
 export function checkLogin(succeed:Function = null, fail:Function = null) {
@@ -23,16 +24,20 @@ export function index(tagIdNumbers:number[] = [], page:number = 1) {
       .query({page, tag_ids})
       .end((err, res)=> {
         if (err) {
-
+          dispatch(failIndexLoad())
         } else {
-          dispatch(showIndex(res.body, +res.header.page, +res.header.par, +res.header['total-pages'], res.header['tag-ids']));
+          dispatch(showIndex(new MemoIndexData(res.body, res.header)));
         }
       })
   }
 }
 
-function showIndex(memos:any[], page:number, par:number, total:number, tagIds:string) {
-  return {type: Type.MEMO_SHOW_INDEX, memos, page, par, total, tagIds};
+function failIndexLoad() {
+  return {type: Type.MEMO_SHOW_INDEX_RETRY};
+}
+
+function showIndex(indexData:MemoIndexData) {
+  return {type: Type.MEMO_SHOW_INDEX, indexData};
 }
 
 function waitLoadedIndex() {
@@ -91,10 +96,10 @@ export function deleteMemo(memoId:number, callback:Function) {
 
 // メモ編集画面
 
-function waitLoadedMemo() {
-  return {type: Type.MEMO_WAIT_EDITING};
+export function editNewMemo() {
+  let memo:MemoData = new MemoData();
+  return {type: Type.MEMO_START_EDITING, memo};
 }
-
 
 export function editMemoById(memoId:number) {
   return (dispatch) => {
@@ -111,18 +116,12 @@ export function editMemoById(memoId:number) {
   }
 }
 
-
-export function editNewMemo() {
-  let memo:MemoData = new MemoData();
-  return {type: Type.MEMO_START_EDITING, memo};
+function waitLoadedMemo() {
+  return {type: Type.MEMO_WAIT_EDITING};
 }
 
 function injectMemoData(memo:MemoData = null) {
   return {type: Type.MEMO_EDIT_NEW_MEMO, memo};
-}
-
-export function startEditMemo(memo:MemoData) {
-  return editMemoById(memo.id);
 }
 
 // slimのリアルタイムレンダリング

@@ -9,7 +9,7 @@
     "test": "istanbul cover --report html _mocha -- --require test/built/reader/setup.js test/built/**/*-test.js",
     "testReader": "mocha -w --compilers ts:espower-typescript/guess test/reader/**/*-test.ts",
     "testReaderJS": "mocha -w --require test/built/reader/setup.js test/built/reader/**/*-test.js",
-    "testWriter": "mocha -w --compilers ts:espower-typescript/guess test/writer/**/*-test.ts",
+    "testWriter": "mocha -w  --require test/writer/setup.ts --compilers ts:espower-typescript/guess test/writer/**/*-test.ts",
     "testWriterJS": "mocha -w --require test/built/writer/setup.js test/built/writer/**/*-test.js"
   },
   "author": "",
@@ -25,6 +25,7 @@
     "espower-typescript": "^3.0.0",
     "events": "^1.1.0",
     "exorcist": "^0.4.0",
+    "global": "^4.3.0",
     "gulp": "^3.9.0",
     "gulp-browserify": "^0.5.1",
     "gulp-espower": "^1.0.1",

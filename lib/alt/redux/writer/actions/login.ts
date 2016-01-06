@@ -2,13 +2,26 @@
 
 import * as Type from '../constants/action-types';
 const request = require('superagent');
+const global = require("global");
 
 export function token():string {
-  return document.getElementsByName('csrf-token')[0].getAttribute('content');
+  return global.document.getElementsByName('csrf-token')[0].getAttribute('content');
 }
 
-export function requestLogin(afterLoginUri:string = null) {
-  return {type: Type.LOGIN_REQUEST, afterLoginUri};
+export function checkInitialState(succeed:Function = null, fail:Function = null){
+  return (dispatch) => {
+    request
+      .get('/w/api/sessions')
+      .end((err, res)=> {
+        if (err) {
+          dispatch(requestLogin());
+          fail && fail();
+        } else {
+          dispatch(accept());
+          succeed && succeed();
+        }
+      })
+  }
 }
 
 export function logOut(succeed:Function = null, fail:Function = null){
@@ -20,44 +33,18 @@ export function logOut(succeed:Function = null, fail:Function = null){
         if (err) {
           fail && fail();
         } else {
-          dispatch(setRequest());
+          dispatch(requestLogin());
           succeed && succeed();
         }
       })
   }
 }
 
-export function logoutFinish() {
-  return {type: Type.LOGIN_LOGGED_OUT};
-}
-
-export function start(){
-  return (dispatch) => {
-    dispatch(requestLogin('/w/memos'));
-  }
-}
-
-export function checkInitialState(succeed:Function = null, fail:Function = null){
-  return (dispatch) => {
-    request
-      .get('/w/api/sessions')
-      .end((err, res)=> {
-        if (err) {
-          dispatch(setRequest());
-          fail && fail();
-        } else {
-          dispatch(setLoggedIn());
-          succeed && succeed();
-        }
-      })
-  }
-}
-
-function setRequest(){
+function requestLogin(){
   return {type: Type.LOGIN_REQUEST};
 }
 
-function setLoggedIn(){
+function accept(){
   return {type: Type.LOGIN_LOGGED_IN};
 }
 
@@ -74,7 +61,7 @@ export function login(email:string, password:string, succeed:Function, fail:Func
           dispatch(requestRetryLogin());
           fail && fail();
         } else {
-          dispatch(setLoggedIn());
+          dispatch(accept());
           succeed && succeed();
         }
       })

@@ -1,8 +1,21 @@
 import MemoData from "./memo-data"
 
 export default class MemoIndexData {
-  constructor(public memos:MemoData[] = [], public page:number = 0, public par:number = 0, public total:number = 0, public tagIds:string = '') {
-    if(tagIds === ''){
+  memos:MemoData[];
+  page:number;
+  par:number;
+  total:number;
+  tagIds:string;
+
+  constructor(body:any, header:any) {
+    this.memos = body.map((memo)=> new MemoData(memo));
+
+    this.page = +header['page'];
+    this.par = +header['par'];
+    this.total = +header['total-pages'];
+    this.tagIds = header['tag-ids']
+
+    if(this.tagIds === ''){
       this.tagIds = null
     }
 
@@ -14,6 +27,6 @@ export default class MemoIndexData {
   }
 
   clone() {
-    return new MemoIndexData(this.memos.concat(), this.page, this.par, this.total, this.tagIds);
+    return this;
   }
 }

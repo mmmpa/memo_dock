@@ -6,6 +6,7 @@ export const LOGIN_LOGGED_OUT:string = 'LOGIN_LOGGED_OUT';
 
 export const MEMO_SHOW_INDEX:string = 'MEMO_SHOW_INDEX';
 export const MEMO_WAIT_INDEX:string = 'MEMO_WAIT_INDEX';
+export const MEMO_SHOW_INDEX_RETRY:string = 'MEMO_SHOW_INDEX_RETRY';
 export const MEMO_START_EDITING:string = 'MEMO_START_EDITING';
 export const MEMO_WAIT_EDITING:string = 'MEMO_WAIT_EDITING';
 export const MEMO_FINISH_RENDERING:string = 'MEMO_FINISH_RENDERING';

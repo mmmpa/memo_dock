@@ -9,9 +9,7 @@ import {EditMemoState, MemoIndexState} from '../constants/status';
 function memoIndexData(state:MemoIndexData = null, action) {
   switch (action.type) {
     case Type.MEMO_SHOW_INDEX:
-      let {memos, page, par, total, tagIds} = action;
-      let ms:MemoData[] = _.map(memos, (memo)=> new MemoData(memo));
-      return new MemoIndexData(ms, page, par, total, tagIds);
+      return action.indexData;
     default:
       return state;
   }
@@ -32,8 +30,6 @@ function memoData(state = null, action) {
   switch (action.type) {
     case Type.MEMO_EDIT_NEW_MEMO:
       return action.memo;
-    case Type.MEMO_WAIT_EDITING:
-      return state;
     case Type.MEMO_START_EDITING:
       return action.memo;
     case Type.MEMO_SUCCEED_SAVING:
@@ -60,19 +56,6 @@ function memoMessage(state:any = null, action) {
   }
 }
 
-function rendered(state:string = '', action) {
-  switch (action.type) {
-    case Type.MEMO_WAIT_EDITING:
-      return '';
-    case Type.MEMO_START_EDITING:
-      return '';
-    case Type.MEMO_FINISH_RENDERING:
-      return action.html;
-    default:
-      return state;
-  }
-}
-
 function editState(state:EditMemoState = EditMemoState.Ready, action) {
   switch (action.type) {
     case Type.MEMO_WAIT_EDITING:
@@ -91,6 +74,20 @@ function editState(state:EditMemoState = EditMemoState.Ready, action) {
       return state;
   }
 }
+
+function rendered(state:string = '', action) {
+  switch (action.type) {
+    case Type.MEMO_WAIT_EDITING:
+      return '';
+    case Type.MEMO_START_EDITING:
+      return '';
+    case Type.MEMO_FINISH_RENDERING:
+      return action.html;
+    default:
+      return state;
+  }
+}
+
 
 export default {memoIndexData, memoData, rendered, editState, memoMessage, memoIndexState}
 
