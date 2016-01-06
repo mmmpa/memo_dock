@@ -6,9 +6,9 @@
   "scripts": {
     "writer": "watchify --extension=js ./redux/writer_built/writer.js -o ./redux/writer_built/built.js -v",
     "reader": "watchify --extension=js  ./redux/reader_built/reader.js -o ./redux/reader_built/built.js -v",
-    "test": "istanbul cover --report html _mocha -- --require test/built/reader/setup.js test/built/**/*-test.js",
+    "test": "istanbul cover --report html _mocha -- --require test/built/writer/setup.js test/built/**/*-test.js",
     "testReader": "mocha -w --compilers ts:espower-typescript/guess test/reader/**/*-test.ts",
-    "testReaderJS": "mocha -w --require test/built/reader/setup.js test/built/reader/**/*-test.js",
+    "testReaderJS": "mocha -w --require test/built/writer/setup.js test/built/reader/**/*-test.js",
     "testWriter": "mocha -w  --require test/writer/setup.ts --compilers ts:espower-typescript/guess test/writer/**/*-test.ts",
     "testWriterJS": "mocha -w --require test/built/writer/setup.js test/built/writer/**/*-test.js"
   },

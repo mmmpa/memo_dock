@@ -6,8 +6,7 @@ import Fa from '../lib/components/fa'
 import {mixChild} from "../components/eventer";
 
 interface ILogin {
-  loginState: LoginState,
-  login:Function
+  loginState: LoginState
 }
 
 interface ILoginState {

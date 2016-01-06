@@ -6,22 +6,16 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as TestUtils from 'react-addons-test-utils'
 
-import Memo from "../src/components/memo";
-import MemoData from "../src/models/memo-data";
+import Login from "../src/components/login";
+import {LoginState} from '../src/constants/status'
 
-function setup(memoData:MemoData = null, linkTag:Function = ()=> null) {
-  let app = {
-    linkTag: linkTag
-  };
+function setup() {
 
   let props = {
-    memo: memoData,
-    windowHeight: 800,
-    memoWidth: 1000,
-    app
+    loginState: LoginState.Request
   };
 
-  let rendered = TestUtils.renderIntoDocument(<Memo {...props} />);
+  let rendered = TestUtils.renderIntoDocument(<Login {...props} />);
   let dom = ReactDOM.findDOMNode(rendered);
   let find = (selector)=> dom.querySelector(selector);
   let findAll = (selector)=> dom.querySelectorAll(selector);
