@@ -33,9 +33,9 @@ export default class Login extends React.Component<ILogin, ILoginState> {
   detectMessage():string {
     switch (this.props.loginState) {
       case LoginState.Invalid:
-        return 'Invalid. Please retry.';
+        return <p className="login state">'Invalid. Please retry.'</p>;
       default:
-        return '';
+        return null;
     }
   }
 
@@ -44,7 +44,7 @@ export default class Login extends React.Component<ILogin, ILoginState> {
       case LoginState.Wait:
         return <button type="submit" className="login submit wait" disabled={true}>
           <Fa icon="spinner" animation="pulse"/>
-          wait
+          Wait
         </button>;
       default:
         return <button type="submit" className="login submit ready"
@@ -60,25 +60,24 @@ export default class Login extends React.Component<ILogin, ILoginState> {
   }
 
   render() {
-    console.log(this)
     return <article className="login container">
       <header className="login title-area">
         <h1 className="login title">Login</h1>
       </header>
       <section className="login input-area">
         <h1 className="login sub-title">Email Address</h1>
-        <input className="login input" type="text" value={this.state.email}
+        <input className="login input email" type="text" value={this.state.email}
                name="email" onChange={this.changeEmail.bind(this)}/>
       </section>
       <section className="login input-area">
         <h1 className="login sub-title">Password</h1>
-        <input className="login input" type="password" value={this.state.password}
+        <input className="login input password" type="password" value={this.state.password}
                name="password" onChange={this.changePassword.bind(this)}/>
       </section>
       <section className="login submit-area">
         {this.detectButton()}
       </section>
-      <p className="login state">{this.detectMessage()}</p>
+      {this.detectMessage()}
     </article>;
   }
 }
