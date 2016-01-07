@@ -13,14 +13,14 @@ import {mixChild} from "../components/eventer";
 interface IMemoIndexTagLink {
   key:number,
   tagData:TagData,
-  isEnable:Function
+  isEnable:boolean
 }
 
 export default class MemoIndexTagLink extends React.Component<IMemoIndexTagLink, {}> {
   dispatch:(event: string, ...args: any[])=> boolean;
 
   detectLinkEnabled():string {
-    return this.props.isEnable() ? 'memo-index tag-link' : 'memo-index tag-link disabled';
+    return this.props.isEnable ? 'memo-index tag-link' : 'memo-index tag-link disabled';
   }
 
   render() {

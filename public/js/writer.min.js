@@ -51809,19 +51809,18 @@ var MemoIndexLine = (function (_super) {
     }
     MemoIndexLine.prototype.tagLinks = function (tags) {
         var _this = this;
-        if (tags === void 0) { tags = []; }
         return tags.map(function (tagData) { return React.createElement(memo_index_tag_link_1.default, {"key": tagData.id, "tagData": tagData, "isEnable": _this.props.isEnable}); });
     };
     MemoIndexLine.prototype.detectPublicText = function () {
         return this.props.memoData.isPublic ? '公開' : '下書き';
     };
     MemoIndexLine.prototype.detectLinkEnabled = function () {
-        return this.props.isEnable() ? '' : 'disabled';
+        return this.props.isEnable ? '' : 'disabled';
     };
     MemoIndexLine.prototype.render = function () {
         var _this = this;
         var memoData = this.props.memoData;
-        return React.createElement("tr", null, React.createElement("td", {"className": "title"}, React.createElement("a", {"className": this.detectLinkEnabled(), "onClick": function () { return _this.dispatch('memo:edit', memoData.id); }}, memoData.title)), React.createElement("td", {"className": "tags"}, this.tagLinks(memoData.tags)), React.createElement("td", {"className": "public"}, this.detectPublicText()), React.createElement("td", {"className": "delete"}, React.createElement("button", {"disabled": !this.props.isEnable(), "onClick": function () { return _this.dispatch('memo:delete', memoData.id); }}, React.createElement(fa_1.default, {"icon": "trash-o"}))));
+        return React.createElement("tr", null, React.createElement("td", {"className": "title"}, React.createElement("a", {"className": this.detectLinkEnabled(), "onClick": function () { return _this.dispatch('memo:edit', memoData.id); }}, memoData.title)), React.createElement("td", {"className": "tags"}, this.tagLinks(memoData.tags)), React.createElement("td", {"className": "public"}, this.detectPublicText()), React.createElement("td", {"className": "delete"}, React.createElement("button", {"disabled": !this.props.isEnable, "onClick": function () { return _this.dispatch('memo:delete', memoData.id); }}, React.createElement(fa_1.default, {"icon": "trash-o"}))));
     };
     return MemoIndexLine;
 })(React.Component);
@@ -51886,7 +51885,7 @@ var MemoIndexTagLink = (function (_super) {
         _super.apply(this, arguments);
     }
     MemoIndexTagLink.prototype.detectLinkEnabled = function () {
-        return this.props.isEnable() ? 'memo-index tag-link' : 'memo-index tag-link disabled';
+        return this.props.isEnable ? 'memo-index tag-link' : 'memo-index tag-link disabled';
     };
     MemoIndexTagLink.prototype.render = function () {
         var _this = this;
@@ -51940,7 +51939,7 @@ var MemoIndex = (function (_super) {
     };
     MemoIndex.prototype.render = function () {
         var memoIndexData = this.props.memoIndexData;
-        var isEnable = this.isEnable;
+        var isEnable = this.isEnable();
         return (React.createElement("div", null, React.createElement("section", {"className": "memo-index index-container"}, React.createElement("h1", {"className": "memo-index index-title"}, "メモ一覧"), React.createElement(memo_index_pager_1.default, React.__spread({}, { memoIndexData: memoIndexData, isEnable: isEnable })), React.createElement("table", {"className": "memo-index index-table"}, React.createElement("thead", null, React.createElement("tr", null, React.createElement("th", {"className": "title"}, "タイトル"), React.createElement("th", {"className": "tags"}, "タグ"), React.createElement("th", {"className": "public"}, "公開"), React.createElement("th", {"className": "delete"}))), React.createElement("tbody", null, this.memoLines())), React.createElement(memo_index_pager_1.default, React.__spread({}, { memoIndexData: memoIndexData, isEnable: isEnable })))));
     };
     return MemoIndex;

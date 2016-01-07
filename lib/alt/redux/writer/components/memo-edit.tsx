@@ -52,7 +52,7 @@ export default class MemoEdit extends React.Component<IMemoEdit, IMemoEditState>
         this.dispatch('render', this.state.memoData.src);
         this.resize();
       }, 1000)
-    }
+    };
 
     this.changeTitle = this.changeTitle.bind(this);
     this.changeTags = this.changeTags.bind(this);

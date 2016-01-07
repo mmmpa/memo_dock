@@ -12,13 +12,13 @@ import {mixChild} from "../components/eventer";
 interface IMemoIndexLine {
   key:number,
   memoData: MemoData,
-  isEnable:Function
+  isEnable:boolean
 }
 
 export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
   dispatch:(event: string, ...args: any[])=> boolean;
 
-  tagLinks(tags:TagData[] = []) {
+  tagLinks(tags:TagData[]) {
     return tags.map((tagData)=> <MemoIndexTagLink
       key={tagData.id}
       tagData={tagData}
@@ -31,7 +31,7 @@ export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
   }
 
   detectLinkEnabled():string {
-    return this.props.isEnable() ? '' : 'disabled';
+    return this.props.isEnable ? '' : 'disabled';
   }
 
   render() {
@@ -43,7 +43,7 @@ export default class MemoIndexLine extends React.Component<IMemoIndexLine, {}> {
       <td className="tags">{this.tagLinks(memoData.tags)}</td>
       <td className="public">{this.detectPublicText()}</td>
       <td className="delete">
-        <button disabled={!this.props.isEnable()} onClick={()=> this.dispatch('memo:delete', memoData.id)}>
+        <button disabled={!this.props.isEnable} onClick={()=> this.dispatch('memo:delete', memoData.id)}>
           <Fa icon="trash-o"/>
         </button>
       </td>

@@ -49,7 +49,7 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
 
   render() {
     let {memoIndexData} = this.props;
-    let isEnable = this.isEnable;
+    let isEnable = this.isEnable();
 
     return (
       <div>
