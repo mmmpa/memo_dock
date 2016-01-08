@@ -15,7 +15,7 @@ import MemoIndexData from "../models/memo-index-data";
 import { pushState } from 'redux-router'
 import Menu from "../components/menu";
 
-import {mixParent} from "../components/eventer";
+import {mixParent} from "../lib/components/eventer";
 import {mixCommon, ICommon} from "./content-common";
 
 

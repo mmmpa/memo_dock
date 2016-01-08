@@ -10,12 +10,35 @@ import * as TestUtils from 'react-addons-test-utils'
 import {Provider} from 'react-redux'
 import {ReduxRouter} from 'redux-router'
 import configureStore from '../src/store/configure-store'
-import Writer from '../src/writer'
 
-describe('Reader', ()=> {
-  it('no error', ()=> {
-    assert.doesNotThrow(()=> Writer);
-  });
+
+function combine(...args) {
+  let doTask = (taskList)=> {
+    let task = taskList.shift();
+    if (task) {
+      setTimeout(()=> {
+        task();
+        doTask(taskList);
+      }, 50);
+    }
+  };
+  doTask(args);
+}
+
+function setup() {
+  const store = configureStore({});
+  let rendered = TestUtils.renderIntoDocument(<Provider store={store}>
+    <ReduxRouter/>
+  </Provider>);
+
+  let dom = ReactDOM.findDOMNode(rendered);
+  let find = (selector)=> dom.querySelector(selector);
+  let findAll = (selector)=> dom.querySelectorAll(selector);
+
+  return {dom, find, findAll, rendered}
+}
+
+describe('Memo', ()=> {
 });
 
 

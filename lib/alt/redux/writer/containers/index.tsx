@@ -17,7 +17,7 @@ import * as LoginAction from "../actions/login"
 import MemoData from "../models/memo-data";
 import MemoIndexData from "../models/memo-index-data";
 
-import {mixParent} from "../components/eventer";
+import {mixParent} from "../lib/components/eventer";
 import {mixCommon, ICommon} from "./content-common";
 
 interface IIndex extends ICommon {

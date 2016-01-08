@@ -3,7 +3,7 @@ import { Link } from 'react-router';
 import {LoginState} from '../constants/status'
 
 import mix from '../lib/mix'
-import {mixChild} from "../components/eventer";
+import {mixChild} from "../lib/components/eventer";
 import MemoData from "../models/memo-data";
 
 export interface ICommon {

@@ -10,13 +10,13 @@ import {LoginState} from '../constants/status'
 import LoginPage from "../components/login";
 import {EventEmitter} from 'events';
 
-import {mixParent} from "../components/eventer";
+import {mixParent} from "../lib/components/eventer";
 
-interface Shared{
+interface Shared {
 
 }
 
-interface ILogin  {
+interface ILogin {
   state?:any,
   loginAction?:any,
   pushState?:Function
@@ -25,9 +25,8 @@ interface ILogin  {
 class Login extends React.Component<ILogin, {}> {
   initializeAsEventing:Function;
 
-  listen(to){
-    to('test', ()=> console.log('dispatch test'));
-    to('login', (email: string, password:string)=>{
+  listen(to) {
+    to('login', (email:string, password:string)=> {
       this.props.loginAction.login(email, password);
     });
   }

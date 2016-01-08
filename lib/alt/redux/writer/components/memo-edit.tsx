@@ -7,7 +7,7 @@ import Fa from '../lib/components/fa'
 import Menu from "../components/menu";
 
 import MemoData from "../models/memo-data";
-import {mixChild} from "../components/eventer";
+import {mixChild} from "../lib/components/eventer";
 
 require("zepto/zepto.min");
 

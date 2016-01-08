@@ -1,6 +1,6 @@
 import * as React from 'react'
 import Fa from '../lib/components/fa'
-import {mixChild} from "../components/eventer";
+import {mixChild} from "../lib/components/eventer";
 
 export default class Menu extends React.Component<{},{}> {
   dispatch:(event: string, ...args: any[])=> boolean;

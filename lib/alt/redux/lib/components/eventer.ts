@@ -1,7 +1,7 @@
 import {EventEmitter} from 'events';
 import * as React from 'react';
 import * as ReactDom from 'react-dom';
-import mix from '../lib/mix'
+import mix from '../../lib/mix'
 
 interface IEventingShared {
   emitter: EventEmitter

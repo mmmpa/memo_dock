@@ -3,7 +3,7 @@ import {LoginState} from '../constants/status'
 
 import Fa from '../lib/components/fa'
 
-import {mixChild} from "../components/eventer";
+import {mixChild} from "../lib/components/eventer";
 
 interface ILogin {
   loginState: LoginState
@@ -60,7 +60,8 @@ export default class Login extends React.Component<ILogin, ILoginState> {
   }
 
   render() {
-    return <article className="login container">
+    return <div>
+      <article className="login container">
       <header className="login title-area">
         <h1 className="login title">Login</h1>
       </header>
@@ -78,7 +79,8 @@ export default class Login extends React.Component<ILogin, ILoginState> {
         {this.detectButton()}
       </section>
       {this.detectMessage()}
-    </article>;
+    </article>
+    </div>;
   }
 }
 

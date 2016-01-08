@@ -6,6 +6,7 @@ import Index from './containers/index'
 
 export default (
   <Route>
+    <Route path="/" component={Login}/>
     <Route path="/w" component={Login}/>
     <Route path="/w/memos/" component={Index}/>
     <Route path="/w/memos/new" component={Memo}/>

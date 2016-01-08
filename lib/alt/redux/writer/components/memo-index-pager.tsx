@@ -4,7 +4,7 @@ import MemoIndexData from "../models/memo-index-data";
 import {AppState, MemoIndexState} from '../constants/status'
 import Fa from '../lib/components/fa'
 
-import {mixChild} from "../components/eventer";
+import {mixChild} from "../lib/components/eventer";
 
 interface IMemoIndexPager {
   memoIndexData:MemoIndexData,

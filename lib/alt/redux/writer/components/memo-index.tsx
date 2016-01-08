@@ -11,7 +11,7 @@ import MemoIndexLine from "./memo-index-line";
 import MemoIndexPager from "./memo-index-pager";
 import Fa from '../lib/components/fa'
 
-import {mixChild} from "../components/eventer";
+import {mixChild} from "../lib/components/eventer";
 
 interface IMemoIndex {
   memoIndexData:MemoIndexData,
@@ -39,18 +39,9 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
     });
   }
 
-  loading(memos:MemoData[] = []) {
-    if (!memos || memos.length === 0) {
-      return <Fa icon="spinner" animation="pulse"/>
-    } else {
-      return null;
-    }
-  }
-
   render() {
     let {memoIndexData} = this.props;
     let isEnable = this.isEnable();
-
     return (
       <div>
         <section className="memo-index index-container">

@@ -6,7 +6,7 @@ import * as React from 'react';
 import * as ReactDOM from 'react-dom';
 import * as TestUtils from 'react-addons-test-utils'
 
-import Fa from "../src/lib/components/fa";
+import Fa from "../../src/lib/components/fa";
 
 describe('FontAwesome', () => {
   it('only icon', ()=> {
