@@ -8,7 +8,7 @@ import {mixChild} from "../components/eventer";
 
 interface IMemoIndexPager {
   memoIndexData:MemoIndexData,
-  isEnable:Function
+  isEnable:boolean
 }
 
 export default class MemoIndexPager extends React.Component<IMemoIndexPager, {}> {
@@ -44,7 +44,7 @@ export default class MemoIndexPager extends React.Component<IMemoIndexPager, {}>
         return <li className="memo-index pager-container" key={"pager" + now}>
           <a className={"memo-index pager-link " + (now == page ? 'now' : 'not-now') }
              onClick={()=> this.index(now) }
-             disabled={ !isEnable() }
+             disabled={ !isEnable }
           >{now}</a>
         </li>
         })}

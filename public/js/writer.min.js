@@ -51861,7 +51861,7 @@ var MemoIndexPager = (function (_super) {
         var _a = this.props.memoIndexData, page = _a.page, total = _a.total;
         return React.createElement("ul", {"className": "memo-index memo-pager"}, _.times(total, function (n) {
             var now = n + 1;
-            return React.createElement("li", {"className": "memo-index pager-container", "key": "pager" + now}, React.createElement("a", {"className": "memo-index pager-link " + (now == page ? 'now' : 'not-now'), "onClick": function () { return _this.index(now); }, "disabled": !isEnable()}, now));
+            return React.createElement("li", {"className": "memo-index pager-container", "key": "pager" + now}, React.createElement("a", {"className": "memo-index pager-link " + (now == page ? 'now' : 'not-now'), "onClick": function () { return _this.index(now); }, "disabled": !isEnable}, now));
         }), this.tagRemover());
     };
     return MemoIndexPager;
@@ -51922,7 +51922,7 @@ var MemoIndex = (function (_super) {
     };
     MemoIndex.prototype.memoLines = function () {
         var memos = this.props.memoIndexData.memos;
-        var isEnable = this.isEnable;
+        var isEnable = this.isEnable();
         return memos.map(function (memoData) {
             var key = memoData.id;
             return React.createElement(memo_index_line_1.default, React.__spread({}, { key: key, memoData: memoData, isEnable: isEnable }));
@@ -52452,7 +52452,7 @@ var MemoIndexData = (function () {
         this.page = +header['page'];
         this.par = +header['par'];
         this.total = +header['total-pages'];
-        this.tagIds = header['tag-ids'];
+        this.tagIds = header['tag-ids'] || '';
         if (this.tagIds === '') {
             this.tagIds = null;
         }

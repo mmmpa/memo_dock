@@ -13,7 +13,7 @@ export default class MemoIndexData {
     this.page = +header['page'];
     this.par = +header['par'];
     this.total = +header['total-pages'];
-    this.tagIds = header['tag-ids']
+    this.tagIds = header['tag-ids'] || '';
 
     if(this.tagIds === ''){
       this.tagIds = null

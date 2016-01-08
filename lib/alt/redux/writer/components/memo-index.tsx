@@ -31,7 +31,7 @@ export default class MemoIndex extends React.Component<IMemoIndex, {}> {
 
   memoLines() {
     let {memos} = this.props.memoIndexData;
-    let isEnable = this.isEnable
+    let isEnable = this.isEnable();
 
     return memos.map((memoData)=> {
       let key = memoData.id;

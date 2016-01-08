@@ -61,15 +61,89 @@ describe('MemoReducer', ()=> {
   });
 
   describe('editState', ()=> {
+    it('default', ()=> {
+      assert.equal(MemoReducer.editState(undefined, {}), EditMemoState.Ready);
+    });
 
+    it('wait', ()=> {
+      assert.equal(MemoReducer.editState(undefined, {type: Type.MEMO_WAIT_EDITING}), EditMemoState.Loading);
+    });
+
+    it('new', ()=> {
+      assert.equal(MemoReducer.editState(undefined, {type: Type.MEMO_EDIT_NEW_MEMO}), EditMemoState.Ready);
+    });
+
+    it('start', ()=> {
+      assert.equal(MemoReducer.editState(undefined, {type: Type.MEMO_START_EDITING}), EditMemoState.Ready);
+    });
+
+    it('save', ()=> {
+      assert.equal(MemoReducer.editState(undefined, {type: Type.MEMO_START_SAVING}), EditMemoState.Saving);
+    });
+
+    it('saved', ()=> {
+      assert.equal(MemoReducer.editState(undefined, {type: Type.MEMO_SUCCEED_SAVING}), EditMemoState.Ready);
+    });
+
+    it('fail', ()=> {
+      assert.equal(MemoReducer.editState(undefined, {type: Type.MEMO_FAIL_SAVING}), EditMemoState.Ready);
+    });
+
+    it('other', ()=> {
+      assert.equal(MemoReducer.editState(EditMemoState.Loading, {}), EditMemoState.Loading);
+    });
   });
 
   describe('memoMessage', ()=> {
+    it('default', ()=> {
+      assert.equal(MemoReducer.memoMessage(undefined, {}), null);
+    });
 
+    it('reset', ()=> {
+      assert.equal(MemoReducer.memoMessage({}, {type: Type.MEMO_START_EDITING}), null);
+    });
+
+    it('reset', ()=> {
+      assert.equal(MemoReducer.memoMessage({}, {type: Type.MEMO_WAIT_EDITING}), null);
+    });
+
+    it('reset', ()=> {
+      assert.equal(MemoReducer.memoMessage({}, {type: Type.MEMO_START_SAVING}), null);
+    });
+
+    it('succeed', ()=> {
+      assert.deepEqual(MemoReducer.memoMessage({}, {type: Type.MEMO_SUCCEED_SAVING}), {messages: {memo: 'Saved'}});
+    });
+
+    it('fail', ()=> {
+      assert.deepEqual(MemoReducer.memoMessage('a', {type: Type.MEMO_FAIL_SAVING, errors: 'errors'}), {errors: 'errors'});
+    });
+
+    it('other', ()=> {
+      assert.equal(MemoReducer.memoMessage('a', {}), 'a');
+    });
   });
 
 
   describe('rendered', ()=> {
+    it('default', ()=> {
+      assert.equal(MemoReducer.rendered(undefined, {}), '');
+    });
 
+    it('init', ()=> {
+      assert.equal(MemoReducer.rendered('a', {type: Type.MEMO_WAIT_EDITING}), '');
+    });
+
+    it('init', ()=> {
+      assert.equal(MemoReducer.rendered('a', {type: Type.MEMO_START_EDITING}), '');
+    });
+
+    it('rendered', ()=> {
+      assert.equal(MemoReducer.rendered('a', {type: Type.MEMO_FINISH_RENDERING, html: 'new'}), 'new');
+    });
+
+    it('other', ()=> {
+      assert.equal(MemoReducer.rendered('a', {}), 'a');
+    });
   });
 });
