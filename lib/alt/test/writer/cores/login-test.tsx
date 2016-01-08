@@ -39,7 +39,7 @@ function combine(...args) {
 }
 
 describe('Login', ()=> {
-  describe('auto link', ()=>{
+  describe('check logged in', ()=>{
     it('not logged in', (done)=>{
       nock('http://localhost')
         .get('/w/api/sessions')
@@ -66,6 +66,48 @@ describe('Login', ()=> {
       combine(()=> {
       },()=>{
         assert(!find('.login.container'));
+        done();
+      });
+    });
+  });
+
+  describe('login', ()=>{
+    it('succeed', (done)=>{
+      nock('http://localhost')
+        .get('/w/api/sessions')
+        .reply(404, {});
+      nock('http://localhost')
+        .post('/w/api/sessions')
+        .reply(200, {});
+
+      let {dom, find, findAll, rendered} = setup();
+
+      combine(()=> {
+        assert(find('.login.container'));
+        TestUtils.Simulate.click(find('.login.submit'));
+        assert(find('.login.submit.wait'));
+      },()=>{
+        assert(!find('.login.container'));
+        done();
+      });
+    });
+
+    it('fail', (done)=>{
+      nock('http://localhost')
+        .get('/w/api/sessions')
+        .reply(404, {});
+      nock('http://localhost')
+        .post('/w/api/sessions')
+        .reply(400, {});
+
+      let {dom, find, findAll, rendered} = setup();
+
+      combine(()=> {
+        assert(find('.login.container'));
+        TestUtils.Simulate.click(find('.login.submit'));
+        assert(find('.login.submit.wait'));
+      },()=>{
+        assert(find('.login.state'));
         done();
       });
     });

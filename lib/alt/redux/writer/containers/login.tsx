@@ -34,8 +34,6 @@ class Login extends React.Component<ILogin, {}> {
   constructor(props) {
     this.initializeAsEventing();
     super(props);
-
-    this.login = this.login.bind(this);
   }
 
   componentWillMount() {
@@ -54,10 +52,6 @@ class Login extends React.Component<ILogin, {}> {
     if (loginState === LoginState.LoggedIn) {
       pushState(null, '/w/memos/');
     }
-  }
-
-  login(email:string, password:string) {
-    this.props.loginAction.login(email, password);
   }
 
   render() {

@@ -17,6 +17,7 @@ function setup(memoData = new MemoData({id:1, title: 'memo'}), isEnable = true, 
     memoData
   };
 
+  let c = MemoIndexLine.prototype['componentWillMount'];
   MemoIndexLine.prototype['componentWillMount'] = function(){
     this.dispatch = dispatch;
   };
@@ -25,6 +26,8 @@ function setup(memoData = new MemoData({id:1, title: 'memo'}), isEnable = true, 
   let dom = ReactDOM.findDOMNode(rendered);
   let find = (selector)=> dom.querySelector(selector);
   let findAll = (selector)=> dom.querySelectorAll(selector);
+
+  MemoIndexLine.prototype['componentWillMount'] = c;
 
   return {dom, find, findAll, rendered}
 }

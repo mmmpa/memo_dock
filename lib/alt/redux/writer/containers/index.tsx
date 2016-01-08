@@ -128,10 +128,12 @@ class Index extends React.Component<IIndex, IIndexState> {
       return <div>initializing...</div>;
     }
 
-    return <article className="memo-index">
-      <Menu />
-      <MemoIndex {...{memoIndexData, memoIndexState}}/>
-    </article>;
+    return <div>
+      <article className="memo-index">
+        <Menu />
+        <MemoIndex {...{memoIndexData, memoIndexState}}/>
+      </article>
+    </div>;
   }
 }
 
