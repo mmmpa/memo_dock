@@ -95,6 +95,11 @@ describe('Index', ()=> {
 
   describe('indexing', ()=> {
     beforeEach(()=> {
+      let indexHeader = {
+        'total-pages': 2,
+        'page': 1
+      };
+
       nock('http://localhost')
         .get('/w/api/sessions')
         .reply(200, ()=> {
@@ -106,8 +111,16 @@ describe('Index', ()=> {
         .reply(200, [
           {id: 1, title: 'title1'},
           {id: 2, title: 'title2'},
-          {id: 3, title: 'title3', tags: [{id: 1, name: 'tag1'}]}
-        ]);
+          {id: 3, title: 'title3', tags: [{id: 2, name: 'tag1'}]}
+        ], indexHeader);
+
+      nock('http://localhost')
+        .get('/w/api/memos?page=1&tag_ids=')
+        .reply(200, [
+          {id: 1, title: 'title1'},
+          {id: 2, title: 'title2'},
+          {id: 3, title: 'title3', tags: [{id: 2, name: 'tag1'}]}
+        ], indexHeader);
 
       nock('http://localhost')
         .get('/w/api/memos?page=2&tag_ids=')
@@ -119,12 +132,66 @@ describe('Index', ()=> {
         .get('/w/api/memos?page=1&tag_ids=2')
         .reply(200, [
           {id: 1, title: 'title1'},
-          {id: 3, title: 'title3', tags: [{id: 1, name: 'tag1'}]}
-        ]);
+          {id: 3, title: 'title3', tags: [{id: 2, name: 'tag1'}]}
+        ], indexHeader);
+
+      nock('http://localhost')
+        .get('/w/api/memos?page=2&tag_ids=2')
+        .reply(200, [
+          {id: 1, title: 'title1'},
+          {id: 2, title: 'title1'},
+          {id: 4, title: 'title1'},
+          {id: 5, title: 'title1'},
+          {id: 3, title: 'title3', tags: [{id: 2, name: 'tag1'}]}
+        ], indexHeader);
+    });
+
+    describe('delete', ()=>{
+      it('delete', (done)=> {
+        nock.cleanAll();
+
+        let indexHeader = {
+          'total-pages': 2,
+          'page': 1
+        };
+
+        nock('http://localhost')
+          .get('/w/api/sessions')
+          .reply(200, ()=> {
+            return {}
+          });
+
+        nock('http://localhost')
+          .get('/w/api/memos?page=1&tag_ids=')
+          .reply(200, [
+            {id: 1, title: 'title1'},
+            {id: 2, title: 'title2'},
+            {id: 3, title: 'title3', tags: [{id: 2, name: 'tag1'}]}
+          ], indexHeader);
+
+        nock('http://localhost')
+          .get('/w/api/memos?page=1&tag_ids=')
+          .reply(200, [
+            {id: 2, title: 'title2'},
+            {id: 3, title: 'title3', tags: [{id: 2, name: 'tag1'}]}
+          ], indexHeader);
+
+        window.location.href = 'http://localhost/w/memos/';
+
+        let {dom, find, findAll, rendered} = setup();
+
+        combine(()=> {
+        }, ()=> {
+          TestUtils.Simulate.click(findAll('td.delete button')[0]);
+        }, ()=> {
+          assert.equal(findAll('td.title').length, 2);
+          done();
+        });
+      });
     });
 
     describe('link', ()=> {
-      it('memo', (done)=> {
+      it('edit memo', (done)=> {
         window.location.href = 'http://localhost/w/memos/';
 
         let {dom, find, findAll, rendered} = setup();
@@ -136,9 +203,43 @@ describe('Index', ()=> {
           done();
         });
       });
+
+      it('page', (done)=> {
+        window.location.href = 'http://localhost/w/memos/';
+
+        let {dom, find, findAll, rendered} = setup();
+
+        combine(()=> {
+          TestUtils.Simulate.click(findAll('.memo-index.pager-link')[1]);
+        }, ()=> {
+          assert.equal(findAll('td.title').length, 1);
+          done();
+        });
+      });
+
+      it('select tag', (done)=> {
+        window.location.href = 'http://localhost/w/memos/';
+
+        let {dom, find, findAll, rendered} = setup();
+
+        combine(()=> {
+          TestUtils.Simulate.click(findAll('.memo-index.tag-link-container a')[0]);
+        }, ()=> {
+          assert.equal(findAll('td.title').length, 2);
+        },()=> {
+          TestUtils.Simulate.click(findAll('.memo-index.pager-link')[1]);
+        }, ()=> {
+          assert.equal(findAll('td.title').length, 5);
+        },()=> {
+          TestUtils.Simulate.click(findAll('.tag-remover')[0]);
+        }, ()=> {
+          assert.equal(findAll('td.title').length, 3);
+          done();
+        });
+      });
     });
 
-    describe('indexing', ()=> {
+    describe('init', ()=> {
       it('indexing', (done)=> {
         window.location.href = 'http://localhost/w/memos/';
 

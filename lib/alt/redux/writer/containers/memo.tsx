@@ -27,7 +27,7 @@ class Memo extends React.Component<IMemo, {}> {
   initializeCommonListener:Function;
   checkLogin:Function;
 
-  listen(to){
+  listen(to) {
     this.initializeCommonListener(to);
     to('save', (memo:MemoData)=> this.props.memoAction.saveMemo(memo));
     to('render', (src:string)=> this.props.memoAction.renderSlim(src));
@@ -39,7 +39,7 @@ class Memo extends React.Component<IMemo, {}> {
   }
 
   componentWillMount() {
-    if(!this.checkLogin()){
+    if (!this.checkLogin()) {
       return;
     }
 
@@ -68,7 +68,7 @@ class Memo extends React.Component<IMemo, {}> {
   }
 
   isSameMemo(a, b) {
-    if(!a || !b){
+    if (!a || !b) {
       return false;
     }
     return a.params.memoId === b.params.memoId;
@@ -87,10 +87,12 @@ class Memo extends React.Component<IMemo, {}> {
       return <div>initializing...</div>;
     }
 
-    return <article className="memo-edit">
-      <Menu/>
-      <MemoEdit {...{memoData, editState, rendered, memoMessage}}/>
-    </article>;
+    return <div>
+      <article className="memo-edit">
+        <Menu/>
+        <MemoEdit {...{memoData, editState, rendered, memoMessage}}/>
+      </article>
+    </div>;
   }
 }
 

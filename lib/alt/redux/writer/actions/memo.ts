@@ -24,6 +24,7 @@ export function index(tagIdNumbers:number[] = [], page:number = 1) {
       .query({page, tag_ids})
       .end((err, res)=> {
         if (err) {
+          console.log(err)
           dispatch(failIndexLoad())
         } else {
           dispatch(showIndex(new MemoIndexData(res.body, res.header)));

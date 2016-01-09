@@ -51420,6 +51420,7 @@ function index(tagIdNumbers, page) {
             .query({ page: page, tag_ids: tag_ids })
             .end(function (err, res) {
             if (err) {
+                console.log(err);
                 dispatch(failIndexLoad());
             }
             else {
@@ -52030,8 +52031,8 @@ var Index = (function (_super) {
     Index.prototype.listen = function (to) {
         var _this = this;
         this.initializeCommonListener(to);
-        to('index:page', function (page) { return _this.indexMemo(page, null); });
-        to('index:tag', function (tags) { return _this.indexMemo(null, tags); });
+        to('index:page', function (page) { return _this.indexMemo(page, undefined); });
+        to('index:tag', function (tags) { return _this.indexMemo(undefined, tags); });
         to('index:reset', function () { return _this.indexMemo(1, []); });
         to('memo:edit', function (id) { return _this.editMemo(id); });
         to('memo:delete', function (id) { return _this.deleteMemo(id); });
@@ -52075,8 +52076,6 @@ var Index = (function (_super) {
         return a.location.query.tagIds == b.location.query.tagIds;
     };
     Index.prototype.indexMemo = function (pageNumber, tagIdNumbers) {
-        if (pageNumber === void 0) { pageNumber = null; }
-        if (tagIdNumbers === void 0) { tagIdNumbers = null; }
         var _a = this.props.location, pathname = _a.pathname, query = _a.query;
         var page = pageNumber ? pageNumber : query.page;
         var tagIds = tagIdNumbers ? tagIdNumbers.join(',') : query.tagIds;
@@ -52241,7 +52240,7 @@ var Memo = (function (_super) {
         if (!memoData || loginState !== status_1.LoginState.LoggedIn) {
             return React.createElement("div", null, "initializing...");
         }
-        return React.createElement("article", {"className": "memo-edit"}, React.createElement(menu_1.default, null), React.createElement(memo_edit_1.default, React.__spread({}, { memoData: memoData, editState: editState, rendered: rendered, memoMessage: memoMessage })));
+        return React.createElement("div", null, React.createElement("article", {"className": "memo-edit"}, React.createElement(menu_1.default, null), React.createElement(memo_edit_1.default, React.__spread({}, { memoData: memoData, editState: editState, rendered: rendered, memoMessage: memoMessage }))));
     };
     return Memo;
 })(React.Component);

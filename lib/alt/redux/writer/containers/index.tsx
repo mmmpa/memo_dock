@@ -34,8 +34,8 @@ class Index extends React.Component<IIndex, IIndexState> {
 
   listen(to) {
     this.initializeCommonListener(to);
-    to('index:page', (page:number)=> this.indexMemo(page, null));
-    to('index:tag', (tags:number[])=> this.indexMemo(null, tags));
+    to('index:page', (page:number)=> this.indexMemo(page, undefined));
+    to('index:tag', (tags:number[])=> this.indexMemo(undefined, tags));
     to('index:reset', ()=> this.indexMemo(1, []));
     to('memo:edit', (id:number)=> this.editMemo(id));
     to('memo:delete', (id:number)=> this.deleteMemo(id));
@@ -98,7 +98,7 @@ class Index extends React.Component<IIndex, IIndexState> {
   }
 
 
-  indexMemo(pageNumber:number = null, tagIdNumbers:number[] = null) {
+  indexMemo(pageNumber:number, tagIdNumbers:number[]) {
     let {pathname, query} = this.props.location;
 
     let page = pageNumber ? pageNumber : query.page;
