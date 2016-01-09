@@ -5,6 +5,18 @@ RSpec.describe Memo, type: :model do
     it { expect(create(:memo, :valid)).to be_a(Memo) }
   end
 
+  describe 'meta data' do
+    it do
+      page = Memo.total_pages(19)
+      expect(page).to eq(3)
+    end
+
+    it do
+      page = Memo.on(Tag.first.id).total_pages(19)
+      expect(page).to eq(3)
+    end
+  end
+
   describe 'converting slim to html' do
     let(:model) { build(:memo, :valid) }
 
@@ -145,6 +157,13 @@ RSpec.describe Memo, type: :model do
 
     it 'valid' do
       expect(model.valid?).to be_truthy
+    end
+
+    context 'need valid slim' do
+      it do
+        model.src = ":h1 test"
+        expect(model.valid?).to be_falsey
+      end
     end
 
     context 'needs any input' do

@@ -173,6 +173,23 @@ RSpec.describe "Writers::Api::Memos", type: :request do
     end
   end
 
+  describe 'convert slim' do
+    before :each do
+      login
+    end
+
+    it 'with valid slim' do
+      post slim_path, slim: 'h1 title'
+      expect(response).to have_http_status(200)
+      expect(json[:html]).to include('<h1>title</h1>')
+    end
+
+    it 'with invalid slim' do
+      post slim_path, slim: "-h1 a\n-div a\n\ta a\n"
+      expect(response).to have_http_status(500)
+    end
+  end
+
   describe 'indexing' do
     before :each do
       login

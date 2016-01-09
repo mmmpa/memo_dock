@@ -22,14 +22,6 @@ class Constraint::Writer
       @request.session
     end
 
-    def responds_to_last_request_update_allowed?
-      true
-    end
-
-    def last_request_update_allowed?
-      false
-    end
-
     def method_missing(*args)
       false
     end

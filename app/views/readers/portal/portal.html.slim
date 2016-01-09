@@ -8,7 +8,7 @@ article#root
     - if @memo
       article
         h1#firstTitle= @memo.title
-        section#firstHtml= @memo.html.html_safe
+        section#firstHtml= @memo.html.try(:html_safe)
         a[href='/'] もどる
 
 script src="/js/reader.min.js"

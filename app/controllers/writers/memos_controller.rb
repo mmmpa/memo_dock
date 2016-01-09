@@ -60,7 +60,7 @@ module Writers
     def page
       base = (params[:page] || PAGE).to_i
 
-      if base < 0
+      if base <= 0
         1
       elsif base > total_pages
         total_pages
