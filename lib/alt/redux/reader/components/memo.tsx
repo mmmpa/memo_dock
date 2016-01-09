@@ -1,4 +1,5 @@
 import * as React from 'react'
+import * as ReactDOM from 'react-dom'
 import MemoData from "../models/memo-data";
 import TagData from "../models/tag-data";
 import Fa from '../lib/components/fa'
@@ -12,16 +13,21 @@ interface IMemo {
 }
 
 export default class Memo extends React.Component<IMemo,{}> {
-  componentDidMount(){
+  componentDidMount() {
     this.componentDidUpdate();
   }
 
   componentDidUpdate() {
-    if(hljs){
+    if(this.refs['container']){
+      ReactDOM.findDOMNode(this.refs['container']).scrollTop = 0;
+    }
+
+    if (hljs) {
       hljs.initHighlighting.called = false;
       hljs.initHighlighting();
     }
   }
+
 
   writeTagList() {
     let {app} = this.props;
@@ -40,7 +46,7 @@ export default class Memo extends React.Component<IMemo,{}> {
       return <div className="memo now-loading">loading...</div>;
     }
 
-    return <section id="memo" style={{height: windowHeight, width: memoWidth}} className="memo memo-container">
+    return <section id="memo" style={{height: windowHeight, width: memoWidth}} className="memo memo-container" ref="container">
       <header className="memo header">
         <h1 className="memo memo-title">{memo.title}</h1>
         <section className="memo tags">
