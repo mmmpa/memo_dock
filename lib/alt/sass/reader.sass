@@ -1,99 +1,95 @@
-@import "./bootstrap/bootstrap"
-@import "./bootstrap/bootswatch"
-@import "./font-awesome/font-awesome"
 @import "./default"
 
-$tag-base-color: #f3f3f3
-$title-base-color: #fafafa
-
 a
-	cursor: pointer
-	&.disabled
-		color: $gray
+  cursor: pointer
+  &.disabled
+    color: $gray
 
 %base-container
-	box-sizing: border-box
-	position: absolute
-	width: 300px
-	top: 0
-	color: #333
-	overflow: hidden
-	overflow-y: scroll
+  box-sizing: border-box
+  position: absolute
+  width: 300px
+  top: 0
+  color: #333
+  overflow: hidden
+  overflow-y: scroll
 
 .selector-container
-	@extend %base-container
-	width: 550px
-	direction: rtl
-	background: #fff
-	.wrapper
-		direction: ltr
-
+  @extend %base-container
+  width: 550px
+  direction: rtl
+  background: #fff
+  .wrapper
+    direction: ltr
+ 
 .tag-list
-	&.tag-list-container
-		direction: rtl
-		@extend %base-container
-		width: 250px
-		position: fixed
-		background: $tag-base-color
-		top: 0
-	&.list
-		direction: ltr
-		list-style: none
-		margin: 0
-		padding: 5px 0
-		label
-			display: block
-			padding: 5px 10px
-			.check,
-			.text
-				display: table-cell
+  &.tag-list-container
+    direction: rtl
+    @extend %base-container
+    width: 250px
+    position: fixed
+    background: $tag-base-color
+    top: 0
+  &.list
+    direction: ltr
+    list-style: none
+    margin: 0
+    padding: 5px 0
+    label
+      display: block
+      padding: 5px 10px
+      .check,
+      .text
+        display: table-cell
+
 .title-list
-	&.title-list-container
-		@extend %base-container
-		left: 250px
-		background: $title-base-color
-	&.list
-		list-style: none
-		margin: 0
-		padding: 0
-	&.title
-		border-right: 1px solid $tag-base-color
-		border-bottom: 1px solid $tag-base-color
-		position: relative
-		&.display-now
-			border-right: 0
-			font-weight: bold
-			background: #fff
-		a
-			padding: 10px 30px 10px 20px
-			color: #666
-			display: block
-		.chevron
-			color: #6E92A5
-			position: absolute
-			right: 10px
-			top: 50%
-			bottom: 50%
-			line-height: 0
-			vertical-align: bottom
-			margin-top: -5px
+  &.title-list-container
+    @extend %base-container
+    left: 250px
+    background: $title-base-color
+  &.list
+    list-style: none
+    margin: 0
+    padding: 0
+  &.title
+    border-right: 1px solid $tag-base-color
+    border-bottom: 1px solid $tag-base-color
+    position: relative
+    &.display-now
+      border-right: 0
+      font-weight: bold
+      background: #fff
+    a
+      padding: 10px 30px 10px 20px
+      color: #666
+      display: block
+    .chevron
+      color: #6E92A5
+      position: absolute
+      right: 10px
+      top: 50%
+      bottom: 50%
+      line-height: 0
+      vertical-align: bottom
+      margin-top: -5px
 
 .memo
-	&.memo-container
-		@extend %base-container
-		left: 550px
-		padding: 10px 20px
-	&.memo-title
-		@extend %size-h3
-		margin: 0 0 10px
-	&.tag-list
-		margin: 0
-		padding: 0
-	&.tag
-		display: inline-block
-		list-style: none
-		margin-right: 20px
-		color: $gray
-	&.header
-		border-bottom: 1px solid $tag-base-color
-		padding: 15px 0 20px
+  &.memo-container
+    @extend %base-container
+    left: 550px
+    padding: 10px 20px
+  &.memo-title
+    @extend %size-h3
+    margin: 0 0 10px
+  &.tag-list
+    margin: 0
+    padding: 0
+  &.tag
+    display: inline-block
+    list-style: none
+    margin-right: 20px
+    color: $gray
+  &.header
+    border-bottom: 1px solid $tag-base-color
+    padding: 15px 0 20px
+

@@ -1,46 +1,71 @@
+@import "./bootstrap/bootstrap"
+@import "./bootstrap/bootswatch"
+@import "./font-awesome/font-awesome"
+
+$tag-base-color: #f3f3f3
+$title-base-color: #fafafa
+
 %size-h1
-	font-size: 56px
+  font-size: 56px
 
 %size-h2
-	font-size: 45px
+  font-size: 45px
 
 %size-h3
-	font-size: 34px
+  font-size: 34px
 
 %size-h4
-	font-size: 24px
+  font-size: 24px
 
 %size-h5
-	font-size: 20px
+  font-size: 20px
 
 %size-h6
-	font-size: 14px
+  font-size: 14px
 
 %min-cell
-	width: 10px
-	white-space: nowrap
+  width: 10px
+  white-space: nowrap
 
 .size-h1
-	font-size: 56px
+  font-size: 56px
 
 .size-h2
-	font-size: 45px
+  font-size: 45px
 
 .size-h3
-	font-size: 34px
+  font-size: 34px
 
 .size-h4
-	font-size: 24px
+  font-size: 24px
 
 .size-h5
-	font-size: 20px
+  font-size: 20px
 
 .size-h6
-	font-size: 14px
-
-.section
-	margin: $font-size-h2 0
+  font-size: 14px
 
 pre
-	border: 1px solid $gray-light
+  border: 1px solid $gray-light
+  border-radius: 3px
+  letter-spacing: normal
+  line-height: 120%
 
+.memo.content,
+.html-container
+    font-size: 14px
+    letter-spacing: 2px
+    line-height: 200%
+    h1, h2, h3, h4, h5, h6
+      margin: 30px 0 20px
+      font-weight: bold
+      color: #555
+      letter-spacing: 2px
+    .section
+      margin: $font-size-h2 0
+    header
+      background: $tag-base-color
+      padding: 15px 20px
+      margin: 20px -20px
+      *
+        margin: 0

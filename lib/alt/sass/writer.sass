@@ -1,171 +1,170 @@
-@import "./bootstrap/bootstrap"
-@import "./bootstrap/bootswatch"
-@import "./font-awesome/font-awesome"
 @import "./default"
 
 a
-	cursor: pointer
-	&.disabled
-		color: $gray
+  cursor: pointer
+  &.disabled
+    color: $gray
 
 body
-	overflow: scroll
+  overflow: scroll
 
 %main-title
-	@extend %size-h2
+  @extend %size-h2
 
 %sub-title
-	@extend %size-h4
+  @extend %size-h4
 
 .global-menu
-	&.menu-container
-		height: 65px
-		overflow: hidden
-		line-height: 65px
-		padding: 0 20px
-		position: absolute
-		width: 100%
-		border-bottom: 1px solid $gray-lighter
-		background: #fff
-		top: 0
-		left: 0
-	&.menu-list
-		margin: 0
-		padding: 0
-		li
-			@extend %size-h5
-			display: inline-block
-			margin-right: 20px
-		a
-			color: $gray-darker
+  &.menu-container
+    height: 65px
+    overflow: hidden
+    line-height: 65px
+    padding: 0 20px
+    position: absolute
+    width: 100%
+    border-bottom: 1px solid $gray-lighter
+    background: #fff
+    top: 0
+    left: 0
+  &.menu-list
+    margin: 0
+    padding: 0
+    li
+      @extend %size-h5
+      display: inline-block
+      margin-right: 20px
+    a
+      color: $gray-darker
+
 .memo-edit
-	&.edit-container
-		padding-top: 70px
-		margin: 0 20px
-	&.title,
-	&.tags
-		input
-			@extend .form-control
-			width: 100%
-	&.content
-		@extend .clearfix
-	&.src,
-	&.html
-		@extend .col-sm-6
-		padding: 0
-	&.html-container
-		margin: 0
-		padding: 10px
-		overflow: scroll
-		box-sizing: border-box
-	&.src
-		border: 1px solid $gray-lighter
-		border-top-width: 0
-	&.submit-area
-		height: 65px
-		overflow: hidden
-		line-height: 65px
-		padding: 0 20px
-		position: absolute
-		width: 100%
-		border-top: 1px solid $gray-lighter
-		background: #fff
-		bottom: 0
-		left: 0
-	&.public
-		@extend %size-h6
-		display: inline-block
-		margin-left: 20px
-		height: 65px
-		line-height: 65px
-		vertical-align: middle
-	&.submit
-		vertical-align: middle
-		@extend .btn, .btn-success
-		@extend %size-h6
-	&.error-area
-		vertical-align: middle
-		display: inline-block
-		margin-left: 20px
-		overflow: hidden
-		height: 65px
-		line-height: 65px
-		ul
-			margin: 0
-			padding: 0
-		li
-			margin-right: 20px
-			display: inline-block
-			&.message
-				color: $brand-success
-			&.error
-				color: $brand-danger
+  &.edit-container
+    padding-top: 70px
+    margin: 0 20px
+  &.title,
+  &.tags
+    input
+      @extend .form-control
+      width: 100%
+  &.content
+    @extend .clearfix
+  &.src,
+  &.html
+    @extend .col-sm-6
+    padding: 0
+  &.html-container
+    margin: 0
+    padding: 20px
+    overflow: scroll
+    box-sizing: border-box
+  &.src
+    border: 1px solid $gray-lighter
+    border-top-width: 0
+  &.submit-area
+    height: 65px
+    overflow: hidden
+    line-height: 65px
+    padding: 0 20px
+    position: absolute
+    width: 100%
+    border-top: 1px solid $gray-lighter
+    background: #fff
+    bottom: 0
+    left: 0
+  &.public
+    @extend %size-h6
+    display: inline-block
+    margin-left: 20px
+    height: 65px
+    line-height: 65px
+    vertical-align: middle
+  &.submit
+    vertical-align: middle
+    @extend .btn, .btn-success
+    @extend %size-h6
+  &.error-area
+    vertical-align: middle
+    display: inline-block
+    margin-left: 20px
+    overflow: hidden
+    height: 65px
+    line-height: 65px
+    ul
+      margin: 0
+      padding: 0
+    li
+      margin-right: 20px
+      display: inline-block
+      &.message
+        color: $brand-success
+      &.error
+        color: $brand-danger
+
 .memo-index
-	&.index-container
-		padding-top: 70px
-		margin: 0 20px
-	&.index-title
-		@extend %sub-title
-	&.index-table
-		@extend .table, .table-striped
-		width: 100%
-		margin: 20px 0
-		td,
-		th
-			vertical-align: middle
-		.title,
-		.tags
-			width: 50%
-		.public,
-		.delete
-			@extend %min-cell
-			text-align: center
-		.delete
-			button
-				@extend .btn, .btn-danger
-				padding: 5px 10px
-	&.tag-link-container
-		display: inline-block
-		margin-right: 1em
-	&.pager-container
-		display: inline-block
-		margin: 10px 10px 10px 0
-	&.hidden
-		display: none
-	&.memo-pager
-		text-align: left
-		margin: 20px 0
-		padding: 0
-	&.tag-remover
-		color: $brand-danger
-	&.pager-link
-		&.not-now
-			@extend .btn, .btn-primary
-		&.now
-			@extend .btn, .btn-default
+  &.index-container
+    padding-top: 70px
+    margin: 0 20px
+  &.index-title
+    @extend %sub-title
+  &.index-table
+    @extend .table, .table-striped
+    width: 100%
+    margin: 20px 0
+    td,
+    th
+      vertical-align: middle
+    .title,
+    .tags
+      width: 50%
+    .public,
+    .delete
+      @extend %min-cell
+      text-align: center
+    .delete
+      button
+        @extend .btn, .btn-danger
+        padding: 5px 10px
+  &.tag-link-container
+    display: inline-block
+    margin-right: 1em
+  &.pager-container
+    display: inline-block
+    margin: 10px 10px 10px 0
+  &.hidden
+    display: none
+  &.memo-pager
+    text-align: left
+    margin: 20px 0
+    padding: 0
+  &.tag-remover
+    color: $brand-danger
+  &.pager-link
+    &.not-now
+      @extend .btn, .btn-primary
+    &.now
+      @extend .btn, .btn-default
 
 .login
-	&.container
-		width: 400px
-		margin: 40px auto
-	&.title
-		@extend %main-title
-		margin: 10px 0
-	&.sub-title
-		@extend %sub-title
-	&.title-area
-		margin: 40px 0
-	&.input-area
-		margin: 10px 0
-	&.submit-area
-		margin: 40px 0
-	&.input
-		@extend .form-control
-		width: 100%
-	&.submit
-		@extend .btn, .btn-lg
-		width: 100%
-		&.ready
-			@extend .btn-success
-		&.wait
-			@extend .btn-default
+  &.container
+    width: 400px
+    margin: 40px auto
+  &.title
+    @extend %main-title
+    margin: 10px 0
+  &.sub-title
+    @extend %sub-title
+  &.title-area
+    margin: 40px 0
+  &.input-area
+    margin: 10px 0
+  &.submit-area
+    margin: 40px 0
+  &.input
+    @extend .form-control
+    width: 100%
+  &.submit
+    @extend .btn, .btn-lg
+    width: 100%
+    &.ready
+      @extend .btn-success
+    &.wait
+      @extend .btn-default
