@@ -38987,7 +38987,7 @@ var Memo = (function (_super) {
         if (!memo) {
             return React.createElement("div", {"className": "memo now-loading"}, "loading...");
         }
-        return React.createElement("section", {"id": "memo", "style": { height: windowHeight, width: memoWidth }, "className": "memo memo-container", "ref": "container"}, React.createElement("header", {"className": "memo header"}, React.createElement("h1", {"className": "memo memo-title"}, memo.title), React.createElement("section", {"className": "memo tags"}, React.createElement("ul", {"className": "memo tag-list"}, this.writeTagList()))), React.createElement("div", {"className": "memo content", "dangerouslySetInnerHTML": { __html: memo.html }}));
+        return React.createElement("section", {"id": "memo", "style": { height: windowHeight, width: memoWidth }, "className": "memo memo-container", "ref": "container"}, React.createElement("header", {"className": "memo header"}, React.createElement("h1", {"className": "memo memo-title"}, memo.title), React.createElement("section", {"className": "memo tags"}, React.createElement("ul", {"className": "memo tag-list"}, this.writeTagList())), React.createElement("section", {"className": "memo last-update"}, "更新: ", React.createElement("em", {"className": "time"}, memo.update))), React.createElement("div", {"className": "memo content", "dangerouslySetInnerHTML": { __html: memo.html }}));
     };
     return Memo;
 })(React.Component);
@@ -39300,12 +39300,14 @@ var MemoData = (function () {
         this.html = '';
         this.tags = [];
         this.tagList = '';
+        this.update = '';
         if (!json) {
             return;
         }
         this.id = +json['id'];
         this.title = json['title'];
         this.html = json['html'];
+        this.update = json['updated_at'];
         if (json['tags']) {
             this.tags = json['tags'].map(function (tag) { return new tag_data_1.default(tag); });
             this.tagList = this.tags.map(function (tag) { return tag.name; }).join(', ');

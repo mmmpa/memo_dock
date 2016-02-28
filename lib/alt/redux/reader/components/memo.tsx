@@ -41,7 +41,6 @@ export default class Memo extends React.Component<IMemo,{}> {
 
   render() {
     let {windowHeight, memoWidth, memo} = this.props;
-
     if (!memo) {
       return <div className="memo now-loading">loading...</div>;
     }
@@ -53,6 +52,9 @@ export default class Memo extends React.Component<IMemo,{}> {
           <ul className="memo tag-list">
             {this.writeTagList()}
           </ul>
+        </section>
+        <section className="memo last-update">
+          更新: <em className="time">{memo.update}</em>
         </section>
       </header>
       <div className="memo content" dangerouslySetInnerHTML={{__html: memo.html}}/>

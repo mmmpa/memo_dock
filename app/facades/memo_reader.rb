@@ -3,9 +3,9 @@ class MemoReader < Memo
 
   def as_json(options={})
     options.merge!(
-      only: [:id, :title, :html, :updated_at],
+      only: [:id, :title, :html],
       methods: [:tags]
     )
-    super
+    super.merge!(updated_at: updated_at.strftime('%Y/%m/%d %H:%M'))
   end
 end

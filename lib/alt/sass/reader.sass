@@ -21,7 +21,7 @@ a
   background: #fff
   .wrapper
     direction: ltr
- 
+
 .tag-list
   &.tag-list-container
     direction: rtl
@@ -74,6 +74,12 @@ a
       margin-top: -5px
 
 .memo
+  &.last-update
+    @extend %size-h6
+    margin-top: 10px
+    em
+      font-style: normal
+      @extend %size-h5
   &.memo-container
     @extend %base-container
     left: 550px
