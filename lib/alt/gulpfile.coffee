@@ -19,6 +19,7 @@ shell = require 'gulp-shell'
 rootPath = path.join(__dirname, '../../')
 srcRootPath = path.join(__dirname, './')
 publicJsPath = path.join(rootPath, './public/js')
+publicCssPath = path.join(rootPath, './public/css')
 sassWatch = path.join(srcRootPath, 'sass/**/*.sass')
 writerWatch = path.join(srcRootPath, 'redux/writer/**/*.ts')
 
@@ -64,6 +65,11 @@ gulp.task 'hardPacking', ->
   .pipe streamify(uglify())
   .pipe gzip()
   .pipe gulp.dest(publicJsPath)
+  .pipe notify message: 'complete'
+  gulp
+  .src [path.join(publicCssPath, 'writer.css'), path.join(publicCssPath, 'reader.css'), path.join(publicCssPath, 'codemirror.css')]
+  .pipe gzip()
+  .pipe gulp.dest(publicCssPath)
   .pipe notify message: 'complete'
 
 gulp.task 'softPacking', ->

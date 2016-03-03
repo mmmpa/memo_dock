@@ -1,6 +1,8 @@
 source 'https://rubygems.org'
 
-gem 'rails', '4.2.5'
+ruby '2.3.0'
+
+gem 'rails', '4.2.5.2'
 gem 'pg'
 gem 'coffee-rails', '~> 4.1.0'
 gem 'therubyracer'
