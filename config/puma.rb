@@ -1,7 +1,7 @@
 app_dir = Pathname.new('__dir__').join('../')
 shared_dir = app_dir.join('shared')
 
-env = ENV['RACK_ENV'] || 'development'
+env =  ENV['RACK_ENV'] || ENV['RAILS_ENV'] || 'development'
 
 workers Integer(ENV['WEB_CONCURRENCY'] || 1)
 threads_count = Integer(ENV['RAILS_MAX_THREADS'] || 5)
